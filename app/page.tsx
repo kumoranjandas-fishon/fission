@@ -1,3 +1,4 @@
+"use client";
 export default function Home() {
   return (
     <main style={{fontFamily:'sans-serif',margin:0,padding:0,background:'#f8f8f8'}}>
@@ -128,7 +129,62 @@ export default function Home() {
           </div>
         </div>
       </section>
-
+{/* PINCODE CHECKER */}
+<section style={{background:'white',padding:'24px 20px',borderBottom:'2px solid #f0f0f0'}}>
+  <div style={{maxWidth:'600px',margin:'0 auto',textAlign:'center'}}>
+    <h3 style={{fontSize:'18px',fontWeight:900,marginBottom:'8px'}}>📍 Apna Pincode Check Karo</h3>
+    <p style={{color:'#666',fontSize:'13px',marginBottom:'16px'}}>Delivery available hai ya nahi — abhi check karo!</p>
+    <div style={{display:'flex',gap:'10px',justifyContent:'center',flexWrap:'wrap'}}>
+      <input 
+        id="pincodeInput"
+        type="number" 
+        placeholder="Apna pincode likho... jaise 110092"
+        style={{padding:'12px 16px',borderRadius:'10px',border:'2px solid #eee',fontSize:'14px',width:'250px',outline:'none'}}
+      />
+      <button 
+        onClick={()=>{
+          const pin = (document.getElementById('pincodeInput') as HTMLInputElement).value;
+          const areas: Record<string, {area:string, time:string}> = {
+            '110092': {area:'Preet Vihar / Mandawali', time:'9 AM - 12 PM'},
+            '110091': {area:'IP Extension / Patparganj', time:'9 AM - 12 PM'},
+            '110096': {area:'Mayur Vihar Phase 1', time:'9 AM - 12 PM'},
+            '110095': {area:'Mayur Vihar Phase 2', time:'9 AM - 12 PM'},
+            '110051': {area:'Gandhi Nagar / Geeta Colony', time:'9 AM - 12 PM'},
+            '110031': {area:'Shakarpur / Laxmi Nagar', time:'9 AM - 12 PM'},
+            '110032': {area:'Vivek Vihar / Karkardooma', time:'9 AM - 12 PM'},
+            '110093': {area:'Pandav Nagar / Ganesh Nagar', time:'9 AM - 12 PM'},
+            '110096': {area:'Commonwealth Village', time:'9 AM - 12 PM'},
+          };
+          const result = document.getElementById('pinResult');
+          if(result) {
+            if(areas[pin]) {
+              result.innerHTML = `✅ <strong>Delivery Available!</strong><br/>📍 ${areas[pin].area}<br/>🕐 Delivery Time: <strong>${areas[pin].time}</strong>`;
+              result.style.background = '#E8F8EE';
+              result.style.color = '#16A34A';
+              result.style.border = '2px solid #16A34A';
+            } else if(pin.length === 6) {
+              result.innerHTML = `⚠️ <strong>Abhi Available Nahi</strong><br/>Hum expand kar rahe hain!<br/><a href="https://wa.me/918287000582?text=Mera pincode ${pin} hai — delivery chahiye!" style="color:#DC2626;font-weight:bold;">WhatsApp karo →</a>`;
+              result.style.background = '#FFF0ED';
+              result.style.color = '#DC2626';
+              result.style.border = '2px solid #DC2626';
+            } else {
+              result.innerHTML = '❌ 6 digit pincode likho!';
+              result.style.background = '#f9f9f9';
+              result.style.color = '#666';
+              result.style.border = '2px solid #eee';
+            }
+          }
+        }}
+        style={{background:'#DC2626',color:'white',border:'none',padding:'12px 24px',borderRadius:'10px',fontWeight:'bold',fontSize:'14px',cursor:'pointer'}}
+      >
+        Check Karo
+      </button>
+    </div>
+    <div id="pinResult" style={{marginTop:'14px',padding:'14px',borderRadius:'10px',fontSize:'14px',lineHeight:1.6,background:'#f9f9f9',border:'2px solid #eee',color:'#666',display:'inline-block',minWidth:'280px'}}>
+      Pincode dalke check karo 👆
+    </div>
+  </div>
+</section>
       {/* PRE ORDER STRIP */}
       <div style={{background:'#FFF8E7',borderBottom:'2px solid #F4A623',padding:'10px 20px',display:'flex',alignItems:'center',gap:'12px',flexWrap:'wrap'}}>
         <span style={{fontSize:'20px'}}>⏰</span>
