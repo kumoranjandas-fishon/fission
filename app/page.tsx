@@ -217,8 +217,8 @@ export default function Home() {
       <section style={{background:'white',padding:'28px 20px'}}>
         <div style={{maxWidth:'1100px',margin:'0 auto'}}>
           <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:'16px'}}>
-            <h2 style={{fontSize:'22px',fontWeight:900,margin:0}}>⚡ Aaj Ka Rate</h2>
-            <span style={{background:'#E8F8EE',color:'#16A34A',padding:'4px 10px',borderRadius:'20px',fontWeight:'bold',fontSize:'11px'}}>🟢 Live</span>
+            <h2 style={{fontSize:'22px',fontWeight:900,margin:0}}>Always Available</h2>
+            <span style={{background:'#E8F8EE',color:'#16A34A',padding:'4px 10px',borderRadius:'20px',fontWeight:'bold',fontSize:'11px'}}></span>
           </div>
           <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(120px,1fr))',gap:'10px'}}>
             {[
