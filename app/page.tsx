@@ -1,5 +1,74 @@
 "use client";
+import { useState } from "react";
+
+const ITEMS = [
+  {n:'Rohu Fish',b:'রুই মাছ',s:'500g • Cleaned',p:180,e:'🐟',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA'},
+  {n:'Hilsa (Ilish)',b:'ইলিশ মাছ',s:'500g • Seasonal',p:380,e:'🐠',badge:'⚡ Limited',bc:'#DC2626',bg:'#FFF0ED',stock:'Only 3kg!'},
+  {n:'Chicken Curry',b:'চিকেন',s:'1kg • With Skin',p:220,e:'🐔',badge:'Always Fresh',bc:'#16A34A',bg:'#F0FFF4'},
+  {n:'Mutton Cut',b:'মাটন',s:'500g • Bone-in',p:340,e:'🐑',badge:'Always Fresh',bc:'#16A34A',bg:'#F0FFF4'},
+  {n:'Tiger Prawns',b:'চিংড়ি',s:'250g • Deveined',p:320,e:'🦐',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA'},
+  {n:'Fresh Crab',b:'কাঁকড়া',s:'1pc • Live',p:450,e:'🦀',badge:'⚡ Limited',bc:'#DC2626',bg:'#FFFBEB',stock:'Only 5!'},
+  {n:'Katla Fish',b:'কাতলা মাছ',s:'500g • Cleaned',p:160,e:'🐡',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA'},
+  {n:'Chicken Keema',b:'কিমা',s:'500g • Boneless',p:180,e:'🍖',badge:'Always Fresh',bc:'#16A34A',bg:'#FFF0ED'},
+];
+
+const PINCODES: Record<string, {area:string, time:string}> = {
+  '110092': {area:'Preet Vihar / Mandawali', time:'9 AM - 12 PM'},
+  '110091': {area:'IP Extension / Patparganj', time:'9 AM - 12 PM'},
+  '110096': {area:'Mayur Vihar Phase 1 & 2 / Commonwealth Village', time:'9 AM - 12 PM'},
+  '110051': {area:'Gandhi Nagar / Geeta Colony', time:'9 AM - 12 PM'},
+  '110031': {area:'Shakarpur / Laxmi Nagar', time:'9 AM - 12 PM'},
+  '110032': {area:'Vivek Vihar / Karkardooma', time:'9 AM - 12 PM'},
+  '110093': {area:'Pandav Nagar / Ganesh Nagar', time:'9 AM - 12 PM'},
+  '110053': {area:'Krishna Nagar', time:'9 AM - 12 PM'},
+  '110033': {area:'Mother Dairy / Kosambi', time:'9 AM - 12 PM'},
+};
+
+type CartItem = {n:string, p:number, e:string, qty:number};
+
 export default function Home() {
+  const [cart, setCart] = useState<CartItem[]>([]);
+  const [showCart, setShowCart] = useState(false);
+  const [pincode, setPincode] = useState('');
+  const [pinResult, setPinResult] = useState<null|'valid'|'invalid'|'short'>(null);
+  const [notifyPin, setNotifyPin] = useState('');
+  const [notifyName, setNotifyName] = useState('');
+  const [notifySent, setNotifySent] = useState(false);
+  const [checkoutStep, setCheckoutStep] = useState<'cart'|'pincode'|'confirm'|'done'>('cart');
+
+  const totalItems = cart.reduce((s,i)=>s+i.qty,0);
+  const totalPrice = cart.reduce((s,i)=>s+i.p*i.qty,0);
+
+  const addToCart = (item: typeof ITEMS[0]) => {
+    setCart(prev => {
+      const exists = prev.find(c=>c.n===item.n);
+      if(exists) return prev.map(c=>c.n===item.n?{...c,qty:c.qty+1}:c);
+      return [...prev, {n:item.n, p:item.p, e:item.e, qty:1}];
+    });
+  };
+
+  const removeFromCart = (name: string) => {
+    setCart(prev => {
+      const exists = prev.find(c=>c.n===name);
+      if(exists && exists.qty > 1) return prev.map(c=>c.n===name?{...c,qty:c.qty-1}:c);
+      return prev.filter(c=>c.n!==name);
+    });
+  };
+
+  const getQty = (name: string) => cart.find(c=>c.n===name)?.qty || 0;
+
+  const checkPincode = () => {
+    if(pincode.length !== 6) { setPinResult('short'); return; }
+    if(PINCODES[pincode]) setPinResult('valid');
+    else setPinResult('invalid');
+  };
+
+  const buildWhatsAppMsg = () => {
+    const items = cart.map(i=>`${i.e} ${i.n} x${i.qty} = ₹${i.p*i.qty}`).join('\n');
+    const area = PINCODES[pincode]?.area || '';
+    return encodeURIComponent(`Hi Fishon! Order karna hai:\n\n${items}\n\nTotal: ₹${totalPrice}\nPincode: ${pincode} (${area})\nDelivery: ${PINCODES[pincode]?.time}`);
+  };
+
   return (
     <main style={{fontFamily:'sans-serif',margin:0,padding:0,background:'#f8f8f8'}}>
 
@@ -15,10 +84,9 @@ export default function Home() {
         <div style={{maxWidth:'1100px',margin:'0 auto',display:'flex',alignItems:'center',gap:'16px',flexWrap:'wrap'}}>
           
           {/* Logo */}
-          <div style={{display:'flex',alignItems:'center',gap:'8px',textDecoration:'none'}}>
+          <div style={{display:'flex',alignItems:'center',gap:'8px'}}>
             <div style={{background:'#111',borderRadius:'10px',padding:'4px',width:'38px',height:'38px',display:'flex',alignItems:'center',justifyContent:'center'}}>
               <svg width="26" height="32" viewBox="0 0 100 120" fill="none">
-                <path d="M40 8 C40 8 86 8 90 42 C94 74 68 88 44 82 C28 77 18 64 20 50" stroke="#DC2626" strokeWidth="4.5" fill="none" strokeLinecap="round"/>
                 <rect x="32" y="5" width="15" height="100" rx="5" fill="#DC2626"/>
                 <rect x="18" y="56" width="50" height="13" rx="5" fill="#DC2626"/>
                 <path d="M32 105 C24 116 10 114 6 106 C18 102 30 96 32 87" fill="#DC2626"/>
@@ -38,11 +106,22 @@ export default function Home() {
             <input placeholder="Search fish, chicken, mutton..." style={{border:'none',background:'transparent',outline:'none',fontSize:'14px',width:'100%',color:'#333'}}/>
           </div>
 
-          {/* Location + WhatsApp */}
+          {/* Cart + WhatsApp */}
           <div style={{display:'flex',gap:'10px',alignItems:'center'}}>
             <div style={{fontSize:'12px',color:'#666',display:'flex',alignItems:'center',gap:'4px'}}>
               📍 <span style={{fontWeight:'bold',color:'#333'}}>East Delhi</span>
             </div>
+            {/* Cart Button */}
+            <button 
+              onClick={()=>{setShowCart(true);setCheckoutStep('cart');}}
+              style={{background:'#DC2626',color:'white',border:'none',padding:'8px 14px',borderRadius:'8px',fontSize:'12px',fontWeight:'bold',cursor:'pointer',display:'flex',alignItems:'center',gap:'6px',position:'relative'}}>
+              🛒 Cart
+              {totalItems > 0 && (
+                <span style={{background:'white',color:'#DC2626',borderRadius:'50%',width:'18px',height:'18px',fontSize:'10px',fontWeight:900,display:'flex',alignItems:'center',justifyContent:'center'}}>
+                  {totalItems}
+                </span>
+              )}
+            </button>
             <a href="https://wa.me/918287000582" style={{background:'#25D366',color:'white',textDecoration:'none',padding:'8px 14px',borderRadius:'8px',fontSize:'12px',fontWeight:'bold',display:'flex',alignItems:'center',gap:'4px'}}>
               💬 Order
             </a>
@@ -60,12 +139,7 @@ export default function Home() {
             {emoji:'📦',name:'Pre-Order'},
           ].map((cat,i)=>(
             <a key={cat.name} href="#menu" style={{
-              textDecoration:'none',
-              padding:'8px 16px',
-              borderRadius:'20px',
-              fontSize:'13px',
-              fontWeight:'600',
-              whiteSpace:'nowrap',
+              textDecoration:'none',padding:'8px 16px',borderRadius:'20px',fontSize:'13px',fontWeight:'600',whiteSpace:'nowrap',
               background: i===0 ? '#DC2626' : 'transparent',
               color: i===0 ? 'white' : '#555',
               border: i===0 ? 'none' : '1.5px solid #eee',
@@ -80,7 +154,6 @@ export default function Home() {
       <section style={{background:'linear-gradient(135deg,#111 0%,#1a0505 60%,#0a1505 100%)',padding:'48px 20px',position:'relative',overflow:'hidden'}}>
         <div style={{position:'absolute',inset:0,backgroundImage:'radial-gradient(circle at 15% 50%,rgba(220,38,38,0.2) 0%,transparent 50%),radial-gradient(circle at 85% 50%,rgba(34,197,94,0.12) 0%,transparent 50%)'}}></div>
         <div style={{maxWidth:'1100px',margin:'0 auto',position:'relative',zIndex:2,display:'flex',alignItems:'center',justifyContent:'space-between',gap:'32px',flexWrap:'wrap'}}>
-          
           <div style={{flex:'1',minWidth:'260px'}}>
             <div style={{display:'inline-block',background:'rgba(220,38,38,0.25)',border:'1px solid rgba(220,38,38,0.5)',padding:'5px 14px',borderRadius:'20px',marginBottom:'16px'}}>
               <span style={{color:'#ffaaaa',fontSize:'12px',fontWeight:'bold'}}>⏰ ORDER BY 10 PM — FRESH TOMORROW</span>
@@ -102,16 +175,14 @@ export default function Home() {
               ))}
             </div>
             <div style={{display:'flex',gap:'10px',flexWrap:'wrap'}}>
+              <a href="#menu" style={{background:'#DC2626',color:'white',textDecoration:'none',padding:'12px 24px',borderRadius:'10px',fontWeight:'bold',fontSize:'14px'}}>
+                🛒 Menu Dekho
+              </a>
               <a href="https://wa.me/918287000582?text=Hi! Order karna hai" style={{background:'#25D366',color:'white',textDecoration:'none',padding:'12px 24px',borderRadius:'10px',fontWeight:'bold',fontSize:'14px'}}>
                 💬 WhatsApp Order
               </a>
-              <a href="#menu" style={{background:'rgba(255,255,255,0.1)',color:'white',textDecoration:'none',padding:'12px 24px',borderRadius:'10px',fontWeight:'bold',fontSize:'14px',border:'1px solid rgba(255,255,255,0.2)'}}>
-                Menu Dekho →
-              </a>
             </div>
           </div>
-
-          {/* Mini cards */}
           <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'10px',flex:'1',minWidth:'240px',maxWidth:'320px'}}>
             {[
               {e:'🐟',n:'Rohu',p:'₹180',t:'Pre-Order'},
@@ -129,62 +200,7 @@ export default function Home() {
           </div>
         </div>
       </section>
-{/* PINCODE CHECKER */}
-<section style={{background:'white',padding:'24px 20px',borderBottom:'2px solid #f0f0f0'}}>
-  <div style={{maxWidth:'600px',margin:'0 auto',textAlign:'center'}}>
-    <h3 style={{fontSize:'18px',fontWeight:900,marginBottom:'8px'}}>📍 Apna Pincode Check Karo</h3>
-    <p style={{color:'#666',fontSize:'13px',marginBottom:'16px'}}>Delivery available hai ya nahi — abhi check karo!</p>
-    <div style={{display:'flex',gap:'10px',justifyContent:'center',flexWrap:'wrap'}}>
-      <input 
-        id="pincodeInput"
-        type="number" 
-        placeholder="Apna pincode likho... jaise 110092"
-        style={{padding:'12px 16px',borderRadius:'10px',border:'2px solid #eee',fontSize:'14px',width:'250px',outline:'none'}}
-      />
-      <button 
-        onClick={()=>{
-          const pin = (document.getElementById('pincodeInput') as HTMLInputElement).value;
-          const areas: Record<string, {area:string, time:string}> = {
-            '110092': {area:'Preet Vihar / Mandawali', time:'9 AM - 12 PM'},
-            '110091': {area:'IP Extension / Patparganj', time:'9 AM - 12 PM'},
-            '110096': {area:'Mayur Vihar Phase 1', time:'9 AM - 12 PM'},
-            '110095': {area:'Mayur Vihar Phase 2', time:'9 AM - 12 PM'},
-            '110051': {area:'Gandhi Nagar / Geeta Colony', time:'9 AM - 12 PM'},
-            '110031': {area:'Shakarpur / Laxmi Nagar', time:'9 AM - 12 PM'},
-            '110032': {area:'Vivek Vihar / Karkardooma', time:'9 AM - 12 PM'},
-            '110093': {area:'Pandav Nagar / Ganesh Nagar', time:'9 AM - 12 PM'},
-            '110096': {area:'Commonwealth Village', time:'9 AM - 12 PM'},
-          };
-          const result = document.getElementById('pinResult');
-          if(result) {
-            if(areas[pin]) {
-              result.innerHTML = `✅ <strong>Delivery Available!</strong><br/>📍 ${areas[pin].area}<br/>🕐 Delivery Time: <strong>${areas[pin].time}</strong>`;
-              result.style.background = '#E8F8EE';
-              result.style.color = '#16A34A';
-              result.style.border = '2px solid #16A34A';
-            } else if(pin.length === 6) {
-              result.innerHTML = `⚠️ <strong>Abhi Available Nahi</strong><br/>Hum expand kar rahe hain!<br/><a href="https://wa.me/918287000582?text=Mera pincode ${pin} hai — delivery chahiye!" style="color:#DC2626;font-weight:bold;">WhatsApp karo →</a>`;
-              result.style.background = '#FFF0ED';
-              result.style.color = '#DC2626';
-              result.style.border = '2px solid #DC2626';
-            } else {
-              result.innerHTML = '❌ 6 digit pincode likho!';
-              result.style.background = '#f9f9f9';
-              result.style.color = '#666';
-              result.style.border = '2px solid #eee';
-            }
-          }
-        }}
-        style={{background:'#DC2626',color:'white',border:'none',padding:'12px 24px',borderRadius:'10px',fontWeight:'bold',fontSize:'14px',cursor:'pointer'}}
-      >
-        Check Karo
-      </button>
-    </div>
-    <div id="pinResult" style={{marginTop:'14px',padding:'14px',borderRadius:'10px',fontSize:'14px',lineHeight:1.6,background:'#f9f9f9',border:'2px solid #eee',color:'#666',display:'inline-block',minWidth:'280px'}}>
-      Pincode dalke check karo 👆
-    </div>
-  </div>
-</section>
+
       {/* PRE ORDER STRIP */}
       <div style={{background:'#FFF8E7',borderBottom:'2px solid #F4A623',padding:'10px 20px',display:'flex',alignItems:'center',gap:'12px',flexWrap:'wrap'}}>
         <span style={{fontSize:'20px'}}>⏰</span>
@@ -231,62 +247,64 @@ export default function Home() {
         <div style={{maxWidth:'1100px',margin:'0 auto'}}>
           <h2 style={{fontSize:'22px',fontWeight:900,marginBottom:'16px'}}>🛒 Fresh Items</h2>
           <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(170px,1fr))',gap:'14px'}}>
-            {[
-              {n:'Rohu Fish',b:'রুই মাছ',s:'500g • Cleaned',p:'₹180',e:'🐟',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA'},
-              {n:'Hilsa (Ilish)',b:'ইলিশ মাছ',s:'500g • Seasonal',p:'₹380',e:'🐠',badge:'⚡ Limited',bc:'#DC2626',bg:'#FFF0ED',stock:'Only 3kg!'},
-              {n:'Chicken Curry',b:'চিকেন',s:'1kg • With Skin',p:'₹220',e:'🐔',badge:'Always Fresh',bc:'#16A34A',bg:'#F0FFF4'},
-              {n:'Mutton Cut',b:'মাটন',s:'500g • Bone-in',p:'₹340',e:'🐑',badge:'Always Fresh',bc:'#16A34A',bg:'#F0FFF4'},
-              {n:'Tiger Prawns',b:'চিংড়ি',s:'250g • Deveined',p:'₹320',e:'🦐',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA'},
-              {n:'Fresh Crab',b:'কাঁকড়া',s:'1pc • Live',p:'₹450',e:'🦀',badge:'⚡ Limited',bc:'#DC2626',bg:'#FFFBEB',stock:'Only 5!'},
-              {n:'Katla Fish',b:'কাতলা মাছ',s:'500g • Cleaned',p:'₹160',e:'🐡',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA'},
-              {n:'Chicken Keema',b:'কিমা',s:'500g • Boneless',p:'₹180',e:'🍖',badge:'Always Fresh',bc:'#16A34A',bg:'#FFF0ED'},
-            ].map(i=>(
-              <div key={i.n} style={{background:'white',borderRadius:'14px',overflow:'hidden',boxShadow:'0 2px 6px rgba(0,0,0,0.07)'}}>
-                <div style={{background:i.bg,height:'95px',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'44px',position:'relative'}}>
-                  {i.e}
-                  <span style={{position:'absolute',top:'6px',left:'6px',background:i.bc,color:'white',fontSize:'8px',fontWeight:'bold',padding:'2px 6px',borderRadius:'4px'}}>
-                    {i.badge}
-                  </span>
-                </div>
-                <div style={{padding:'10px'}}>
-                  {i.stock && <div style={{color:'#DC2626',fontSize:'9px',fontWeight:'bold',marginBottom:'2px'}}>🔥 {i.stock}</div>}
-                  <div style={{fontWeight:'bold',fontSize:'13px'}}>{i.n}</div>
-                  <div style={{color:'#16A34A',fontSize:'10px'}}>{i.b}</div>
-                  <div style={{color:'#aaa',fontSize:'10px',marginBottom:'7px'}}>{i.s}</div>
-                  <div style={{display:'flex',justifyContent:'space-between',alignItems:'center'}}>
-                    <span style={{fontWeight:900,fontSize:'14px'}}>{i.p}</span>
-                    <a href={`https://wa.me/918287000582?text=Order: ${i.n} ${i.p}`}
-                       style={{background:'#25D366',color:'white',textDecoration:'none',padding:'5px 10px',borderRadius:'6px',fontSize:'10px',fontWeight:'bold'}}>
-                      Order
-                    </a>
+            {ITEMS.map(i=>{
+              const qty = getQty(i.n);
+              return (
+                <div key={i.n} style={{background:'white',borderRadius:'14px',overflow:'hidden',boxShadow:'0 2px 6px rgba(0,0,0,0.07)'}}>
+                  <div style={{background:i.bg,height:'95px',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'44px',position:'relative'}}>
+                    {i.e}
+                    <span style={{position:'absolute',top:'6px',left:'6px',background:i.bc,color:'white',fontSize:'8px',fontWeight:'bold',padding:'2px 6px',borderRadius:'4px'}}>
+                      {i.badge}
+                    </span>
                   </div>
-                </div>{/* DELIVERY AREAS */}
-<section style={{background:'#f0f9ff',padding:'28px 20px'}}>
-  <div style={{maxWidth:'1100px',margin:'0 auto'}}>
-    <h2 style={{fontSize:'22px',fontWeight:900,marginBottom:'8px'}}>📍 Delivery Areas</h2>
-    <p style={{color:'#666',fontSize:'13px',marginBottom:'16px'}}>Hum in areas mein deliver karte hain — East Delhi</p>
-    <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(150px,1fr))',gap:'10px'}}>
-      {[
-        'IP Extension','Mother Dairy','Pandav Nagar',
-        'Ganesh Nagar','Mandawali','Commonwealth Village',
-        'Mayur Vihar','Kosambi','Laxmi Nagar',
-        'Preet Vihar','Karkardooma','Vivek Vihar',
-        'Shakarpur','Patparganj','Krishna Nagar',
-        'Gandhi Nagar','Geeta Colony',
-      ].map(area=>(
-        <div key={area} style={{background:'white',borderRadius:'10px',padding:'10px 14px',fontSize:'13px',fontWeight:'600',color:'#333',border:'1.5px solid #e0f0ff',display:'flex',alignItems:'center',gap:'6px'}}>
-          ✅ {area}
+                  <div style={{padding:'10px'}}>
+                    {'stock' in i && i.stock && <div style={{color:'#DC2626',fontSize:'9px',fontWeight:'bold',marginBottom:'2px'}}>🔥 {i.stock}</div>}
+                    <div style={{fontWeight:'bold',fontSize:'13px'}}>{i.n}</div>
+                    <div style={{color:'#16A34A',fontSize:'10px'}}>{i.b}</div>
+                    <div style={{color:'#aaa',fontSize:'10px',marginBottom:'7px'}}>{i.s}</div>
+                    <div style={{display:'flex',justifyContent:'space-between',alignItems:'center'}}>
+                      <span style={{fontWeight:900,fontSize:'14px'}}>₹{i.p}</span>
+                      {qty === 0 ? (
+                        <button 
+                          onClick={()=>addToCart(i)}
+                          style={{background:'#DC2626',color:'white',border:'none',padding:'5px 12px',borderRadius:'6px',fontSize:'11px',fontWeight:'bold',cursor:'pointer'}}>
+                          + Add
+                        </button>
+                      ) : (
+                        <div style={{display:'flex',alignItems:'center',gap:'6px'}}>
+                          <button onClick={()=>removeFromCart(i.n)} style={{background:'#f0f0f0',border:'none',width:'24px',height:'24px',borderRadius:'6px',fontWeight:'bold',cursor:'pointer',fontSize:'14px'}}>−</button>
+                          <span style={{fontWeight:900,fontSize:'13px',minWidth:'16px',textAlign:'center'}}>{qty}</span>
+                          <button onClick={()=>addToCart(i)} style={{background:'#DC2626',color:'white',border:'none',width:'24px',height:'24px',borderRadius:'6px',fontWeight:'bold',cursor:'pointer',fontSize:'14px'}}>+</button>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         </div>
-      ))}
-    </div>
-    <p style={{color:'#DC2626',fontSize:'12px',marginTop:'14px',fontWeight:'bold'}}>
-      ⚠️ Aapka area nahi hai? WhatsApp karo — hum expand kar rahe hain!
-    </p>
-  </div>
-</section>
+      </section>
+
+      {/* DELIVERY AREAS */}
+      <section style={{background:'#f0f9ff',padding:'28px 20px'}}>
+        <div style={{maxWidth:'1100px',margin:'0 auto'}}>
+          <h2 style={{fontSize:'22px',fontWeight:900,marginBottom:'8px'}}>📍 Delivery Areas</h2>
+          <p style={{color:'#666',fontSize:'13px',marginBottom:'16px'}}>Hum in areas mein deliver karte hain — East Delhi</p>
+          <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(200px,1fr))',gap:'10px'}}>
+            {Object.entries(PINCODES).map(([pin, data])=>(
+              <div key={pin} style={{background:'white',borderRadius:'10px',padding:'10px 14px',border:'1.5px solid #e0f0ff'}}>
+                <div style={{display:'flex',alignItems:'center',gap:'6px',marginBottom:'2px'}}>
+                  <span style={{color:'#16A34A',fontWeight:'bold'}}>✅</span>
+                  <span style={{fontSize:'13px',fontWeight:'600',color:'#333'}}>{data.area}</span>
+                </div>
+                <div style={{fontSize:'11px',color:'#888',paddingLeft:'18px'}}>📌 {pin} • 🕐 {data.time}</div>
               </div>
             ))}
           </div>
+          <p style={{color:'#DC2626',fontSize:'12px',marginTop:'14px',fontWeight:'bold'}}>
+            ⚠️ Aapka area nahi hai? WhatsApp karo — hum expand kar rahe hain!
+          </p>
         </div>
       </section>
 
@@ -327,6 +345,173 @@ export default function Home() {
         <span style={{color:'#16A34A',fontWeight:900,fontSize:'20px',fontStyle:'italic'}}>on</span>
         <p style={{color:'#555',fontSize:'11px',marginTop:'6px'}}>📍 East Delhi • 🕐 7-9 AM Daily • © 2026</p>
       </footer>
+
+      {/* FLOATING CART BUTTON */}
+      {totalItems > 0 && !showCart && (
+        <button
+          onClick={()=>{setShowCart(true);setCheckoutStep('cart');}}
+          style={{position:'fixed',bottom:'24px',right:'24px',background:'#DC2626',color:'white',border:'none',padding:'14px 20px',borderRadius:'50px',fontWeight:'bold',fontSize:'14px',cursor:'pointer',boxShadow:'0 4px 20px rgba(220,38,38,0.4)',zIndex:200,display:'flex',alignItems:'center',gap:'8px'}}>
+          🛒 {totalItems} items • ₹{totalPrice}
+        </button>
+      )}
+
+      {/* CART MODAL */}
+      {showCart && (
+        <div style={{position:'fixed',inset:0,background:'rgba(0,0,0,0.6)',zIndex:300,display:'flex',alignItems:'flex-end',justifyContent:'center'}}>
+          <div style={{background:'white',width:'100%',maxWidth:'540px',borderRadius:'20px 20px 0 0',padding:'24px',maxHeight:'90vh',overflowY:'auto'}}>
+            
+            {/* STEP 1: CART */}
+            {checkoutStep === 'cart' && (
+              <>
+                <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:'20px'}}>
+                  <h3 style={{margin:0,fontSize:'18px',fontWeight:900}}>🛒 Aapka Cart</h3>
+                  <button onClick={()=>setShowCart(false)} style={{background:'#f0f0f0',border:'none',borderRadius:'50%',width:'32px',height:'32px',cursor:'pointer',fontSize:'16px'}}>✕</button>
+                </div>
+                {cart.length === 0 ? (
+                  <div style={{textAlign:'center',padding:'40px 0',color:'#aaa'}}>
+                    <div style={{fontSize:'48px',marginBottom:'12px'}}>🛒</div>
+                    <p>Cart khali hai!</p>
+                  </div>
+                ) : (
+                  <>
+                    {cart.map(item=>(
+                      <div key={item.n} style={{display:'flex',justifyContent:'space-between',alignItems:'center',padding:'12px 0',borderBottom:'1px solid #f0f0f0'}}>
+                        <div style={{display:'flex',alignItems:'center',gap:'10px'}}>
+                          <span style={{fontSize:'24px'}}>{item.e}</span>
+                          <div>
+                            <div style={{fontWeight:'bold',fontSize:'13px'}}>{item.n}</div>
+                            <div style={{color:'#DC2626',fontSize:'12px'}}>₹{item.p} × {item.qty} = ₹{item.p*item.qty}</div>
+                          </div>
+                        </div>
+                        <div style={{display:'flex',alignItems:'center',gap:'6px'}}>
+                          <button onClick={()=>removeFromCart(item.n)} style={{background:'#f0f0f0',border:'none',width:'26px',height:'26px',borderRadius:'6px',fontWeight:'bold',cursor:'pointer'}}>−</button>
+                          <span style={{fontWeight:900,minWidth:'20px',textAlign:'center'}}>{item.qty}</span>
+                          <button onClick={()=>addToCart(ITEMS.find(i=>i.n===item.n)!)} style={{background:'#DC2626',color:'white',border:'none',width:'26px',height:'26px',borderRadius:'6px',fontWeight:'bold',cursor:'pointer'}}>+</button>
+                        </div>
+                      </div>
+                    ))}
+                    <div style={{marginTop:'16px',padding:'14px',background:'#f9f9f9',borderRadius:'10px'}}>
+                      <div style={{display:'flex',justifyContent:'space-between',fontWeight:900,fontSize:'16px'}}>
+                        <span>Total</span>
+                        <span style={{color:'#DC2626'}}>₹{totalPrice}</span>
+                      </div>
+                      {totalPrice >= 499 && <div style={{color:'#16A34A',fontSize:'11px',marginTop:'4px'}}>🎉 Free Delivery!</div>}
+                      {totalPrice < 499 && <div style={{color:'#888',fontSize:'11px',marginTop:'4px'}}>₹{499-totalPrice} aur order karo free delivery ke liye</div>}
+                    </div>
+                    <button
+                      onClick={()=>setCheckoutStep('pincode')}
+                      style={{width:'100%',background:'#DC2626',color:'white',border:'none',padding:'14px',borderRadius:'10px',fontWeight:'bold',fontSize:'15px',cursor:'pointer',marginTop:'14px'}}>
+                      Aage Badho — Pincode Check Karo →
+                    </button>
+                  </>
+                )}
+              </>
+            )}
+
+            {/* STEP 2: PINCODE */}
+            {checkoutStep === 'pincode' && (
+              <>
+                <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:'20px'}}>
+                  <h3 style={{margin:0,fontSize:'18px',fontWeight:900}}>📍 Delivery Area Check</h3>
+                  <button onClick={()=>setCheckoutStep('cart')} style={{background:'#f0f0f0',border:'none',borderRadius:'8px',padding:'6px 12px',cursor:'pointer',fontSize:'13px'}}>← Wapas</button>
+                </div>
+                <p style={{color:'#666',fontSize:'13px',marginBottom:'16px'}}>Apna pincode dalke check karo ki delivery available hai ya nahi</p>
+                <div style={{display:'flex',gap:'10px',marginBottom:'16px'}}>
+                  <input 
+                    type="number"
+                    placeholder="6 digit pincode..."
+                    value={pincode}
+                    onChange={e=>setPincode(e.target.value.slice(0,6))}
+                    style={{flex:1,padding:'12px 16px',borderRadius:'10px',border:'2px solid #eee',fontSize:'14px',outline:'none'}}
+                  />
+                  <button 
+                    onClick={checkPincode}
+                    style={{background:'#DC2626',color:'white',border:'none',padding:'12px 20px',borderRadius:'10px',fontWeight:'bold',cursor:'pointer'}}>
+                    Check
+                  </button>
+                </div>
+
+                {pinResult === 'short' && (
+                  <div style={{background:'#f9f9f9',border:'2px solid #eee',borderRadius:'10px',padding:'14px',color:'#666',fontSize:'13px'}}>
+                    ❌ 6 digit pincode likho!
+                  </div>
+                )}
+
+                {pinResult === 'valid' && (
+                  <div style={{background:'#E8F8EE',border:'2px solid #16A34A',borderRadius:'10px',padding:'14px',color:'#16A34A',fontSize:'13px',lineHeight:1.8}}>
+                    ✅ <strong>Delivery Available!</strong><br/>
+                    📍 {PINCODES[pincode].area}<br/>
+                    🕐 Delivery Time: <strong>{PINCODES[pincode].time}</strong>
+                  </div>
+                )}
+
+                {pinResult === 'invalid' && (
+                  <div style={{background:'#FFF0ED',border:'2px solid #DC2626',borderRadius:'10px',padding:'14px',fontSize:'13px',lineHeight:1.8}}>
+                    <div style={{color:'#DC2626',fontWeight:'bold',marginBottom:'8px'}}>⚠️ Abhi Is Area Mein Delivery Nahi Hai</div>
+                    <div style={{color:'#666',marginBottom:'12px',fontSize:'12px'}}>Hum jald expand kar rahe hain — notify karo jab aapke area mein aayein!</div>
+                    <input 
+                      placeholder="Aapka naam"
+                      value={notifyName}
+                      onChange={e=>setNotifyName(e.target.value)}
+                      style={{width:'100%',padding:'10px',borderRadius:'8px',border:'1.5px solid #eee',fontSize:'13px',marginBottom:'8px',boxSizing:'border-box',outline:'none'}}
+                    />
+                    {!notifySent ? (
+                      <a 
+                        href={`https://wa.me/918287000582?text=Notify me: Mera naam ${notifyName || 'Customer'} hai. Mera pincode ${pincode} hai — jab deliver karo to batana!`}
+                        onClick={()=>setNotifySent(true)}
+                        style={{display:'block',background:'#25D366',color:'white',textDecoration:'none',padding:'10px',borderRadius:'8px',fontWeight:'bold',fontSize:'13px',textAlign:'center'}}>
+                        🔔 Notify Me — WhatsApp Karo
+                      </a>
+                    ) : (
+                      <div style={{background:'#E8F8EE',color:'#16A34A',padding:'10px',borderRadius:'8px',textAlign:'center',fontWeight:'bold',fontSize:'13px'}}>
+                        ✅ Request Send Ho Gayi! Hum batayenge.
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {pinResult === 'valid' && (
+                  <button
+                    onClick={()=>setCheckoutStep('confirm')}
+                    style={{width:'100%',background:'#16A34A',color:'white',border:'none',padding:'14px',borderRadius:'10px',fontWeight:'bold',fontSize:'15px',cursor:'pointer',marginTop:'14px'}}>
+                    Order Confirm Karo ✓
+                  </button>
+                )}
+              </>
+            )}
+
+            {/* STEP 3: CONFIRM */}
+            {checkoutStep === 'confirm' && (
+              <>
+                <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:'20px'}}>
+                  <h3 style={{margin:0,fontSize:'18px',fontWeight:900}}>✅ Order Summary</h3>
+                  <button onClick={()=>setCheckoutStep('pincode')} style={{background:'#f0f0f0',border:'none',borderRadius:'8px',padding:'6px 12px',cursor:'pointer',fontSize:'13px'}}>← Wapas</button>
+                </div>
+                {cart.map(item=>(
+                  <div key={item.n} style={{display:'flex',justifyContent:'space-between',padding:'8px 0',borderBottom:'1px solid #f0f0f0',fontSize:'13px'}}>
+                    <span>{item.e} {item.n} × {item.qty}</span>
+                    <span style={{fontWeight:900}}>₹{item.p*item.qty}</span>
+                  </div>
+                ))}
+                <div style={{display:'flex',justifyContent:'space-between',fontWeight:900,fontSize:'16px',marginTop:'12px',padding:'12px 0',borderTop:'2px solid #eee'}}>
+                  <span>Total</span>
+                  <span style={{color:'#DC2626'}}>₹{totalPrice}</span>
+                </div>
+                <div style={{background:'#E8F8EE',borderRadius:'10px',padding:'12px',marginBottom:'16px',fontSize:'13px',color:'#16A34A'}}>
+                  📍 {PINCODES[pincode]?.area}<br/>
+                  🕐 Delivery: {PINCODES[pincode]?.time}
+                </div>
+                <a
+                  href={`https://wa.me/918287000582?text=${buildWhatsAppMsg()}`}
+                  style={{display:'block',background:'#25D366',color:'white',textDecoration:'none',padding:'14px',borderRadius:'10px',fontWeight:'bold',fontSize:'15px',textAlign:'center'}}>
+                  💬 WhatsApp Pe Order Karo
+                </a>
+              </>
+            )}
+
+          </div>
+        </div>
+      )}
 
     </main>
   );
