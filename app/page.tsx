@@ -125,6 +125,9 @@ export default function Home() {
             <a href="https://wa.me/918287000582" style={{background:'#25D366',color:'white',textDecoration:'none',padding:'8px 14px',borderRadius:'8px',fontSize:'12px',fontWeight:'bold',display:'flex',alignItems:'center',gap:'4px'}}>
               💬 Order
             </a>
+            <a href="/login" style={{background:'#111',color:'white',textDecoration:'none',padding:'8px 14px',borderRadius:'8px',fontSize:'12px',fontWeight:'bold'}}>
+              👤 Login
+            </a>
           </div>
         </div>
 
