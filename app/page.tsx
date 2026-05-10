@@ -191,17 +191,6 @@ border: i===0 ? 'none' : '1.5px solid #eee',
 </div>
 </div>
 </section>
-{/* PRE ORDER STRIP */}
-<div style={{background:'#FFF8E7',borderBottom:'2px solid #F4A623',padding:'10px 20px',display:'flex',alignItems:'center',gap:'12px',flexWrap:'wrap'}}>
-<span style={{fontSize:'20px'}}>⏰</span>
-<div style={{flex:1}}>
-<span style={{fontWeight:'bold',fontSize:'13px',color:'#333'}}>Pre-Order Closes at 11 PM! </span>
-<span style={{fontSize:'12px',color:'#666'}}>Tomorrow morning 9 to 12 fresh delivery • Free on ₹499+</span>
-</div>
-<a href="https://wa.me/918287000582?text=Pre-order karna hai" style={{background:'#F4A623',color:'white',textDecoration:'none',padding:'7px 14px',borderRadius:'8px',fontWeight:'bold',fontSize:'12px',whiteSpace:'nowrap'}}>
-          Pre-Order →
-</a>
-</div>
 {/* RATES */}
 <section style={{background:'white',padding:'28px 20px'}}>
 <div style={{maxWidth:'1100px',margin:'0 auto'}}>
@@ -232,6 +221,17 @@ border: i===0 ? 'none' : '1.5px solid #eee',
 </div>
 </div>
 </section>
+{/* PRE ORDER STRIP */}
+<div style={{background:'#FFF8E7',borderBottom:'2px solid #F4A623',padding:'10px 20px',display:'flex',alignItems:'center',gap:'12px',flexWrap:'wrap'}}>
+<span style={{fontSize:'20px'}}>⏰</span>
+<div style={{flex:1}}>
+<span style={{fontWeight:'bold',fontSize:'13px',color:'#333'}}>Pre-Order Closes at 11 PM! </span>
+<span style={{fontSize:'12px',color:'#666'}}>Tomorrow morning 9 to 12 fresh delivery • Free on ₹499+</span>
+</div>
+<a href="https://wa.me/918287000582?text=Pre-order karna hai" style={{background:'#F4A623',color:'white',textDecoration:'none',padding:'7px 14px',borderRadius:'8px',fontWeight:'bold',fontSize:'12px',whiteSpace:'nowrap'}}>
+          Pre-Order →
+</a>
+</div>
 {/* ITEMS */}
 <section id="menu" style={{background:'#f5f5f5',padding:'28px 20px'}}>
 <div style={{maxWidth:'1100px',margin:'0 auto'}}>
