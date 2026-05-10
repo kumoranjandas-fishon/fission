@@ -141,7 +141,7 @@ border: i===0 ? 'none' : '1.5px solid #eee',
 <div style={{maxWidth:'1100px',margin:'0 auto',position:'relative',zIndex:2,display:'flex',alignItems:'center',justifyContent:'space-between',gap:'32px',flexWrap:'wrap'}}>
 <div style={{flex:'1',minWidth:'260px'}}>
 <div style={{display:'inline-block',background:'rgba(220,38,38,0.25)',border:'1px solid rgba(220,38,38,0.5)',padding:'5px 14px',borderRadius:'20px',marginBottom:'16px'}}>
-<span style={{color:'#ffaaaa',fontSize:'12px',fontWeight:'bold'}}>⏰ ORDER BY 10 PM — FRESH TOMORROW</span>
+<span style={{color:'#ffaaaa',fontSize:'12px',fontWeight:'bold'}}>⏰ ORDER BY 11 PM — FRESH TOMORROW</span>
 </div>
 <h1 style={{color:'white',fontSize:'clamp(28px,4vw,50px)',fontWeight:900,margin:'0 0 14px',lineHeight:1.2}}>
               Fresh Fish<br/>
@@ -189,8 +189,8 @@ border: i===0 ? 'none' : '1.5px solid #eee',
 <div style={{background:'#FFF8E7',borderBottom:'2px solid #F4A623',padding:'10px 20px',display:'flex',alignItems:'center',gap:'12px',flexWrap:'wrap'}}>
 <span style={{fontSize:'20px'}}>⏰</span>
 <div style={{flex:1}}>
-<span style={{fontWeight:'bold',fontSize:'13px',color:'#333'}}>Pre-Order Closes at 10 PM! </span>
-<span style={{fontSize:'12px',color:'#666'}}>Kal subah 7-9 AM fresh delivery • Free on ₹499+</span>
+<span style={{fontWeight:'bold',fontSize:'13px',color:'#333'}}>Pre-Order Closes at 11 PM! </span>
+<span style={{fontSize:'12px',color:'#666'}}>Tomorrow morning 9 to 12 fresh delivery • Free on ₹499+</span>
 </div>
 <a href="https://wa.me/918287000582?text=Pre-order karna hai" style={{background:'#F4A623',color:'white',textDecoration:'none',padding:'7px 14px',borderRadius:'8px',fontWeight:'bold',fontSize:'12px',whiteSpace:'nowrap'}}>
           Pre-Order →
@@ -200,17 +200,19 @@ border: i===0 ? 'none' : '1.5px solid #eee',
 <section style={{background:'white',padding:'28px 20px'}}>
 <div style={{maxWidth:'1100px',margin:'0 auto'}}>
 <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:'16px'}}>
-<h2 style={{fontSize:'22px',fontWeight:900,margin:0}}>Always Available</h2>
+<h2 style={{fontSize:'22px',fontWeight:900,margin:0}}>Available</h2>
 <span style={{background:'#E8F8EE',color:'#16A34A',padding:'4px 10px',borderRadius:'20px',fontWeight:'bold',fontSize:'11px'}}></span>
 </div>
 <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(120px,1fr))',gap:'10px'}}>
 {[
-              {n:'Rohu',h:'रोहू',p:'₹180',u:'/500g',e:'🐟',c:'▲₹10',up:true},
-              {n:'Chicken',h:'चिकन',p:'₹220',u:'/kg',e:'🐔',c:'▼₹5',up:false},
-              {n:'Mutton',h:'मटन',p:'₹680',u:'/kg',e:'🐑',c:'▲₹20',up:true},
-              {n:'Prawns',h:'झींगा',p:'₹320',u:'/500g',e:'🦐',c:'▼₹15',up:false},
-              {n:'Hilsa',h:'इलिश',p:'₹380',u:'/500g',e:'🐠',c:'▲₹30',up:true},
-              {n:'Crab',h:'केकड़ा',p:'₹450',u:'/kg',e:'🦀',c:'▲₹25',up:true},
+              {n:'Rohu',h:'রুই',p:'₹180',u:'/500g',e:'🐟',c:'▲₹10',up:true},
+              {n:'Katla',h:'কাতলা',p:'₹160',u:'/500g',e:'🐡',c:'▲₹5',up:true},
+              {n:'Fresh Indian Baasa',h:'ভাসা',p:'₹200',u:'/500g',e:'🐠',c:'▼₹10',up:false},
+              {n:'Indian Prawns',h:'চিংড়ি',p:'₹320',u:'/500g',e:'🦐',c:'▼₹15',up:false},
+              {n:'Mathi',h:'মাথি',p:'₹150',u:'/500g',e:'🐟',c:'▲₹5',up:true},
+              {n:'Tilapia',h:'তেলাপিয়া',p:'₹140',u:'/500g',e:'🐡',c:'▼₹5',up:false},
+              {n:'Rupchanda',h:'রূপচাঁদা',p:'₹420',u:'/500g',e:'🐠',c:'▲₹20',up:true},
+              {n:'Mourala',h:'মৌরলা',p:'₹120',u:'/500g',e:'🐟',c:'▲₹5',up:true},
             ].map(i=>(
 <div key={i.n} style={{background:'#f9f9f9',borderRadius:'12px',padding:'12px',textAlign:'center',border:'1.5px solid #eee'}}>
 <div style={{fontSize:'28px',marginBottom:'4px'}}>{i.e}</div>
