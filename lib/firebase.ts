@@ -3,7 +3,7 @@ import { getAuth } from "firebase/auth";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBi48c1YkvZqi1_oFasXe2bqGRG2JkAGOU",
-  authDomain: "fishon-95c71.firebaseapp.com",
+  authDomain: "fishon.co.in",
   projectId: "fishon-95c71",
   storageBucket: "fishon-95c71.firebasestorage.app",
   messagingSenderId: "414551804155",
