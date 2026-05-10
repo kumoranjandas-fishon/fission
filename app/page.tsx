@@ -248,7 +248,7 @@ return (
 </span>
 </div>
 <div style={{padding:'10px'}}>
-{'stock' in i && i.stock && <div style={{color:'#DC2626',fontSize:'9px',fontWeight:'bold',marginBottom:'2px'}}>🔥 {i.stock}</div>}
+{('stock' in i) && (i as any).stock && <div style={{color:'#DC2626',fontSize:'9px',fontWeight:'bold',marginBottom:'2px'}}>🔥 {(i as any).stock}</div>}
 <div style={{fontWeight:'bold',fontSize:'13px'}}>{i.n}</div>
 <div style={{color:'#16A34A',fontSize:'10px'}}>{i.b}</div>
 <div style={{color:'#aaa',fontSize:'10px',marginBottom:'7px'}}>{i.s}</div>
