@@ -1,14 +1,20 @@
 "use client";
 import { useState } from "react";
 const ITEMS = [
-  {n:'Rohu Fish',b:'রুই মাছ',s:'500g • Cleaned',p:180,e:'🐟',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA'},
-  {n:'Hilsa (Ilish)',b:'ইলিশ মাছ',s:'500g • Seasonal',p:380,e:'🐠',badge:'⚡ Limited',bc:'#DC2626',bg:'#FFF0ED',stock:'Only 3kg!'},
-  {n:'Chicken Curry',b:'চিকেন',s:'1kg • With Skin',p:220,e:'🐔',badge:'Always Fresh',bc:'#16A34A',bg:'#F0FFF4'},
-  {n:'Mutton Cut',b:'মাটন',s:'500g • Bone-in',p:340,e:'🐑',badge:'Always Fresh',bc:'#16A34A',bg:'#F0FFF4'},
-  {n:'Tiger Prawns',b:'চিংড়ি',s:'250g • Deveined',p:320,e:'🦐',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA'},
-  {n:'Fresh Crab',b:'কাঁকড়া',s:'1pc • Live',p:450,e:'🦀',badge:'⚡ Limited',bc:'#DC2626',bg:'#FFFBEB',stock:'Only 5!'},
-  {n:'Katla Fish',b:'কাতলা মাছ',s:'500g • Cleaned',p:160,e:'🐡',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA'},
-  {n:'Chicken Keema',b:'কিমা',s:'500g • Boneless',p:180,e:'🍖',badge:'Always Fresh',bc:'#16A34A',bg:'#FFF0ED'},
+  {n:'Ilish Hilsa',b:'ইলিশ মাছ',s:'500g • Whole Cleaned',p:380,e:'🐠',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA'},
+  {n:'Tiger Prawns',b:'বাঘা চিংড়ি',s:'250g • Deveined',p:320,e:'🦐',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA'},
+  {n:'Golda Chingdi',b:'গলদা চিংড়ি',s:'250g • Whole',p:450,e:'🦐',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA'},
+  {n:'Pink Perch / Kilimeen',b:'কিলিমিন',s:'500g • Whole Cleaned',p:280,e:'🐟',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA'},
+  {n:'River Sole / Vaka Varal',b:'ভাকা ভারাল',s:'500g • Whole Cleaned',p:260,e:'🐟',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA'},
+  {n:'Singi / Kaari Catfish',b:'সিঙি মাছ',s:'Whole Cleaned',p:220,e:'🐟',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA'},
+  {n:'Kolkata Bhetki / Barramundi',b:'ভেটকী মাছ',s:'Whole Fish 1kg-2kg',p:520,e:'🐠',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA'},
+  {n:'Singhara / Aar Catfish',b:'সিঙারা মাছ',s:'Whole Fish 1kg-2kg',p:350,e:'🐟',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA'},
+  {n:'Boal Fish / Attu Vaala',b:'বোয়াল মাছ',s:'Whole Fish 1kg-2kg',p:380,e:'🐟',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA'},
+  {n:'Black Pomfret / Halwa Fish',b:'কালো পমফ্রেট',s:'Whole Fish 1.5kg-4kg',p:580,e:'🐠',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA'},
+  {n:'White Pomfret / Silver Pomfret',b:'রূপালী পমফ্রেট',s:'Whole Fish 200g-300g',p:650,e:'🐠',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA'},
+  {n:'Seer Fish / Surmai / Vanjaram',b:'সুরমাই মাছ',s:'Whole Fish 5kg+',p:750,e:'🐠',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA'},
+  {n:'Yellow Fin Tuna / Kera',b:'টুনা মাছ',s:'Whole Fish 4kg-9kg',p:820,e:'🐠',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA'},
+  {n:'Mackerel / Bangda / Ayala',b:'ম্যাকেরেল',s:'5-9 Count/kg • Whole',p:180,e:'🐟',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA'},
 ];
 const PINCODES: Record<string, {area:string, time:string}> = {
 '110092': {area:'Preet Vihar / Mandawali', time:'9 AM - 12 PM'},
@@ -229,7 +235,7 @@ border: i===0 ? 'none' : '1.5px solid #eee',
 {/* ITEMS */}
 <section id="menu" style={{background:'#f5f5f5',padding:'28px 20px'}}>
 <div style={{maxWidth:'1100px',margin:'0 auto'}}>
-<h2 style={{fontSize:'22px',fontWeight:900,marginBottom:'16px'}}>🛒 Fresh Items</h2>
+<h2 style={{fontSize:'22px',fontWeight:900,marginBottom:'16px'}}>🛒 Fresh Items (Pre-Order)</h2>
 <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(170px,1fr))',gap:'14px'}}>
 {ITEMS.map(i=>{
 const qty = getQty(i.n);
