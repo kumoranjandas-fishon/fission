@@ -21,7 +21,7 @@ type Order = {
   area: string;
   status: "new" | "confirmed" | "out" | "delivered";
   source: "website" | "whatsapp";
-  createdAt: Timestamp;
+  address?: string;
 };
 
 const STATUS_LABELS: Record<string, string> = {
