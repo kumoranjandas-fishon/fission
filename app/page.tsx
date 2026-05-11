@@ -4,7 +4,8 @@ import { db } from "@/lib/firebase";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 
 const ITEMS = [
-  {n:'Ilish Hilsa{n:'Rohu Fish',b:'রুই মাছ',s:'500g • Cleaned',p:180,e:'🐟',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA',img:'/rohu-whole.jpg'},',b:'ইলিশ মাছ',s:'500g • Whole Cleaned',p:380,e:'🐠',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA'},
+  {n:'Rohu Fish',b:'রুই মাছ',s:'500g • Cleaned',p:180,e:'🐟',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA',img:'/rohu-whole.jpg'},
+  {n:'Ilish Hilsa',b:'ইলিশ মাছ',s:'500g • Whole Cleaned',p:380,e:'🐠',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA'},
   {n:'Tiger Prawns',b:'বাঘা চিংড়ি',s:'250g • Deveined',p:320,e:'🦐',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA'},
   {n:'Golda Chingdi',b:'গলদা চিংড়ি',s:'250g • Whole',p:450,e:'🦐',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA'},
   {n:'Pink Perch / Kilimeen',b:'কিলিমিন',s:'500g • Whole Cleaned',p:280,e:'🐟',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA'},
@@ -285,8 +286,8 @@ export default function Home() {
               const qty = getQty(i.n);
               return (
                 <div key={i.n} style={{background:'white',borderRadius:'14px',overflow:'hidden',boxShadow:'0 2px 6px rgba(0,0,0,0.07)'}}>
-                  <div style={{background:i.bg,height:'95px',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'44px',position:'relative'}}>
-                    {i.e}
+                  <div style={{background:i.bg,height:'150px',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'44px',position:'relative',overflow:'hidden'}}>
+                    {('img' in i && (i as any).img) ? <img src={(i as any).img} alt={i.n} style={{width:'100%',height:'100%',objectFit:'cover',position:'absolute',inset:0}}/> : <span style={{fontSize:'44px'}}>{i.e}</span>}
                     <span style={{position:'absolute',top:'6px',left:'6px',background:i.bc,color:'white',fontSize:'8px',fontWeight:'bold',padding:'2px 6px',borderRadius:'4px'}}>{i.badge}</span>
                   </div>
                   <div style={{padding:'10px'}}>
