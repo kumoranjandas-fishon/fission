@@ -168,7 +168,7 @@ export default function AdminPage() {
                       ["🛒 Items", selected.items],
                       ["💰 Total", `₹${selected.total}`],
                       ["📍 Area", selected.area],
-                      ["📮 Pincode", selected.pincode],
+                      ["🏠 Address", selected.address],
                       ["📱 Source", selected.source === "whatsapp" ? "WhatsApp" : "Website"],
                     ].map(([label, value]) => (
                       <tr key={label}>
