@@ -4,21 +4,55 @@ import { db } from "@/lib/firebase";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 
 const ITEMS = [
-  {n:'Rohu Fish',b:'রুই মাছ',s:'500g • Cleaned & Cut',p:180,e:'🐟',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA',img:'/rohu-whole.jpg'},
-  {n:'Ilish Hilsa',b:'ইলিশ মাছ',s:'500g • Whole Cleaned',p:380,e:'🐠',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA'},
-  {n:'Tiger Prawns',b:'বাঘা চিংড়ি',s:'250g • Deveined',p:320,e:'🦐',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA'},
-  {n:'Golda Chingdi',b:'গলদা চিংড়ি',s:'250g • Whole',p:450,e:'🦐',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA'},
-  {n:'Pink Perch / Kilimeen',b:'কিলিমিন',s:'500g • Whole Cleaned',p:280,e:'🐟',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA'},
-  {n:'River Sole / Vaka Varal',b:'ভাকা ভারাল',s:'500g • Whole Cleaned',p:260,e:'🐟',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA'},
-  {n:'Singi / Kaari Catfish',b:'সিঙি মাছ',s:'Whole Cleaned',p:220,e:'🐟',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA'},
-  {n:'Kolkata Bhetki / Barramundi',b:'ভেটকী মাছ',s:'Whole Fish 1kg-2kg',p:520,e:'🐠',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA'},
-  {n:'Singhara / Aar Catfish',b:'সিঙারা মাছ',s:'Whole Fish 1kg-2kg',p:350,e:'🐟',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA'},
-  {n:'Boal Fish / Attu Vaala',b:'বোয়াল মাছ',s:'Whole Fish 1kg-2kg',p:380,e:'🐟',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA'},
-  {n:'Black Pomfret / Halwa Fish',b:'কালো পমফ্রেট',s:'Whole Fish 1.5kg-4kg',p:580,e:'🐠',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA'},
-  {n:'White Pomfret / Silver Pomfret',b:'রূপালী পমফ্রেট',s:'Whole Fish 200g-300g',p:650,e:'🐠',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA'},
-  {n:'Seer Fish / Surmai / Vanjaram',b:'সুরমাই মাছ',s:'Whole Fish 5kg+',p:750,e:'🐠',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA'},
-  {n:'Yellow Fin Tuna / Kera',b:'টুনা মাছ',s:'Whole Fish 4kg-9kg',p:820,e:'🐠',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA'},
-  {n:'Mackerel / Bangda / Ayala',b:'ম্যাকেরেল',s:'5-9 Count/kg • Whole',p:180,e:'🐟',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA'},
+  {n:'Rohu Fish',b:'রুই মাছ',s:'500g • Cleaned & Cut',p:180,e:'🐟',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA',img:'/rohu-whole.jpg',
+    desc:'Fresh Rohu from local market, cleaned and cut into pieces. Rich in Omega-3, perfect for curry.',tags:['High Protein','Omega-3','Best Seller']},
+  {n:'Ilish Hilsa',b:'ইলিশ মাছ',s:'500g • Whole Cleaned',p:380,e:'🐠',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA',
+    desc:'Premium Ilish Hilsa — the king of fish. Sourced fresh every morning. Ideal for Ilish Bhapa or Sorshe Ilish.',tags:['Premium','Seasonal','Bengali Favourite']},
+  {n:'Tiger Prawns',b:'বাঘা চিংড়ি',s:'250g • Deveined',p:320,e:'🦐',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA',
+    desc:'Large Tiger Prawns, deveined and cleaned. Great for grilling, frying or curry.',tags:['Deveined','Ready to Cook']},
+  {n:'Golda Chingdi',b:'গলদা চিংড়ি',s:'250g • Whole',p:450,e:'🦐',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA',
+    desc:'Fresh water Golda Prawns — a Bengali delicacy. Whole with shell, perfect for Chingdi Malaikari.',tags:['Delicacy','Bengali Special']},
+  {n:'Pink Perch / Kilimeen',b:'কিলিমিন',s:'500g • Whole Cleaned',p:280,e:'🐟',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA',
+    desc:'Pink Perch from coastal waters. Tender white flesh, great for fry or gravy.',tags:['Coastal Catch','Tender Flesh']},
+  {n:'River Sole / Vaka Varal',b:'ভাকা ভারাল',s:'500g • Whole Cleaned',p:260,e:'🐟',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA',
+    desc:'River Sole — flat fish with delicate flavour. Best for shallow fry with mustard.',tags:['Delicate Flavour']},
+  {n:'Singi / Kaari Catfish',b:'সিঙি মাছ',s:'Whole Cleaned',p:220,e:'🐟',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA',
+    desc:'Freshwater Catfish known for medicinal properties. Great for light curry or soup.',tags:['Medicinal','Freshwater']},
+  {n:'Kolkata Bhetki / Barramundi',b:'ভেটকী মাছ',s:'Whole Fish 1kg-2kg',p:520,e:'🐠',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA',
+    desc:'Premium Bhetki from Kolkata markets. Firm white flesh, perfect for Bhetki Paturi or fillet fry.',tags:['Premium','Firm Flesh','Bengali Classic']},
+  {n:'Singhara / Aar Catfish',b:'সিঙারা মাছ',s:'Whole Fish 1kg-2kg',p:350,e:'🐟',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA',
+    desc:'River Catfish with rich flavour. Best for spicy curry or mustard gravy.',tags:['River Fresh','Rich Flavour']},
+  {n:'Boal Fish / Attu Vaala',b:'বোয়াল মাছ',s:'Whole Fish 1kg-2kg',p:380,e:'🐟',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA',
+    desc:'Large freshwater Boal — prized for its fatty, flavourful flesh. Ideal for jhol or bhuna.',tags:['Fatty Fish','Rich Taste']},
+  {n:'Black Pomfret / Halwa Fish',b:'কালো পমফ্রেট',s:'Whole Fish 1.5kg-4kg',p:580,e:'🐠',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA',
+    desc:'Black Pomfret — a premium sea fish. Mild flavour, ideal for fry or tandoor.',tags:['Sea Fish','Premium','Mild Flavour']},
+  {n:'White Pomfret / Silver Pomfret',b:'রূপালী পমফ্রেট',s:'Whole Fish 200g-300g',p:650,e:'🐠',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA',
+    desc:'Silver Pomfret — the most prized sea fish. Delicate, buttery texture. Perfect for fry or steam.',tags:['Most Prized','Buttery','Sea Fish']},
+  {n:'Seer Fish / Surmai / Vanjaram',b:'সুরমাই মাছ',s:'Whole Fish 5kg+',p:750,e:'🐠',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA',
+    desc:'King Mackerel / Surmai — firm steaks with rich flavour. Great for fry, tikka or curry.',tags:['King Fish','Firm Steak']},
+  {n:'Yellow Fin Tuna / Kera',b:'টুনা মাছ',s:'Whole Fish 4kg-9kg',p:820,e:'🐠',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA',
+    desc:'Deep sea Yellow Fin Tuna. High protein, low fat. Excellent for sashimi, grilling or curry.',tags:['High Protein','Deep Sea','Rare Catch']},
+  {n:'Mackerel / Bangda / Ayala',b:'ম্যাকেরেল',s:'5-9 Count/kg • Whole',p:180,e:'🐟',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA',
+    desc:'Fresh Mackerel — affordable and nutritious. High in Omega-3. Best for fry or curry.',tags:['Omega-3','Affordable','Nutritious']},
+];
+
+const AVAILABLE_ITEMS = [
+  {n:'Rohu',h:'Labeo rohita',p:180,u:'/500g',e:'🐟',c:'▲₹10',up:true,
+    desc:'Fresh Rohu fish, cleaned and ready. Same day delivery possible.',tags:['Same Day','Freshwater']},
+  {n:'Katla',h:'Catla catla',p:160,u:'/500g',e:'🐡',c:'▲₹5',up:true,
+    desc:'Fresh Katla fish. Excellent for mustard curry or simple jhol.',tags:['Same Day','Freshwater']},
+  {n:'Indian Baasa',h:'Pangasius',p:200,u:'/500g',e:'🐠',c:'▼₹10',up:false,
+    desc:'Mild flavoured Baasa, boneless cuts available. Great for fry.',tags:['Mild Flavour','Same Day']},
+  {n:'Prawns',h:'Penaeus',p:320,u:'/500g',e:'🦐',c:'▼₹15',up:false,
+    desc:'Fresh sea prawns. Cleaned and deveined on request.',tags:['Same Day','Sea Fresh']},
+  {n:'Hilsa',h:'Tenualosa ilisha',p:380,u:'/500g',e:'🐠',c:'▲₹30',up:true,
+    desc:'Fresh Hilsa — limited stock daily. Order early to avoid missing out.',tags:['Limited Stock','Premium']},
+  {n:'Tilapia',h:'Oreochromis',p:140,u:'/500g',e:'🐡',c:'▼₹5',up:false,
+    desc:'Farm-raised Tilapia. Affordable and protein-rich. Good for light curry.',tags:['Farm Fresh','Affordable']},
+  {n:'Rupchanda',h:'Pampus argenteus',p:420,u:'/500g',e:'🐠',c:'▲₹20',up:true,
+    desc:'Silver Pomfret — premium quality available today. Order fast.',tags:['Premium','Limited']},
+  {n:'Mourala',h:'Amblypharyngodon',p:120,u:'/500g',e:'🐟',c:'▲₹5',up:true,
+    desc:'Small freshwater Mourala. Perfect for crispy fry. Bengali favourite.',tags:['Bengali Favourite','Crispy Fry']},
 ];
 
 const PINCODES: Record<string, {area:string, time:string}> = {
@@ -35,6 +69,9 @@ const PINCODES: Record<string, {area:string, time:string}> = {
 
 type CartItem = {n:string, p:number, e:string, qty:number};
 type Address = {name:string; phone:string; flat:string; building:string; street:string; landmark:string; instructions:string;};
+type ModalItem = {n:string; b?:string; s?:string; h?:string; p:number; e:string; desc?:string; tags?:string[]; img?:string; badge?:string; u?:string; type:'preorder'|'available'};
+
+const inputStyle: React.CSSProperties = {width:'100%',padding:'11px 14px',borderRadius:'10px',border:'1.5px solid #e2e8f0',fontSize:'14px',marginBottom:'10px',boxSizing:'border-box',outline:'none',color:'#0f172a'};
 
 export default function Home() {
   const [cart, setCart] = useState<CartItem[]>([]);
@@ -47,11 +84,12 @@ export default function Home() {
   const [address, setAddress] = useState<Address>({name:'',phone:'',flat:'',building:'',street:'',landmark:'',instructions:''});
   const [orderLoading, setOrderLoading] = useState(false);
   const [orderId, setOrderId] = useState('');
+  const [modalItem, setModalItem] = useState<ModalItem|null>(null);
 
   const totalItems = cart.reduce((s,i)=>s+i.qty,0);
   const totalPrice = cart.reduce((s,i)=>s+i.p*i.qty,0);
 
-  const addToCart = (item: typeof ITEMS[0]) => {
+  const addToCart = (item: {n:string, p:number, e:string}) => {
     setCart(prev => {
       const exists = prev.find(c=>c.n===item.n);
       if(exists) return prev.map(c=>c.n===item.n?{...c,qty:c.qty+1}:c);
@@ -98,29 +136,26 @@ export default function Home() {
     setOrderLoading(false);
   };
 
-  const inputStyle = {width:'100%',padding:'10px 14px',border:'1.5px solid #e5e7eb',borderRadius:'8px',fontSize:'14px',outline:'none',marginBottom:'10px',boxSizing:'border-box' as const,fontFamily:'sans-serif'};
-
   return (
-    <main style={{fontFamily:"'Segoe UI', sans-serif",margin:0,padding:0,background:'#f9fafb'}}>
+    <main style={{fontFamily:'-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif',minHeight:'100vh',background:'#f9fafb'}}>
 
-      {/* TOP BAR */}
-      <div style={{background:'#0f172a',padding:'8px 20px',textAlign:'center'}}>
-        <span style={{color:'#94a3b8',fontSize:'12px'}}>
-          🎉 Free Delivery on orders above ₹499 &nbsp;•&nbsp; Order by 11 PM for next morning delivery
-        </span>
+      {/* ANNOUNCEMENT BAR */}
+      <div style={{background:'#0f172a',color:'white',textAlign:'center',padding:'8px 16px',fontSize:'12px',fontWeight:500,letterSpacing:'0.3px'}}>
+        🎉 Free Delivery on orders above ₹499 &nbsp;•&nbsp; Order by 11 PM for next morning delivery
       </div>
 
       {/* HEADER */}
-      <header style={{background:'white',padding:'14px 24px',boxShadow:'0 1px 3px rgba(0,0,0,0.08)',position:'sticky',top:0,zIndex:100,borderBottom:'1px solid #f1f5f9'}}>
-        <div style={{maxWidth:'1200px',margin:'0 auto',display:'flex',alignItems:'center',gap:'20px',flexWrap:'wrap'}}>
+      <header style={{background:'white',borderBottom:'1px solid #f1f5f9',padding:'12px 24px',position:'sticky',top:0,zIndex:100,boxShadow:'0 1px 8px rgba(0,0,0,0.06)'}}>
+        <div style={{maxWidth:'1200px',margin:'0 auto',display:'flex',alignItems:'center',gap:'16px',flexWrap:'wrap'}}>
           {/* Logo */}
-          <div style={{display:'flex',alignItems:'center',gap:'10px',textDecoration:'none'}}>
-            <div style={{background:'#DC2626',borderRadius:'10px',width:'40px',height:'40px',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'22px'}}>🐟</div>
+          <div style={{display:'flex',alignItems:'center',gap:'10px',minWidth:'140px'}}>
+            <div style={{width:'38px',height:'38px',background:'#DC2626',borderRadius:'10px',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'20px'}}>🐟</div>
             <div>
-              <div style={{fontWeight:800,fontSize:'20px',letterSpacing:'-0.5px'}}>
-                <span style={{color:'#DC2626'}}>Fish</span><span style={{color:'#16A34A',fontStyle:'italic'}}>on</span>
+              <div style={{fontWeight:900,fontSize:'20px',lineHeight:1}}>
+                <span style={{color:'#DC2626'}}>Fish</span>
+                <span style={{color:'#16A34A',fontStyle:'italic'}}>on</span>
               </div>
-              <div style={{color:'#94a3b8',fontSize:'9px',letterSpacing:'1.5px',fontWeight:600}}>FRESH CATCH DAILY</div>
+              <div style={{fontSize:'9px',color:'#94a3b8',fontWeight:600,letterSpacing:'1px'}}>FRESH CATCH DAILY</div>
             </div>
           </div>
 
@@ -203,7 +238,50 @@ export default function Home() {
         </div>
       </section>
 
-      {/* PRE ORDER STRIP */}
+      {/* RATES — Available Items */}
+      <section style={{background:'white',padding:'32px 24px',borderBottom:'1px solid #f1f5f9'}}>
+        <div style={{maxWidth:'1200px',margin:'0 auto'}}>
+          <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:'20px'}}>
+            <div>
+              <h2 style={{fontSize:'22px',fontWeight:800,margin:'0 0 4px',color:'#0f172a'}}>Available Now</h2>
+              <p style={{fontSize:'13px',color:'#64748b',margin:0}}>In stock • Same day delivery possible</p>
+            </div>
+            <span style={{background:'#dcfce7',color:'#16A34A',padding:'4px 12px',borderRadius:'20px',fontWeight:700,fontSize:'12px'}}>✓ Fresh Stock</span>
+          </div>
+          <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(130px,1fr))',gap:'12px'}}>
+            {AVAILABLE_ITEMS.map(i=>{
+              const qty = getQty(i.n);
+              return (
+                <div key={i.n}
+                  onClick={()=>setModalItem({n:i.n,h:i.h,p:i.p,e:i.e,desc:i.desc,tags:i.tags,u:i.u,type:'available'})}
+                  style={{background:'#f8fafc',borderRadius:'12px',padding:'14px',textAlign:'center',border:'1.5px solid #e2e8f0',cursor:'pointer',transition:'box-shadow 0.2s',position:'relative'}}>
+                  <div style={{fontSize:'30px',marginBottom:'6px'}}>{i.e}</div>
+                  <div style={{fontSize:'13px',fontWeight:700,color:'#0f172a'}}>{i.n}</div>
+                  <div style={{fontSize:'10px',color:'#94a3b8',marginBottom:'6px',fontStyle:'italic'}}>{i.h}</div>
+                  <div style={{fontSize:'18px',fontWeight:900,color:'#0f172a'}}>{i.p}</div>
+                  <div style={{fontSize:'10px',color:'#64748b'}}>{i.u}</div>
+                  <div style={{fontSize:'11px',fontWeight:700,color:i.up?'#DC2626':'#16A34A',marginTop:'4px',marginBottom:'8px'}}>{i.c}</div>
+                  {/* Add to cart inline - stop propagation */}
+                  <div onClick={e=>e.stopPropagation()}>
+                    {qty === 0 ? (
+                      <button onClick={()=>addToCart({n:i.n,p:i.p,e:i.e})}
+                        style={{background:'#DC2626',color:'white',border:'none',padding:'6px 14px',borderRadius:'8px',fontSize:'11px',fontWeight:700,cursor:'pointer',width:'100%'}}>+ Add</button>
+                    ) : (
+                      <div style={{display:'flex',alignItems:'center',justifyContent:'center',gap:'6px'}}>
+                        <button onClick={()=>removeFromCart(i.n)} style={{background:'#f1f5f9',border:'none',width:'26px',height:'26px',borderRadius:'6px',fontWeight:700,cursor:'pointer',fontSize:'14px',color:'#334155'}}>−</button>
+                        <span style={{fontWeight:900,fontSize:'14px',minWidth:'18px',textAlign:'center',color:'#0f172a'}}>{qty}</span>
+                        <button onClick={()=>addToCart({n:i.n,p:i.p,e:i.e})} style={{background:'#DC2626',color:'white',border:'none',width:'26px',height:'26px',borderRadius:'6px',fontWeight:700,cursor:'pointer',fontSize:'14px'}}>+</button>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* PRE ORDER STRIP — "Fresh Catch Pre-Order" heading ke bilkul upar */}
       <div style={{background:'#fffbeb',borderBottom:'2px solid #f59e0b',padding:'12px 24px',display:'flex',alignItems:'center',gap:'16px',flexWrap:'wrap'}}>
         <div style={{display:'flex',alignItems:'center',gap:'8px',flex:1}}>
           <span style={{fontSize:'18px'}}>⏰</span>
@@ -217,40 +295,6 @@ export default function Home() {
         </a>
       </div>
 
-      {/* RATES — Available Items */}
-      <section style={{background:'white',padding:'32px 24px',borderBottom:'1px solid #f1f5f9'}}>
-        <div style={{maxWidth:'1200px',margin:'0 auto'}}>
-          <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:'20px'}}>
-            <div>
-              <h2 style={{fontSize:'22px',fontWeight:800,margin:'0 0 4px',color:'#0f172a'}}>Available Now</h2>
-              <p style={{fontSize:'13px',color:'#64748b',margin:0}}>In stock • Same day delivery possible</p>
-            </div>
-            <span style={{background:'#dcfce7',color:'#16A34A',padding:'4px 12px',borderRadius:'20px',fontWeight:700,fontSize:'12px'}}>✓ Fresh Stock</span>
-          </div>
-          <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(130px,1fr))',gap:'12px'}}>
-            {[
-              {n:'Rohu',h:'Labeo rohita',p:'₹180',u:'/500g',e:'🐟',c:'▲₹10',up:true},
-              {n:'Katla',h:'Catla catla',p:'₹160',u:'/500g',e:'🐡',c:'▲₹5',up:true},
-              {n:'Indian Baasa',h:'Pangasius',p:'₹200',u:'/500g',e:'🐠',c:'▼₹10',up:false},
-              {n:'Prawns',h:'Penaeus',p:'₹320',u:'/500g',e:'🦐',c:'▼₹15',up:false},
-              {n:'Hilsa',h:'Tenualosa ilisha',p:'₹380',u:'/500g',e:'🐠',c:'▲₹30',up:true},
-              {n:'Tilapia',h:'Oreochromis',p:'₹140',u:'/500g',e:'🐡',c:'▼₹5',up:false},
-              {n:'Rupchanda',h:'Pampus argenteus',p:'₹420',u:'/500g',e:'🐠',c:'▲₹20',up:true},
-              {n:'Mourala',h:'Amblypharyngodon',p:'₹120',u:'/500g',e:'🐟',c:'▲₹5',up:true},
-            ].map(i=>(
-              <div key={i.n} style={{background:'#f8fafc',borderRadius:'12px',padding:'14px',textAlign:'center',border:'1.5px solid #e2e8f0',transition:'border-color 0.2s'}}>
-                <div style={{fontSize:'30px',marginBottom:'6px'}}>{i.e}</div>
-                <div style={{fontSize:'13px',fontWeight:700,color:'#0f172a'}}>{i.n}</div>
-                <div style={{fontSize:'10px',color:'#94a3b8',marginBottom:'6px',fontStyle:'italic'}}>{i.h}</div>
-                <div style={{fontSize:'18px',fontWeight:900,color:'#0f172a'}}>{i.p}</div>
-                <div style={{fontSize:'10px',color:'#64748b'}}>{i.u}</div>
-                <div style={{fontSize:'11px',fontWeight:700,color:i.up?'#DC2626':'#16A34A',marginTop:'4px'}}>{i.c}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* PRE-ORDER MENU */}
       <section id="menu" style={{background:'#f9fafb',padding:'32px 24px'}}>
         <div style={{maxWidth:'1200px',margin:'0 auto'}}>
@@ -262,7 +306,9 @@ export default function Home() {
             {ITEMS.map(i=>{
               const qty = getQty(i.n);
               return (
-                <div key={i.n} style={{background:'white',borderRadius:'14px',overflow:'hidden',boxShadow:'0 1px 3px rgba(0,0,0,0.06)',border:'1px solid #f1f5f9',transition:'box-shadow 0.2s'}}>
+                <div key={i.n}
+                  onClick={()=>setModalItem({n:i.n,b:i.b,s:i.s,p:i.p,e:i.e,desc:i.desc,tags:i.tags,img:(i as any).img,badge:i.badge,type:'preorder'})}
+                  style={{background:'white',borderRadius:'14px',overflow:'hidden',boxShadow:'0 1px 3px rgba(0,0,0,0.06)',border:'1px solid #f1f5f9',cursor:'pointer',transition:'box-shadow 0.2s'}}>
                   <div style={{height:'160px',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'50px',position:'relative',overflow:'hidden',background:i.bg}}>
                     {('img' in i && (i as any).img) ?
                       <img src={(i as any).img} alt={i.n} style={{width:'100%',height:'100%',objectFit:'cover',position:'absolute',inset:0}}/> :
@@ -276,15 +322,17 @@ export default function Home() {
                     <div style={{color:'#94a3b8',fontSize:'11px',marginBottom:'10px'}}>{i.s}</div>
                     <div style={{display:'flex',justifyContent:'space-between',alignItems:'center'}}>
                       <span style={{fontWeight:900,fontSize:'16px',color:'#0f172a'}}>₹{i.p}</span>
-                      {qty === 0 ? (
-                        <button onClick={()=>addToCart(i)} style={{background:'#DC2626',color:'white',border:'none',padding:'6px 14px',borderRadius:'8px',fontSize:'12px',fontWeight:700,cursor:'pointer'}}>+ Add</button>
-                      ) : (
-                        <div style={{display:'flex',alignItems:'center',gap:'8px'}}>
-                          <button onClick={()=>removeFromCart(i.n)} style={{background:'#f1f5f9',border:'none',width:'26px',height:'26px',borderRadius:'6px',fontWeight:700,cursor:'pointer',fontSize:'14px',color:'#334155'}}>−</button>
-                          <span style={{fontWeight:900,fontSize:'14px',minWidth:'18px',textAlign:'center',color:'#0f172a'}}>{qty}</span>
-                          <button onClick={()=>addToCart(i)} style={{background:'#DC2626',color:'white',border:'none',width:'26px',height:'26px',borderRadius:'6px',fontWeight:700,cursor:'pointer',fontSize:'14px'}}>+</button>
-                        </div>
-                      )}
+                      <div onClick={e=>e.stopPropagation()}>
+                        {qty === 0 ? (
+                          <button onClick={()=>addToCart(i)} style={{background:'#DC2626',color:'white',border:'none',padding:'6px 14px',borderRadius:'8px',fontSize:'12px',fontWeight:700,cursor:'pointer'}}>+ Add</button>
+                        ) : (
+                          <div style={{display:'flex',alignItems:'center',gap:'8px'}}>
+                            <button onClick={()=>removeFromCart(i.n)} style={{background:'#f1f5f9',border:'none',width:'26px',height:'26px',borderRadius:'6px',fontWeight:700,cursor:'pointer',fontSize:'14px',color:'#334155'}}>−</button>
+                            <span style={{fontWeight:900,fontSize:'14px',minWidth:'18px',textAlign:'center',color:'#0f172a'}}>{qty}</span>
+                            <button onClick={()=>addToCart(i)} style={{background:'#DC2626',color:'white',border:'none',width:'26px',height:'26px',borderRadius:'6px',fontWeight:700,cursor:'pointer',fontSize:'14px'}}>+</button>
+                          </div>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -344,6 +392,77 @@ export default function Home() {
         </button>
       )}
 
+      {/* ============ PRODUCT DETAIL MODAL ============ */}
+      {modalItem && (
+        <div onClick={()=>setModalItem(null)}
+          style={{position:'fixed',inset:0,background:'rgba(15,23,42,0.75)',zIndex:400,display:'flex',alignItems:'center',justifyContent:'center',padding:'20px'}}>
+          <div onClick={e=>e.stopPropagation()}
+            style={{background:'white',borderRadius:'20px',width:'100%',maxWidth:'480px',overflow:'hidden',boxShadow:'0 20px 60px rgba(0,0,0,0.3)'}}>
+
+            {/* Image / Emoji area */}
+            <div style={{height:'220px',background: modalItem.type==='preorder' ? '#EBF5FA' : '#f0fdf4',display:'flex',alignItems:'center',justifyContent:'center',position:'relative'}}>
+              {modalItem.img ?
+                <img src={modalItem.img} alt={modalItem.n} style={{width:'100%',height:'100%',objectFit:'cover'}}/> :
+                <span style={{fontSize:'80px'}}>{modalItem.e}</span>
+              }
+              {modalItem.badge && (
+                <span style={{position:'absolute',top:'12px',left:'12px',background:'#0B4F6C',color:'white',fontSize:'10px',fontWeight:700,padding:'4px 10px',borderRadius:'20px'}}>{modalItem.badge}</span>
+              )}
+              <button onClick={()=>setModalItem(null)}
+                style={{position:'absolute',top:'12px',right:'12px',background:'rgba(255,255,255,0.9)',border:'none',borderRadius:'50%',width:'32px',height:'32px',cursor:'pointer',fontSize:'16px',fontWeight:700,color:'#334155'}}>✕</button>
+            </div>
+
+            {/* Content */}
+            <div style={{padding:'20px 24px 24px'}}>
+              <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginBottom:'8px'}}>
+                <div>
+                  <h2 style={{margin:'0 0 2px',fontSize:'20px',fontWeight:800,color:'#0f172a'}}>{modalItem.n}</h2>
+                  {modalItem.b && <div style={{color:'#16A34A',fontSize:'13px',fontWeight:500}}>{modalItem.b}</div>}
+                  {modalItem.h && <div style={{color:'#94a3b8',fontSize:'12px',fontStyle:'italic'}}>{modalItem.h}</div>}
+                </div>
+                <div style={{textAlign:'right'}}>
+                  <div style={{fontSize:'24px',fontWeight:900,color:'#DC2626'}}>₹{modalItem.p}</div>
+                  <div style={{fontSize:'11px',color:'#94a3b8'}}>{modalItem.s || modalItem.u || '/500g'}</div>
+                </div>
+              </div>
+
+              {modalItem.desc && (
+                <p style={{color:'#475569',fontSize:'13px',lineHeight:1.7,margin:'12px 0'}}>{modalItem.desc}</p>
+              )}
+
+              {modalItem.tags && modalItem.tags.length > 0 && (
+                <div style={{display:'flex',flexWrap:'wrap',gap:'6px',marginBottom:'16px'}}>
+                  {modalItem.tags.map(tag=>(
+                    <span key={tag} style={{background:'#f0fdf4',color:'#16A34A',fontSize:'11px',fontWeight:600,padding:'3px 10px',borderRadius:'20px',border:'1px solid #bbf7d0'}}>{tag}</span>
+                  ))}
+                </div>
+              )}
+
+              {/* Add to cart in modal */}
+              {(() => {
+                const qty = getQty(modalItem.n);
+                return qty === 0 ? (
+                  <button
+                    onClick={()=>{ addToCart({n:modalItem.n,p:modalItem.p,e:modalItem.e}); setModalItem(null); }}
+                    style={{width:'100%',background:'#DC2626',color:'white',border:'none',padding:'14px',borderRadius:'12px',fontWeight:700,fontSize:'15px',cursor:'pointer'}}>
+                    🛒 Add to Cart — ₹{modalItem.p}
+                  </button>
+                ) : (
+                  <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',background:'#f8fafc',borderRadius:'12px',padding:'10px 16px',border:'1.5px solid #e2e8f0'}}>
+                    <button onClick={()=>removeFromCart(modalItem.n)} style={{background:'white',border:'1.5px solid #e2e8f0',width:'36px',height:'36px',borderRadius:'8px',fontWeight:700,cursor:'pointer',fontSize:'18px',color:'#334155'}}>−</button>
+                    <div style={{textAlign:'center'}}>
+                      <div style={{fontWeight:900,fontSize:'18px',color:'#0f172a'}}>{qty} in cart</div>
+                      <div style={{fontSize:'12px',color:'#DC2626',fontWeight:600}}>₹{modalItem.p*qty} total</div>
+                    </div>
+                    <button onClick={()=>addToCart({n:modalItem.n,p:modalItem.p,e:modalItem.e})} style={{background:'#DC2626',color:'white',border:'none',width:'36px',height:'36px',borderRadius:'8px',fontWeight:700,cursor:'pointer',fontSize:'18px'}}>+</button>
+                  </div>
+                );
+              })()}
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* CART MODAL */}
       {showCart && (
         <div style={{position:'fixed',inset:0,background:'rgba(15,23,42,0.7)',zIndex:300,display:'flex',alignItems:'flex-end',justifyContent:'center'}}>
@@ -375,7 +494,7 @@ export default function Home() {
                         <div style={{display:'flex',alignItems:'center',gap:'8px'}}>
                           <button onClick={()=>removeFromCart(item.n)} style={{background:'#f1f5f9',border:'none',width:'28px',height:'28px',borderRadius:'7px',fontWeight:700,cursor:'pointer',color:'#334155'}}>−</button>
                           <span style={{fontWeight:900,minWidth:'20px',textAlign:'center',color:'#0f172a'}}>{item.qty}</span>
-                          <button onClick={()=>addToCart(ITEMS.find(i=>i.n===item.n)!)} style={{background:'#DC2626',color:'white',border:'none',width:'28px',height:'28px',borderRadius:'7px',fontWeight:700,cursor:'pointer'}}>+</button>
+                          <button onClick={()=>addToCart(ITEMS.find(i=>i.n===item.n) || item)} style={{background:'#DC2626',color:'white',border:'none',width:'28px',height:'28px',borderRadius:'7px',fontWeight:700,cursor:'pointer'}}>+</button>
                         </div>
                       </div>
                     ))}
@@ -388,7 +507,7 @@ export default function Home() {
                         <div style={{color:'#64748b',fontSize:'12px',marginTop:'4px'}}>Add ₹{499-totalPrice} more for free delivery</div>}
                     </div>
                     <button onClick={()=>setCheckoutStep('pincode')} style={{width:'100%',background:'#DC2626',color:'white',border:'none',padding:'14px',borderRadius:'10px',fontWeight:700,fontSize:'15px',cursor:'pointer',marginTop:'14px'}}>
-                      Check Delivery → 
+                      Check Delivery →
                     </button>
                   </>
                 )}
