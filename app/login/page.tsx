@@ -48,7 +48,7 @@ export default function LoginPage() {
       {/* Card */}
       <div style={{background:'white',borderRadius:'24px',padding:'36px 32px',width:'100%',maxWidth:'420px',boxShadow:'0 20px 60px rgba(0,0,0,0.4)'}}>
         <h1 style={{margin:'0 0 6px',fontSize:'24px',fontWeight:800,color:'#0f172a',textAlign:'center'}}>Welcome Back! 👋</h1>
-        <p style={{margin:'0 0 28px',color:'#64748b',fontSize:'14px',textAlign:'center'}}>Enter your phone number to track your orders</p>
+        <p style={{margin:'0 0 28px',color:'#64748b',fontSize:'14px',textAlign:'center'}}>Enter your phone number to login</p>
 
         {/* Phone Input */}
         <div style={{marginBottom:'16px'}}>
@@ -77,7 +77,7 @@ export default function LoginPage() {
           onClick={handleLogin}
           disabled={loading}
           style={{width:'100%',background:'#DC2626',color:'white',border:'none',padding:'14px',borderRadius:'12px',fontWeight:700,fontSize:'15px',cursor:'pointer',opacity:loading?0.7:1,marginBottom:'16px'}}>
-          {loading ? '⏳ Checking...' : '🔍 Track My Orders'}
+          {loading ? '⏳ Checking...' : '🔒 Login'}
         </button>
 
         {/* Divider */}
