@@ -5,7 +5,7 @@ import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 
 const ITEMS = [
   {n:'Rohu Fish',b:'রুই মাছ',s:'500g • Cleaned & Cut',p:180,e:'🐟',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA',
-    img:'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Rohu_fish.jpg/400px-Rohu_fish.jpg',
+    img:'https://m.media-amazon.com/images/I/51vddLa1uUL._AC_UF894,1000_QL80_.jpg',
     desc:'Fresh Rohu from local market, cleaned and cut into pieces. Rich in Omega-3, perfect for curry.',tags:['High Protein','Omega-3','Best Seller']},
   {n:'Ilish Hilsa',b:'ইলিশ মাছ',s:'500g • Whole Cleaned',p:380,e:'🐠',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA',
     img:'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/Hilsha_fish.jpg/400px-Hilsha_fish.jpg',
