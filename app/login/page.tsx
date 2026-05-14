@@ -186,8 +186,64 @@ export default function Home() {
       </header>
 
       {/* HERO */}
-      <section style={{background:'linear-gradient(135deg,#0f172a 0%,#1e1b4b 60%,#0f172a 100%)',padding:'80px 24px',position:'relative',overflow:'hidden'}}>
-        <div style={{position:'absolute',inset:0,backgroundImage:'radial-gradient(circle at 15% 50%,rgba(220,38,38,0.18) 0%,transparent 55%),radial-gradient(circle at 85% 50%,rgba(22,163,74,0.1) 0%,transparent 50%)'}}></div>
+      <section style={{background:'linear-gradient(180deg,#0a1628 0%,#0d2137 40%,#0a1628 100%)',padding:'80px 24px',position:'relative',overflow:'hidden'}}>
+
+        {/* Animated CSS */}
+        <style>{`
+          @keyframes fishSwim1 {
+            0%   { transform: translateX(-120px) translateY(0px) scaleX(1); opacity:0; }
+            10%  { opacity: 0.18; }
+            90%  { opacity: 0.18; }
+            100% { transform: translateX(110vw) translateY(-30px) scaleX(1); opacity:0; }
+          }
+          @keyframes fishSwim2 {
+            0%   { transform: translateX(110vw) translateY(0px) scaleX(-1); opacity:0; }
+            10%  { opacity: 0.13; }
+            90%  { opacity: 0.13; }
+            100% { transform: translateX(-120px) translateY(20px) scaleX(-1); opacity:0; }
+          }
+          @keyframes fishSwim3 {
+            0%   { transform: translateX(-120px) translateY(0px) scaleX(1); opacity:0; }
+            10%  { opacity: 0.1; }
+            90%  { opacity: 0.1; }
+            100% { transform: translateX(110vw) translateY(10px) scaleX(1); opacity:0; }
+          }
+          @keyframes bubble {
+            0%   { transform: translateY(0px); opacity:0.4; }
+            100% { transform: translateY(-80px); opacity:0; }
+          }
+          @keyframes glow {
+            0%,100% { opacity:0.15; }
+            50%      { opacity:0.25; }
+          }
+        `}</style>
+
+        {/* Underwater glow */}
+        <div style={{position:'absolute',inset:0,backgroundImage:'radial-gradient(ellipse at 20% 60%,rgba(0,100,200,0.2) 0%,transparent 55%),radial-gradient(ellipse at 80% 40%,rgba(0,60,120,0.15) 0%,transparent 50%)',animation:'glow 4s ease-in-out infinite'}}></div>
+
+        {/* Floating fish silhouettes */}
+        {/* Fish 1 - big, slow */}
+        <div style={{position:'absolute',top:'20%',left:0,fontSize:'48px',animation:'fishSwim1 18s linear infinite',animationDelay:'0s',pointerEvents:'none'}}>🐟</div>
+        {/* Fish 2 - medium, opposite direction */}
+        <div style={{position:'absolute',top:'55%',right:0,fontSize:'36px',animation:'fishSwim2 14s linear infinite',animationDelay:'3s',pointerEvents:'none'}}>🐠</div>
+        {/* Fish 3 - small */}
+        <div style={{position:'absolute',top:'70%',left:0,fontSize:'24px',animation:'fishSwim1 22s linear infinite',animationDelay:'7s',pointerEvents:'none'}}>🐡</div>
+        {/* Fish 4 - prawn */}
+        <div style={{position:'absolute',top:'35%',right:0,fontSize:'30px',animation:'fishSwim2 16s linear infinite',animationDelay:'11s',pointerEvents:'none'}}>🦐</div>
+        {/* Fish 5 */}
+        <div style={{position:'absolute',top:'80%',left:0,fontSize:'40px',animation:'fishSwim1 20s linear infinite',animationDelay:'5s',pointerEvents:'none'}}>🐟</div>
+        {/* Fish 6 - small opposite */}
+        <div style={{position:'absolute',top:'15%',right:0,fontSize:'28px',animation:'fishSwim2 12s linear infinite',animationDelay:'9s',pointerEvents:'none'}}>🐠</div>
+
+        {/* Bubbles */}
+        {[{l:'10%',d:'0s',s:'3px'},{l:'25%',d:'1.5s',s:'5px'},{l:'45%',d:'0.8s',s:'4px'},{l:'60%',d:'2s',s:'3px'},{l:'75%',d:'0.3s',s:'6px'},{l:'88%',d:'1.2s',s:'4px'}].map((b,i)=>(
+          <div key={i} style={{position:'absolute',bottom:'10%',left:b.l,width:b.s,height:b.s,borderRadius:'50%',background:'rgba(100,180,255,0.3)',animation:`bubble ${3+i*0.5}s ease-out infinite`,animationDelay:b.d,pointerEvents:'none'}}></div>
+        ))}
+
+        {/* Light rays from top */}
+        <div style={{position:'absolute',top:0,left:'30%',width:'2px',height:'100%',background:'linear-gradient(180deg,rgba(100,200,255,0.08) 0%,transparent 70%)',transform:'rotate(-15deg)',transformOrigin:'top'}}></div>
+        <div style={{position:'absolute',top:0,left:'60%',width:'1px',height:'100%',background:'linear-gradient(180deg,rgba(100,200,255,0.06) 0%,transparent 60%)',transform:'rotate(10deg)',transformOrigin:'top'}}></div>
+
         <div style={{maxWidth:'860px',margin:'0 auto',position:'relative',zIndex:2,textAlign:'center'}}>
 
           {/* Badge */}
