@@ -186,54 +186,101 @@ export default function Home() {
       </header>
 
       {/* HERO */}
-      <section style={{background:'linear-gradient(135deg,#0f172a 0%,#1e1b4b 50%,#0f172a 100%)',padding:'60px 24px',position:'relative',overflow:'hidden'}}>
-        <div style={{position:'absolute',inset:0,backgroundImage:'radial-gradient(circle at 20% 50%,rgba(220,38,38,0.15) 0%,transparent 60%),radial-gradient(circle at 80% 30%,rgba(22,163,74,0.1) 0%,transparent 50%)'}}></div>
-        <div style={{maxWidth:'1200px',margin:'0 auto',position:'relative',zIndex:2,display:'flex',alignItems:'center',justifyContent:'space-between',gap:'40px',flexWrap:'wrap'}}>
-          <div style={{flex:'1',minWidth:'280px'}}>
-            <div style={{display:'inline-flex',alignItems:'center',gap:'6px',background:'rgba(220,38,38,0.2)',border:'1px solid rgba(220,38,38,0.4)',padding:'5px 14px',borderRadius:'20px',marginBottom:'20px'}}>
-              <span style={{color:'#fca5a5',fontSize:'12px',fontWeight:600}}>⏰ ORDER BY 11 PM — DELIVERED FRESH TOMORROW</span>
-            </div>
-            <h1 style={{color:'white',fontSize:'clamp(30px,4vw,52px)',fontWeight:900,margin:'0 0 16px',lineHeight:1.15,letterSpacing:'-1px'}}>
-              Fresh Fish<br/>
-              <span style={{color:'#DC2626'}}>Delivered</span> to<br/>
-              Your Doorstep 🐟
-            </h1>
-            <p style={{color:'#94a3b8',fontSize:'16px',marginBottom:'28px',maxWidth:'440px',lineHeight:1.7}}>
-              Sourced fresh from the market every morning. Delivered to your home 9 AM - 12 PM. No chemicals, no preservatives.
-            </p>
-            <div style={{display:'flex',gap:'24px',marginBottom:'32px'}}>
-              {[{n:'100%',l:'Chemical Free'},{n:'Fresh',l:'Every Morning'},{n:'9-12 AM',l:'Delivery Window'}].map(s=>(
-                <div key={s.l} style={{borderLeft:'2px solid #DC2626',paddingLeft:'12px'}}>
-                  <div style={{color:'white',fontWeight:800,fontSize:'18px'}}>{s.n}</div>
-                  <div style={{color:'#64748b',fontSize:'11px',marginTop:'2px'}}>{s.l}</div>
-                </div>
-              ))}
-            </div>
-            <div style={{display:'flex',gap:'12px',flexWrap:'wrap'}}>
-              <a href="#menu" style={{background:'#DC2626',color:'white',textDecoration:'none',padding:'13px 28px',borderRadius:'10px',fontWeight:700,fontSize:'14px',display:'flex',alignItems:'center',gap:'8px'}}>
-                🛒 Order Now
-              </a>
-              <a href="https://wa.me/918287000582?text=Hi! I want to order fish" style={{background:'rgba(255,255,255,0.08)',color:'white',textDecoration:'none',padding:'13px 28px',borderRadius:'10px',fontWeight:700,fontSize:'14px',border:'1px solid rgba(255,255,255,0.15)',display:'flex',alignItems:'center',gap:'8px'}}>
-                💬 WhatsApp Order
-              </a>
-            </div>
+      <section style={{background:'linear-gradient(180deg,#0a1628 0%,#0d2137 40%,#0a1628 100%)',padding:'80px 24px',position:'relative',overflow:'hidden'}}>
+
+        {/* Animated CSS */}
+        <style>{`
+          @keyframes fishSwim1 {
+            0%   { transform: translateX(-120px) translateY(0px) scaleX(1); opacity:0; }
+            10%  { opacity: 0.18; }
+            90%  { opacity: 0.18; }
+            100% { transform: translateX(110vw) translateY(-30px) scaleX(1); opacity:0; }
+          }
+          @keyframes fishSwim2 {
+            0%   { transform: translateX(110vw) translateY(0px) scaleX(-1); opacity:0; }
+            10%  { opacity: 0.13; }
+            90%  { opacity: 0.13; }
+            100% { transform: translateX(-120px) translateY(20px) scaleX(-1); opacity:0; }
+          }
+          @keyframes fishSwim3 {
+            0%   { transform: translateX(-120px) translateY(0px) scaleX(1); opacity:0; }
+            10%  { opacity: 0.1; }
+            90%  { opacity: 0.1; }
+            100% { transform: translateX(110vw) translateY(10px) scaleX(1); opacity:0; }
+          }
+          @keyframes bubble {
+            0%   { transform: translateY(0px); opacity:0.4; }
+            100% { transform: translateY(-80px); opacity:0; }
+          }
+          @keyframes glow {
+            0%,100% { opacity:0.15; }
+            50%      { opacity:0.25; }
+          }
+        `}</style>
+
+        {/* Underwater glow */}
+        <div style={{position:'absolute',inset:0,backgroundImage:'radial-gradient(ellipse at 20% 60%,rgba(0,100,200,0.2) 0%,transparent 55%),radial-gradient(ellipse at 80% 40%,rgba(0,60,120,0.15) 0%,transparent 50%)',animation:'glow 4s ease-in-out infinite'}}></div>
+
+        {/* Floating fish silhouettes */}
+        {/* Fish 1 - big, slow */}
+        <div style={{position:'absolute',top:'20%',left:0,fontSize:'48px',animation:'fishSwim1 18s linear infinite',animationDelay:'0s',pointerEvents:'none'}}>🐟</div>
+        {/* Fish 2 - medium, opposite direction */}
+        <div style={{position:'absolute',top:'55%',right:0,fontSize:'36px',animation:'fishSwim2 14s linear infinite',animationDelay:'3s',pointerEvents:'none'}}>🐠</div>
+        {/* Fish 3 - small */}
+        <div style={{position:'absolute',top:'70%',left:0,fontSize:'24px',animation:'fishSwim1 22s linear infinite',animationDelay:'7s',pointerEvents:'none'}}>🐡</div>
+        {/* Fish 4 - prawn */}
+        <div style={{position:'absolute',top:'35%',right:0,fontSize:'30px',animation:'fishSwim2 16s linear infinite',animationDelay:'11s',pointerEvents:'none'}}>🦐</div>
+        {/* Fish 5 */}
+        <div style={{position:'absolute',top:'80%',left:0,fontSize:'40px',animation:'fishSwim1 20s linear infinite',animationDelay:'5s',pointerEvents:'none'}}>🐟</div>
+        {/* Fish 6 - small opposite */}
+        <div style={{position:'absolute',top:'15%',right:0,fontSize:'28px',animation:'fishSwim2 12s linear infinite',animationDelay:'9s',pointerEvents:'none'}}>🐠</div>
+
+        {/* Bubbles */}
+        {[{l:'10%',d:'0s',s:'3px'},{l:'25%',d:'1.5s',s:'5px'},{l:'45%',d:'0.8s',s:'4px'},{l:'60%',d:'2s',s:'3px'},{l:'75%',d:'0.3s',s:'6px'},{l:'88%',d:'1.2s',s:'4px'}].map((b,i)=>(
+          <div key={i} style={{position:'absolute',bottom:'10%',left:b.l,width:b.s,height:b.s,borderRadius:'50%',background:'rgba(100,180,255,0.3)',animation:`bubble ${3+i*0.5}s ease-out infinite`,animationDelay:b.d,pointerEvents:'none'}}></div>
+        ))}
+
+        {/* Light rays from top */}
+        <div style={{position:'absolute',top:0,left:'30%',width:'2px',height:'100%',background:'linear-gradient(180deg,rgba(100,200,255,0.08) 0%,transparent 70%)',transform:'rotate(-15deg)',transformOrigin:'top'}}></div>
+        <div style={{position:'absolute',top:0,left:'60%',width:'1px',height:'100%',background:'linear-gradient(180deg,rgba(100,200,255,0.06) 0%,transparent 60%)',transform:'rotate(10deg)',transformOrigin:'top'}}></div>
+
+        <div style={{maxWidth:'860px',margin:'0 auto',position:'relative',zIndex:2,textAlign:'center'}}>
+
+          {/* Badge */}
+          <div style={{display:'inline-flex',alignItems:'center',gap:'8px',background:'rgba(220,38,38,0.15)',border:'1px solid rgba(220,38,38,0.35)',padding:'7px 18px',borderRadius:'30px',marginBottom:'28px'}}>
+            <span style={{color:'#fca5a5',fontSize:'12px',fontWeight:700,letterSpacing:'0.5px'}}>⏰ ORDER BY 11 PM — DELIVERED FRESH TOMORROW</span>
           </div>
 
-          {/* Featured items */}
-          <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'12px',flex:'1',minWidth:'240px',maxWidth:'340px'}}>
-            {[
-              {e:'🐠',n:'Ilish Hilsa',p:'₹380',t:'Pre-Order'},
-              {e:'🦐',n:'Tiger Prawns',p:'₹320',t:'Pre-Order'},
-              {e:'🐠',n:'White Pomfret',p:'₹650',t:'Pre-Order'},
-              {e:'🐟',n:'Mackerel',p:'₹180',t:'Pre-Order'},
-            ].map(i=>(
-              <div key={i.n} style={{background:'rgba(255,255,255,0.05)',borderRadius:'16px',padding:'16px',textAlign:'center',border:'1px solid rgba(255,255,255,0.08)',backdropFilter:'blur(10px)'}}>
-                <div style={{fontSize:'34px',marginBottom:'6px'}}>{i.e}</div>
-                <div style={{color:'white',fontWeight:700,fontSize:'13px'}}>{i.n}</div>
-                <div style={{color:'#DC2626',fontWeight:900,fontSize:'16px',margin:'3px 0'}}>{i.p}</div>
-                <div style={{background:'rgba(22,163,74,0.2)',color:'#4ade80',fontSize:'10px',padding:'2px 8px',borderRadius:'20px',display:'inline-block',fontWeight:600}}>{i.t}</div>
+          {/* Heading */}
+          <h1 style={{color:'white',fontSize:'clamp(36px,5vw,64px)',fontWeight:900,margin:'0 0 20px',lineHeight:1.1,letterSpacing:'-1.5px'}}>
+            Fresh Fish,{' '}
+            <span style={{color:'#DC2626'}}>Delivered</span>{' '}
+            to Your Doorstep 🐟
+          </h1>
+
+          {/* Subtext */}
+          <p style={{color:'#94a3b8',fontSize:'17px',marginBottom:'40px',maxWidth:'560px',lineHeight:1.75,margin:'0 auto 40px'}}>
+            Sourced fresh from the market every morning. Delivered to your home <strong style={{color:'white'}}>9 AM – 12 PM</strong>. No chemicals, no preservatives.
+          </p>
+
+          {/* Stats */}
+          <div style={{display:'flex',justifyContent:'center',gap:'40px',marginBottom:'44px',flexWrap:'wrap'}}>
+            {[{n:'100%',l:'Chemical Free'},{n:'15+',l:'Fish Varieties'},{n:'9–12 AM',l:'Delivery Window'},{n:'₹499+',l:'Free Delivery'}].map(s=>(
+              <div key={s.l} style={{textAlign:'center'}}>
+                <div style={{color:'white',fontWeight:900,fontSize:'22px'}}>{s.n}</div>
+                <div style={{color:'#64748b',fontSize:'12px',marginTop:'4px',fontWeight:500}}>{s.l}</div>
               </div>
             ))}
+          </div>
+
+          {/* CTA Buttons */}
+          <div style={{display:'flex',gap:'14px',justifyContent:'center',flexWrap:'wrap'}}>
+            <a href="#menu" style={{background:'#DC2626',color:'white',textDecoration:'none',padding:'15px 32px',borderRadius:'12px',fontWeight:700,fontSize:'15px',display:'flex',alignItems:'center',gap:'8px',boxShadow:'0 4px 24px rgba(220,38,38,0.4)'}}>
+              🛒 Order Now
+            </a>
+            <a href="https://wa.me/918287000582?text=Hi! I want to order fish" style={{background:'rgba(255,255,255,0.08)',color:'white',textDecoration:'none',padding:'15px 32px',borderRadius:'12px',fontWeight:700,fontSize:'15px',border:'1px solid rgba(255,255,255,0.2)',display:'flex',alignItems:'center',gap:'8px'}}>
+              💬 WhatsApp Order
+            </a>
           </div>
         </div>
       </section>
