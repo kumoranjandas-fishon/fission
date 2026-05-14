@@ -1,7 +1,7 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { db } from "@/lib/firebase";
-import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { collection, addDoc, serverTimestamp, doc, getDoc } from "firebase/firestore";
 
 const ITEMS = [
   {n:'Rohu Fish',b:'রুই মাছ',s:'500g • Cleaned & Cut',p:180,e:'🐟',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA',
@@ -104,6 +104,55 @@ export default function Home() {
   const [orderId, setOrderId] = useState('');
   const [modalPhoto, setModalPhoto] = useState(0);
   const [modalItem, setModalItem] = useState<ModalItem|null>(null);
+
+  // Firebase se live items fetch karo
+  const [liveAvailableItems, setLiveAvailableItems] = useState(AVAILABLE_ITEMS);
+  const [livePreorderItems, setLivePreorderItems] = useState(ITEMS);
+
+  useEffect(() => {
+    const fetchItems = async () => {
+      try {
+        const snap = await getDoc(doc(db, 'settings', 'items'));
+        if (snap.exists()) {
+          const firebaseItems = snap.data().list;
+          // Available items update karo
+          const newAvailable = AVAILABLE_ITEMS.map(ai => {
+            const fi = firebaseItems.find((f: any) =>
+              f.name.toLowerCase().includes(ai.n.toLowerCase()) ||
+              ai.n.toLowerCase().includes(f.name.toLowerCase().split(' ')[0])
+            );
+            if (fi) return {...ai, p: fi.price, type: fi.type};
+            return ai;
+          }).filter(ai => {
+            const fi = firebaseItems.find((f: any) =>
+              f.name.toLowerCase().includes(ai.n.toLowerCase()) ||
+              ai.n.toLowerCase().includes(f.name.toLowerCase().split(' ')[0])
+            );
+            return !fi || fi.type === 'available';
+          });
+          setLiveAvailableItems(newAvailable);
+
+          // Preorder items update karo
+          const newPreorder = ITEMS.map(pi => {
+            const fi = firebaseItems.find((f: any) =>
+              f.name.toLowerCase().includes(pi.n.toLowerCase().split(' ')[0]) ||
+              pi.n.toLowerCase().includes(f.name.toLowerCase().split(' ')[0])
+            );
+            if (fi) return {...pi, p: fi.price};
+            return pi;
+          }).filter(pi => {
+            const fi = firebaseItems.find((f: any) =>
+              f.name.toLowerCase().includes(pi.n.toLowerCase().split(' ')[0]) ||
+              pi.n.toLowerCase().includes(f.name.toLowerCase().split(' ')[0])
+            );
+            return !fi || fi.type === 'preorder';
+          });
+          setLivePreorderItems(newPreorder);
+        }
+      } catch(e) { console.error('Items load error:', e); }
+    };
+    fetchItems();
+  }, []);
 
   const totalItems = cart.reduce((s,i)=>s+i.qty,0);
   const totalPrice = cart.reduce((s,i)=>s+i.p*i.qty,0);
@@ -315,7 +364,7 @@ export default function Home() {
             <span style={{background:'#dcfce7',color:'#16A34A',padding:'4px 12px',borderRadius:'20px',fontWeight:700,fontSize:'12px'}}>✓ Fresh Stock</span>
           </div>
           <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(130px,1fr))',gap:'12px'}}>
-            {AVAILABLE_ITEMS.map(i=>{
+            {liveAvailableItems.map(i=>{
               const qty = getQty(i.n);
               return (
                 <div key={i.n}
@@ -369,7 +418,7 @@ export default function Home() {
             <p style={{fontSize:'13px',color:'#64748b',margin:0}}>Order by 11 PM • Delivered fresh next morning 9 AM - 12 PM</p>
           </div>
           <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(180px,1fr))',gap:'16px'}}>
-            {ITEMS.map(i=>{
+            {livePreorderItems.map(i=>{
               const qty = getQty(i.n);
               return (
                 <div key={i.n}
