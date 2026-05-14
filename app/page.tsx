@@ -5,7 +5,8 @@ import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 
 const ITEMS = [
   {n:'Rohu Fish',b:'রুই মাছ',s:'500g • Cleaned & Cut',p:180,e:'🐟',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA',
-    img:'https://m.media-amazon.com/images/I/51vddLa1uUL._AC_UF894,1000_QL80_.jpg',
+    img:'https://img.clevup.in/224989/SKU-0930_0-1712380773022.png?width=600&format=webp',
+    imgs:['https://img.clevup.in/224989/SKU-0930_0-1712380773022.png?width=600&format=webp','https://m.media-amazon.com/images/I/51vddLa1uUL._AC_UF894,1000_QL80_.jpg','https://5.imimg.com/data5/SELLER/Default/2020/12/PK/QF/UV/58226302/rohu-fish-cut.jpg'],
     desc:'Fresh Rohu from local market, cleaned and cut into pieces. Rich in Omega-3, perfect for curry.',tags:['High Protein','Omega-3','Best Seller']},
   {n:'Ilish Hilsa',b:'ইলিশ মাছ',s:'500g • Whole Cleaned',p:380,e:'🐠',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA',
     img:'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/Hilsha_fish.jpg/400px-Hilsha_fish.jpg',
@@ -84,7 +85,7 @@ const PINCODES: Record<string, {area:string, time:string}> = {
 
 type CartItem = {n:string, p:number, e:string, qty:number};
 type Address = {name:string; phone:string; flat:string; building:string; street:string; landmark:string; instructions:string;};
-type ModalItem = {n:string; b?:string; s?:string; h?:string; p:number; e:string; desc?:string; tags?:string[]; img?:string; badge?:string; u?:string; type:'preorder'|'available'};
+type ModalItem = {n:string; b?:string; s?:string; h?:string; p:number; e:string; desc?:string; tags?:string[]; img?:string; imgs?:string[]; badge?:string; u?:string; type:'preorder'|'available'};
 
 const inputStyle: React.CSSProperties = {width:'100%',padding:'11px 14px',borderRadius:'10px',border:'1.5px solid #e2e8f0',fontSize:'14px',marginBottom:'10px',boxSizing:'border-box',outline:'none',color:'#0f172a'};
 
@@ -99,6 +100,7 @@ export default function Home() {
   const [address, setAddress] = useState<Address>({name:'',phone:'',flat:'',building:'',street:'',landmark:'',instructions:''});
   const [orderLoading, setOrderLoading] = useState(false);
   const [orderId, setOrderId] = useState('');
+  const [modalPhoto, setModalPhoto] = useState(0);
   const [modalItem, setModalItem] = useState<ModalItem|null>(null);
 
   const totalItems = cart.reduce((s,i)=>s+i.qty,0);
@@ -369,7 +371,7 @@ export default function Home() {
               const qty = getQty(i.n);
               return (
                 <div key={i.n}
-                  onClick={()=>setModalItem({n:i.n,b:i.b,s:i.s,p:i.p,e:i.e,desc:i.desc,tags:i.tags,img:(i as any).img,badge:i.badge,type:'preorder'})}
+                  onClick={()=>{setModalPhoto(0);setModalItem({n:i.n,b:i.b,s:i.s,p:i.p,e:i.e,desc:i.desc,tags:i.tags,img:(i as any).img,imgs:(i as any).imgs,badge:i.badge,type:'preorder'})}}
                   style={{background:'white',borderRadius:'14px',overflow:'hidden',boxShadow:'0 1px 3px rgba(0,0,0,0.06)',border:'1px solid #f1f5f9',cursor:'pointer',transition:'box-shadow 0.2s'}}>
                   <div style={{height:'160px',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'50px',position:'relative',overflow:'hidden',background:i.bg}}>
                     {('img' in i && (i as any).img) ?
@@ -461,12 +463,35 @@ export default function Home() {
           <div onClick={e=>e.stopPropagation()}
             style={{background:'white',borderRadius:'20px',width:'100%',maxWidth:'480px',overflow:'hidden',boxShadow:'0 20px 60px rgba(0,0,0,0.3)'}}>
 
-            {/* Image / Emoji area */}
+            {/* Image / Emoji area with slider */}
             <div style={{height:'220px',background: modalItem.type==='preorder' ? '#EBF5FA' : '#f0fdf4',display:'flex',alignItems:'center',justifyContent:'center',position:'relative'}}>
-              {modalItem.img ?
-                <img src={modalItem.img} alt={modalItem.n} style={{width:'100%',height:'100%',objectFit:'cover'}}/> :
+              {modalItem.imgs && modalItem.imgs.length > 0 ? (
+                <>
+                  <img src={modalItem.imgs[modalPhoto]} alt={modalItem.n} style={{width:'100%',height:'100%',objectFit:'cover'}}/>
+                  {/* Dots */}
+                  {modalItem.imgs.length > 1 && (
+                    <div style={{position:'absolute',bottom:'10px',left:'50%',transform:'translateX(-50%)',display:'flex',gap:'6px'}}>
+                      {modalItem.imgs.map((_,idx)=>(
+                        <div key={idx} onClick={e=>{e.stopPropagation();setModalPhoto(idx);}}
+                          style={{width:'8px',height:'8px',borderRadius:'50%',background:idx===modalPhoto?'white':'rgba(255,255,255,0.5)',cursor:'pointer',border:'1px solid rgba(0,0,0,0.2)'}}/>
+                      ))}
+                    </div>
+                  )}
+                  {/* Prev/Next arrows */}
+                  {modalItem.imgs.length > 1 && (
+                    <>
+                      <button onClick={e=>{e.stopPropagation();setModalPhoto(p=>p===0?modalItem.imgs!.length-1:p-1);}}
+                        style={{position:'absolute',left:'8px',top:'50%',transform:'translateY(-50%)',background:'rgba(255,255,255,0.8)',border:'none',borderRadius:'50%',width:'32px',height:'32px',cursor:'pointer',fontSize:'16px',fontWeight:700}}>‹</button>
+                      <button onClick={e=>{e.stopPropagation();setModalPhoto(p=>p===modalItem.imgs!.length-1?0:p+1);}}
+                        style={{position:'absolute',right:'44px',top:'50%',transform:'translateY(-50%)',background:'rgba(255,255,255,0.8)',border:'none',borderRadius:'50%',width:'32px',height:'32px',cursor:'pointer',fontSize:'16px',fontWeight:700}}>›</button>
+                    </>
+                  )}
+                </>
+              ) : modalItem.img ? (
+                <img src={modalItem.img} alt={modalItem.n} style={{width:'100%',height:'100%',objectFit:'cover'}}/>
+              ) : (
                 <span style={{fontSize:'80px'}}>{modalItem.e}</span>
-              }
+              )}
               {modalItem.badge && (
                 <span style={{position:'absolute',top:'12px',left:'12px',background:'#0B4F6C',color:'white',fontSize:'10px',fontWeight:700,padding:'4px 10px',borderRadius:'20px'}}>{modalItem.badge}</span>
               )}
