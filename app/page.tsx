@@ -536,16 +536,20 @@ export default function Home() {
       </section>
 
       {/* FOOTER */}
-      <footer style={{background:'#0f172a',color:'white',padding:'24px',textAlign:'center'}}>
-        <div style={{marginBottom:'6px'}}>
-          <span style={{color:'#DC2626',fontWeight:800,fontSize:'20px'}}>Fish</span>
-          <span style={{color:'#16A34A',fontWeight:800,fontSize:'20px',fontStyle:'italic'}}>on</span>
+      <footer style={{background:'#0f172a',color:'white',padding:'32px 24px',textAlign:'center'}}>
+        <div style={{marginBottom:'8px'}}>
+          <span style={{color:'#DC2626',fontWeight:800,fontSize:'22px'}}>Fish</span>
+          <span style={{color:'#16A34A',fontWeight:800,fontSize:'22px',fontStyle:'italic'}}>on</span>
         </div>
-        <p style={{color:'#475569',fontSize:'12px',margin:'0 0 8px'}}>📍 East Delhi • 🕐 9 AM - 12 PM Daily • © 2026 Fishon. All rights reserved.</p>
-        <div style={{display:'flex',alignItems:'center',justifyContent:'center',gap:'8px'}}>
-          <span style={{background:'#1e293b',border:'1px solid #334155',borderRadius:'6px',padding:'4px 12px',fontSize:'11px',color:'#94a3b8',fontWeight:500}}>
-            🏛️ FSSAI Reg. No: <span style={{color:'#16A34A',fontWeight:700}}>23326003001887</span>
-          </span>
+        <p style={{color:'#475569',fontSize:'12px',margin:'0 0 16px'}}>📍 East Delhi • 🕐 9 AM - 12 PM Daily • © 2026 Fishon. All rights reserved.</p>
+
+        {/* FSSAI Logo + Number */}
+        <div style={{display:'flex',alignItems:'center',justifyContent:'center',gap:'10px',background:'#1e293b',border:'1px solid #334155',borderRadius:'10px',padding:'10px 20px',display:'inline-flex'}}>
+          <img src="https://upload.wikimedia.org/wikipedia/en/thumb/4/4f/FSSAI_logo.svg/120px-FSSAI_logo.svg.png" alt="FSSAI" style={{height:'32px',objectFit:'contain'}}/>
+          <div style={{textAlign:'left'}}>
+            <div style={{fontSize:'9px',color:'#94a3b8',fontWeight:600,letterSpacing:'0.5px'}}>LICENSED BY</div>
+            <div style={{fontSize:'12px',color:'white',fontWeight:700}}>FSSAI Reg. No: <span style={{color:'#16A34A'}}>23326003001887</span></div>
+          </div>
         </div>
       </footer>
 
