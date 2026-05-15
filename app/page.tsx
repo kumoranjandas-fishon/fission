@@ -545,9 +545,19 @@ export default function Home() {
 
         {/* FSSAI Logo + Number */}
         <div style={{display:'inline-flex',alignItems:'center',gap:'10px',background:'#1e293b',border:'1px solid #334155',borderRadius:'10px',padding:'10px 20px'}}>
-          <img src="https://foscos.fssai.gov.in/images/fssai-logo.png" alt="FSSAI"
-            onError={(e)=>{(e.target as HTMLImageElement).src='https://www.fssai.gov.in/upload/uploadfiles/files/fssai_logo.png';}}
-            style={{height:'32px',objectFit:'contain',background:'white',padding:'2px 6px',borderRadius:'4px'}}/>
+          {/* FSSAI Logo SVG */}
+          <div style={{background:'white',borderRadius:'4px',padding:'4px 8px',display:'flex',alignItems:'center',justifyContent:'center'}}>
+            <svg width="60" height="28" viewBox="0 0 120 56" xmlns="http://www.w3.org/2000/svg">
+              <rect width="120" height="56" fill="white"/>
+              <text x="4" y="22" fontSize="13" fontWeight="bold" fill="#1a5276" fontFamily="Arial">FSSAI</text>
+              <text x="4" y="38" fontSize="7" fill="#666" fontFamily="Arial">Food Safety and Standards</text>
+              <text x="4" y="48" fontSize="7" fill="#666" fontFamily="Arial">Authority of India</text>
+              <rect x="78" y="4" width="38" height="48" rx="4" fill="#f39c12"/>
+              <text x="82" y="20" fontSize="8" fontWeight="bold" fill="white" fontFamily="Arial">GOVT</text>
+              <text x="82" y="30" fontSize="8" fontWeight="bold" fill="white" fontFamily="Arial">OF</text>
+              <text x="82" y="40" fontSize="8" fontWeight="bold" fill="white" fontFamily="Arial">INDIA</text>
+            </svg>
+          </div>
           <div style={{textAlign:'left'}}>
             <div style={{fontSize:'9px',color:'#94a3b8',fontWeight:600,letterSpacing:'0.5px'}}>LICENSED BY</div>
             <div style={{fontSize:'12px',color:'white',fontWeight:700}}>FSSAI Reg. No: <span style={{color:'#16A34A'}}>23326003001887</span></div>
