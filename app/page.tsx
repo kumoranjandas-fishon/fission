@@ -842,6 +842,17 @@ export default function Home() {
                   <span>Total</span>
                   <span style={{color:'#DC2626'}}>₹{totalPrice}</span>
                 </div>
+
+                {/* COD Badge */}
+                <div style={{background:'#f0fdf4',border:'1.5px solid #86efac',borderRadius:'12px',padding:'14px',marginBottom:'14px',display:'flex',alignItems:'center',gap:'12px'}}>
+                  <div style={{fontSize:'28px'}}>💵</div>
+                  <div>
+                    <div style={{fontWeight:700,fontSize:'14px',color:'#15803d'}}>Cash on Delivery</div>
+                    <div style={{fontSize:'12px',color:'#16A34A'}}>Delivery ke waqt cash payment karein</div>
+                  </div>
+                  <div style={{marginLeft:'auto',background:'#16A34A',color:'white',fontSize:'11px',fontWeight:700,padding:'4px 10px',borderRadius:'20px'}}>✓ Selected</div>
+                </div>
+
                 <div style={{background:'#f8fafc',borderRadius:'12px',padding:'14px',marginBottom:'16px',fontSize:'13px',border:'1px solid #e2e8f0',lineHeight:1.8,color:'#334155'}}>
                   <div style={{fontWeight:700,color:'#0f172a',marginBottom:'6px'}}>📦 Delivery Details</div>
                   <div>👤 {address.name} • 📱 {address.phone}</div>
@@ -853,7 +864,7 @@ export default function Home() {
                 </div>
                 <button onClick={placeOrder} disabled={orderLoading}
                   style={{width:'100%',background:'#16A34A',color:'white',border:'none',padding:'14px',borderRadius:'10px',fontWeight:700,fontSize:'15px',cursor:'pointer',opacity:orderLoading?0.7:1}}>
-                  {orderLoading ? '⏳ Placing Order...' : '✅ Place Order'}
+                  {orderLoading ? '⏳ Placing Order...' : '✅ Place Order — Cash on Delivery'}
                 </button>
               </>
             )}
