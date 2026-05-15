@@ -4,54 +4,99 @@ import { db } from "@/lib/firebase";
 import { collection, addDoc, serverTimestamp, doc, getDoc } from "firebase/firestore";
 
 const ITEMS = [
-  {n:'Rohu Fish',b:'রুই মাছ',s:'500g • Cleaned & Cut',p:180,e:'🐟',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA',
+  {n:'Rohu Fish',b:'রুই মাছ',h:'रोहू मछली',t:'ரோஹு மீன்',s:'500g • Cleaned & Cut',p:180,e:'🐟',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA',
     img:'https://img.clevup.in/224989/SKU-0930_0-1712380773022.png?width=600&format=webp',
     imgs:['https://img.clevup.in/224989/SKU-0930_0-1712380773022.png?width=600&format=webp','https://m.media-amazon.com/images/I/51vddLa1uUL._AC_UF894,1000_QL80_.jpg','https://5.imimg.com/data5/SELLER/Default/2020/12/PK/QF/UV/58226302/rohu-fish-cut.jpg'],
-    desc:'Fresh Rohu from local market, cleaned and cut into pieces. Rich in Omega-3, perfect for curry.',tags:['High Protein','Omega-3','Best Seller']},
-  {n:'Ilish Hilsa',b:'ইলিশ মাছ',s:'500g • Whole Cleaned',p:380,e:'🐠',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA',
+    desc:'Fresh Rohu from local market, cleaned and cut into pieces. Rich in Omega-3, perfect for curry.',
+    storage:'Store under refrigeration at 4°C or below',
+    weight:'Pre-cleaned: ~650g | Final: 500g | Pieces: 6-8',
+    tags:['High Protein','Omega-3','Best Seller']},
+  {n:'Ilish Hilsa',b:'ইলিশ মাছ',h:'इलिश हिलसा',t:'இலிஷ் ஹில்சா',s:'500g • Whole Cleaned',p:380,e:'🐠',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA',
     img:'https://www.bazaarkgp.com/product_image/11751194251.jpg',
     imgs:['https://www.bazaarkgp.com/product_image/11751194251.jpg','https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTsAE-dcxhCpCPz4_fr7Wlar2aCNZ4Y4O5NyQ&s','https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSdMXndbM_FRxGa46SSagkvz-coeLX80VFPxg&s'],
-    desc:'Premium Ilish Hilsa — the king of fish. Sourced fresh every morning.',tags:['Premium','Seasonal','Bengali Favourite']},
-  {n:'Tiger Prawns',b:'বাঘা চিংড়ি',s:'250g • Deveined',p:320,e:'🦐',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA',
+    desc:'Premium Ilish Hilsa — the king of fish. Sourced fresh every morning. Ideal for Ilish Bhapa or Sorshe Ilish.',
+    storage:'Store under refrigeration at 4°C or below',
+    weight:'Whole fish 500g | Cleaned & gutted',
+    tags:['Premium','Seasonal','Bengali Favourite']},
+  {n:'Tiger Prawns',b:'বাঘা চিংড়ি',h:'टाइगर झींगा',t:'புலி இறால்',s:'250g • Deveined',p:320,e:'🦐',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA',
     img:'https://www.bbassets.com/media/uploads/p/l/800448132_1-ak-daily-bazaar-fish-bagda-chingri-tiger-prawn.jpg',
     imgs:['https://www.bbassets.com/media/uploads/p/l/800448132_1-ak-daily-bazaar-fish-bagda-chingri-tiger-prawn.jpg','https://c8.alamy.com/comp/2G0Y8CW/cleaned-peeled-deveined-tiger-prawns-or-asian-tiger-shrimps-also-known-as-kolambi-or-bagda-chingri-recipe-ingredients-with-copy-sapce-2G0Y8CW.jpg','https://derafarms.com/cdn/shop/files/deraproducts_16_19ffb8f8-24a8-4315-9c0a-6bae5e3628ec.png?v=1719395255'],
-    desc:'Large Tiger Prawns, deveined and cleaned. Great for grilling, frying or curry.',tags:['Deveined','Ready to Cook']},
-  {n:'Golda Chingdi',b:'গলদা চিংড়ি',s:'250g • Whole',p:450,e:'🦐',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA',
+    desc:'Large Tiger Prawns, deveined and cleaned. Great for grilling, frying or curry.',
+    storage:'Store under refrigeration at 4°C or below',
+    weight:'250g deveined | Count: 8-12 pieces',
+    tags:['Deveined','Ready to Cook']},
+  {n:'Golda Chingdi',b:'গলদা চিংড়ি',h:'गोल्डा झींगा',t:'கோல்டா இறால்',s:'250g • Whole',p:450,e:'🦐',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA',
     img:'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Macrobrachium_rosenbergii.jpg/400px-Macrobrachium_rosenbergii.jpg',
-    desc:'Fresh water Golda Prawns — a Bengali delicacy.',tags:['Delicacy','Bengali Special']},
-  {n:'Pink Perch / Kilimeen',b:'কিলিমিন',s:'500g • Whole Cleaned',p:280,e:'🐟',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA',
+    desc:'Fresh water Golda Prawns — a Bengali delicacy. Whole with shell, perfect for Chingdi Malaikari.',
+    storage:'Store under refrigeration at 4°C or below',
+    weight:'250g whole with shell | Count: 4-6 pieces',
+    tags:['Delicacy','Bengali Special']},
+  {n:'Pink Perch / Kilimeen',b:'কিলিমিন',h:'पिंक पर्च',t:'கிலிமீன்',s:'500g • Whole Cleaned',p:280,e:'🐟',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA',
     img:'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Lutjanus_campechanus.jpg/400px-Lutjanus_campechanus.jpg',
-    desc:'Pink Perch from coastal waters. Tender white flesh, great for fry or gravy.',tags:['Coastal Catch','Tender Flesh']},
-  {n:'River Sole / Vaka Varal',b:'ভাকা ভারাল',s:'500g • Whole Cleaned',p:260,e:'🐟',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA',
+    desc:'Pink Perch from coastal waters. Tender white flesh, great for fry or gravy.',
+    storage:'Store under refrigeration at 4°C or below',
+    weight:'500g whole cleaned',
+    tags:['Coastal Catch','Tender Flesh']},
+  {n:'River Sole / Vaka Varal',b:'ভাকা ভারাল',h:'रिवर सोल',t:'வாக்கா வரால்',s:'500g • Whole Cleaned',p:260,e:'🐟',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA',
     img:'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/Solea_solea.jpg/400px-Solea_solea.jpg',
-    desc:'River Sole — flat fish with delicate flavour. Best for shallow fry with mustard.',tags:['Delicate Flavour']},
-  {n:'Singi / Kaari Catfish',b:'সিঙি মাছ',s:'Whole Cleaned',p:220,e:'🐟',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA',
+    desc:'River Sole — flat fish with delicate flavour. Best for shallow fry with mustard.',
+    storage:'Store under refrigeration at 4°C or below',
+    weight:'500g whole cleaned',
+    tags:['Delicate Flavour']},
+  {n:'Singi / Kaari Catfish',b:'সিঙি মাছ',h:'सिंगी मछली',t:'சிங்கி மீன்',s:'Whole Cleaned',p:220,e:'🐟',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA',
     img:'https://upload.wikimedia.org/wikipedia/commons/thumb/5/cinquanta/Heteropneustes_fossilis.jpg/400px-Heteropneustes_fossilis.jpg',
-    desc:'Freshwater Catfish known for medicinal properties.',tags:['Medicinal','Freshwater']},
-  {n:'Kolkata Bhetki / Barramundi',b:'ভেটকী মাছ',s:'Whole Fish 1kg-2kg',p:520,e:'🐠',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA',
+    desc:'Freshwater Catfish known for medicinal properties. Great for light curry or soup.',
+    storage:'Store under refrigeration at 4°C or below',
+    weight:'Whole cleaned | 400-600g',
+    tags:['Medicinal','Freshwater']},
+  {n:'Kolkata Bhetki / Barramundi',b:'ভেটকী মাছ',h:'भेटकी / बारामुंडी',t:'பெட்கி மீன்',s:'Whole Fish 1kg-2kg',p:520,e:'🐠',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA',
     img:'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Lates_calcarifer.jpg/400px-Lates_calcarifer.jpg',
-    desc:'Premium Bhetki from Kolkata markets. Firm white flesh.',tags:['Premium','Firm Flesh','Bengali Classic']},
-  {n:'Singhara / Aar Catfish',b:'সিঙারা মাছ',s:'Whole Fish 1kg-2kg',p:350,e:'🐟',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA',
+    desc:'Premium Bhetki from Kolkata markets. Firm white flesh, perfect for Bhetki Paturi or fillet fry.',
+    storage:'Store under refrigeration at 4°C or below',
+    weight:'Whole fish 1kg-2kg | Cleaned',
+    tags:['Premium','Firm Flesh','Bengali Classic']},
+  {n:'Singhara / Aar Catfish',b:'সিঙারা মাছ',h:'सिंघाड़ा मछली',t:'சிங்காரா மீன்',s:'Whole Fish 1kg-2kg',p:350,e:'🐟',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA',
     img:'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/Sperata_aor.jpg/400px-Sperata_aor.jpg',
-    desc:'River Catfish with rich flavour. Best for spicy curry.',tags:['River Fresh','Rich Flavour']},
-  {n:'Boal Fish / Attu Vaala',b:'বোয়াল মাছ',s:'Whole Fish 1kg-2kg',p:380,e:'🐟',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA',
+    desc:'River Catfish with rich flavour. Best for spicy curry or mustard gravy.',
+    storage:'Store under refrigeration at 4°C or below',
+    weight:'Whole fish 1kg-2kg',
+    tags:['River Fresh','Rich Flavour']},
+  {n:'Boal Fish / Attu Vaala',b:'বোয়াল মাছ',h:'बोआल मछली',t:'போல் மீன்',s:'Whole Fish 1kg-2kg',p:380,e:'🐟',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA',
     img:'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1c/Wallago_attu.jpg/400px-Wallago_attu.jpg',
-    desc:'Large freshwater Boal — prized for its fatty, flavourful flesh.',tags:['Fatty Fish','Rich Taste']},
-  {n:'Black Pomfret / Halwa Fish',b:'কালো পমফ্রেট',s:'Whole Fish 1.5kg-4kg',p:580,e:'🐠',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA',
+    desc:'Large freshwater Boal — prized for its fatty, flavourful flesh. Ideal for jhol or bhuna.',
+    storage:'Store under refrigeration at 4°C or below',
+    weight:'Whole fish 1kg-2kg',
+    tags:['Fatty Fish','Rich Taste']},
+  {n:'Black Pomfret / Halwa Fish',b:'কালো পমফ্রেট',h:'काला पॉमफ्रेट',t:'கருப்பு பாம்ஃப்ரெட்',s:'Whole Fish 1.5kg-4kg',p:580,e:'🐠',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA',
     img:'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Parastromateus_niger.jpg/400px-Parastromateus_niger.jpg',
-    desc:'Black Pomfret — a premium sea fish. Mild flavour, ideal for fry.',tags:['Sea Fish','Premium','Mild Flavour']},
-  {n:'White Pomfret / Silver Pomfret',b:'রূপালী পমফ্রেট',s:'Whole Fish 200g-300g',p:650,e:'🐠',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA',
+    desc:'Black Pomfret — a premium sea fish. Mild flavour, ideal for fry or tandoor.',
+    storage:'Store under refrigeration at 4°C or below',
+    weight:'Whole fish 1.5kg-4kg',
+    tags:['Sea Fish','Premium','Mild Flavour']},
+  {n:'White Pomfret / Silver Pomfret',b:'রূপালী পমফ্রেট',h:'सफेद पॉमफ्रेट',t:'வெள்ளை பாம்ஃப்ரெட்',s:'Whole Fish 200g-300g',p:650,e:'🐠',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA',
     img:'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Pampus_argenteus.jpg/400px-Pampus_argenteus.jpg',
-    desc:'Silver Pomfret — the most prized sea fish. Delicate, buttery texture.',tags:['Most Prized','Buttery','Sea Fish']},
-  {n:'Seer Fish / Surmai / Vanjaram',b:'সুরমাই মাছ',s:'Whole Fish 5kg+',p:750,e:'🐠',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA',
+    desc:'Silver Pomfret — the most prized sea fish. Delicate, buttery texture. Perfect for fry or steam.',
+    storage:'Store under refrigeration at 4°C or below',
+    weight:'Whole fish 200g-300g per piece',
+    tags:['Most Prized','Buttery','Sea Fish']},
+  {n:'Seer Fish / Surmai / Vanjaram',b:'সুরমাই মাছ',h:'सुरमई मछली',t:'வஞ்சரம் மீன்',s:'Whole Fish 5kg+',p:750,e:'🐠',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA',
     img:'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Scomberomorus_commerson.jpg/400px-Scomberomorus_commerson.jpg',
-    desc:'King Mackerel / Surmai — firm steaks with rich flavour.',tags:['King Fish','Firm Steak']},
-  {n:'Yellow Fin Tuna / Kera',b:'টুনা মাছ',s:'Whole Fish 4kg-9kg',p:820,e:'🐠',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA',
+    desc:'King Mackerel / Surmai — firm steaks with rich flavour. Great for fry, tikka or curry.',
+    storage:'Store under refrigeration at 4°C or below',
+    weight:'Whole fish 5kg+ | Steaks available',
+    tags:['King Fish','Firm Steak']},
+  {n:'Yellow Fin Tuna / Kera',b:'টুনা মাছ',h:'येलो फिन टूना',t:'கேரா மீன்',s:'Whole Fish 4kg-9kg',p:820,e:'🐠',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA',
     img:'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/Yellowfin_tuna_nurp.jpg/400px-Yellowfin_tuna_nurp.jpg',
-    desc:'Deep sea Yellow Fin Tuna. High protein, low fat.',tags:['High Protein','Deep Sea','Rare Catch']},
-  {n:'Mackerel / Bangda / Ayala',b:'ম্যাকেরেল',s:'5-9 Count/kg • Whole',p:180,e:'🐟',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA',
+    desc:'Deep sea Yellow Fin Tuna. High protein, low fat. Excellent for sashimi, grilling or curry.',
+    storage:'Store under refrigeration at 4°C or below',
+    weight:'Whole fish 4kg-9kg',
+    tags:['High Protein','Deep Sea','Rare Catch']},
+  {n:'Mackerel / Bangda / Ayala',b:'ম্যাকেরেল',h:'मैकेरल / बांगड़ा',t:'அயலா மீன்',s:'5-9 Count/kg • Whole',p:180,e:'🐟',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA',
     img:'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8b/Rastrelliger_kanagurta.jpg/400px-Rastrelliger_kanagurta.jpg',
-    desc:'Fresh Mackerel — affordable and nutritious. High in Omega-3.',tags:['Omega-3','Affordable','Nutritious']},
+    desc:'Fresh Mackerel — affordable and nutritious. High in Omega-3. Best for fry or curry.',
+    storage:'Store under refrigeration at 4°C or below',
+    weight:'5-9 count per kg | Whole',
+    tags:['Omega-3','Affordable','Nutritious']},
 ];
 
 const AVAILABLE_ITEMS = [
@@ -87,7 +132,7 @@ const PINCODES: Record<string, {area:string, time:string}> = {
 
 type CartItem = {n:string, p:number, e:string, qty:number};
 type Address = {name:string; phone:string; flat:string; building:string; street:string; landmark:string; instructions:string;};
-type ModalItem = {n:string; b?:string; s?:string; h?:string; p:number; e:string; desc?:string; tags?:string[]; img?:string; imgs?:string[]; badge?:string; u?:string; type:'preorder'|'available'};
+type ModalItem = {n:string; b?:string; h?:string; t?:string; s?:string; p:number; e:string; desc?:string; tags?:string[]; img?:string; imgs?:string[]; badge?:string; u?:string; storage?:string; weight?:string; type:'preorder'|'available'};
 
 const inputStyle: React.CSSProperties = {width:'100%',padding:'11px 14px',borderRadius:'10px',border:'1.5px solid #e2e8f0',fontSize:'14px',marginBottom:'10px',boxSizing:'border-box',outline:'none',color:'#0f172a'};
 
@@ -422,7 +467,7 @@ export default function Home() {
               const qty = getQty(i.n);
               return (
                 <div key={i.n}
-                  onClick={()=>{setModalPhoto(0);setModalItem({n:i.n,b:i.b,s:i.s,p:i.p,e:i.e,desc:i.desc,tags:i.tags,img:(i as any).img,imgs:(i as any).imgs,badge:i.badge,type:'preorder'})}}
+                  onClick={()=>{setModalPhoto(0);setModalItem({n:i.n,b:i.b,h:(i as any).h,t:(i as any).t,s:i.s,p:i.p,e:i.e,desc:i.desc,tags:i.tags,img:(i as any).img,imgs:(i as any).imgs,badge:i.badge,storage:(i as any).storage,weight:(i as any).weight,type:'preorder'})}}
                   style={{background:'white',borderRadius:'14px',overflow:'hidden',boxShadow:'0 1px 3px rgba(0,0,0,0.06)',border:'1px solid #f1f5f9',cursor:'pointer',transition:'box-shadow 0.2s'}}>
                   <div style={{height:'160px',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'50px',position:'relative',overflow:'hidden',background:i.bg}}>
                     {('img' in i && (i as any).img) ?
@@ -556,23 +601,52 @@ export default function Home() {
             </div>
 
             {/* Content */}
-            <div style={{padding:'20px 24px 24px'}}>
-              <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginBottom:'8px'}}>
-                <div>
-                  <h2 style={{margin:'0 0 2px',fontSize:'20px',fontWeight:800,color:'#0f172a'}}>{modalItem.n}</h2>
-                  {modalItem.b && <div style={{color:'#16A34A',fontSize:'13px',fontWeight:500}}>{modalItem.b}</div>}
-                  {modalItem.h && <div style={{color:'#94a3b8',fontSize:'12px',fontStyle:'italic'}}>{modalItem.h}</div>}
+            <div style={{padding:'20px 24px 24px',maxHeight:'60vh',overflowY:'auto'}}>
+
+              {/* Name in multiple languages */}
+              <div style={{marginBottom:'12px'}}>
+                <h2 style={{margin:'0 0 4px',fontSize:'20px',fontWeight:800,color:'#0f172a'}}>{modalItem.n}</h2>
+                <div style={{display:'flex',flexWrap:'wrap',gap:'8px',marginBottom:'4px'}}>
+                  {modalItem.b && <span style={{fontSize:'13px',color:'#16A34A',fontWeight:600}}>{modalItem.b}</span>}
+                  {modalItem.h && <span style={{fontSize:'13px',color:'#DC2626',fontWeight:600}}>• {modalItem.h}</span>}
+                  {modalItem.t && <span style={{fontSize:'13px',color:'#7c3aed',fontWeight:600}}>• {modalItem.t}</span>}
                 </div>
-                <div style={{textAlign:'right'}}>
-                  <div style={{fontSize:'24px',fontWeight:900,color:'#DC2626'}}>₹{modalItem.p}</div>
-                  <div style={{fontSize:'11px',color:'#94a3b8'}}>{modalItem.s || modalItem.u || '/500g'}</div>
-                </div>
+                <div style={{fontSize:'12px',color:'#94a3b8'}}>{modalItem.s || modalItem.u}</div>
               </div>
 
+              {/* Price */}
+              <div style={{display:'flex',alignItems:'center',gap:'12px',marginBottom:'16px',padding:'12px',background:'#f8fafc',borderRadius:'10px'}}>
+                <div>
+                  <div style={{fontSize:'28px',fontWeight:900,color:'#DC2626'}}>₹{modalItem.p}</div>
+                  <div style={{fontSize:'11px',color:'#64748b'}}>per {modalItem.s || '500g'}</div>
+                </div>
+                {modalItem.badge && (
+                  <span style={{background:'#0B4F6C',color:'white',fontSize:'11px',fontWeight:700,padding:'4px 12px',borderRadius:'20px'}}>{modalItem.badge}</span>
+                )}
+              </div>
+
+              {/* Description */}
               {modalItem.desc && (
-                <p style={{color:'#475569',fontSize:'13px',lineHeight:1.7,margin:'12px 0'}}>{modalItem.desc}</p>
+                <p style={{color:'#475569',fontSize:'13px',lineHeight:1.7,margin:'0 0 14px',padding:'12px',background:'#f0fdf4',borderRadius:'10px',borderLeft:'3px solid #16A34A'}}>{modalItem.desc}</p>
               )}
 
+              {/* Weight & Storage */}
+              <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'10px',marginBottom:'14px'}}>
+                {modalItem.weight && (
+                  <div style={{background:'#fefce8',borderRadius:'10px',padding:'10px',border:'1px solid #fef08a'}}>
+                    <div style={{fontSize:'10px',color:'#854d0e',fontWeight:700,marginBottom:'3px'}}>⚖️ WEIGHT INFO</div>
+                    <div style={{fontSize:'12px',color:'#713f12'}}>{modalItem.weight}</div>
+                  </div>
+                )}
+                {modalItem.storage && (
+                  <div style={{background:'#eff6ff',borderRadius:'10px',padding:'10px',border:'1px solid #bfdbfe'}}>
+                    <div style={{fontSize:'10px',color:'#1e40af',fontWeight:700,marginBottom:'3px'}}>❄️ STORAGE</div>
+                    <div style={{fontSize:'12px',color:'#1e3a8a'}}>{modalItem.storage}</div>
+                  </div>
+                )}
+              </div>
+
+              {/* Tags */}
               {modalItem.tags && modalItem.tags.length > 0 && (
                 <div style={{display:'flex',flexWrap:'wrap',gap:'6px',marginBottom:'16px'}}>
                   {modalItem.tags.map(tag=>(
@@ -580,6 +654,13 @@ export default function Home() {
                   ))}
                 </div>
               )}
+
+              {/* Marketed by */}
+              <div style={{background:'#f8fafc',borderRadius:'10px',padding:'10px 14px',marginBottom:'16px',fontSize:'12px',color:'#64748b',border:'1px solid #e2e8f0'}}>
+                <div style={{fontWeight:700,color:'#334155',marginBottom:'2px'}}>🏪 Marketed By</div>
+                <div>Fishon Fresh Delivery, A38/2 Joshi Colony, Mandawali, Preet Vihar, Delhi - 110092</div>
+                <div style={{marginTop:'4px',color:'#16A34A',fontWeight:600}}>FSSAI Reg. No: 23326003001887</div>
+              </div>
 
               {/* Add to cart in modal */}
               {(() => {
