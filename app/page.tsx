@@ -544,8 +544,10 @@ export default function Home() {
         <p style={{color:'#475569',fontSize:'12px',margin:'0 0 16px'}}>📍 East Delhi • 🕐 9 AM - 12 PM Daily • © 2026 Fishon. All rights reserved.</p>
 
         {/* FSSAI Logo + Number */}
-        <div style={{display:'flex',alignItems:'center',justifyContent:'center',gap:'10px',background:'#1e293b',border:'1px solid #334155',borderRadius:'10px',padding:'10px 20px',display:'inline-flex'}}>
-          <img src="https://upload.wikimedia.org/wikipedia/en/thumb/4/4f/FSSAI_logo.svg/120px-FSSAI_logo.svg.png" alt="FSSAI" style={{height:'32px',objectFit:'contain'}}/>
+        <div style={{display:'inline-flex',alignItems:'center',gap:'10px',background:'#1e293b',border:'1px solid #334155',borderRadius:'10px',padding:'10px 20px'}}>
+          <img src="https://foscos.fssai.gov.in/images/fssai-logo.png" alt="FSSAI"
+            onError={(e)=>{(e.target as HTMLImageElement).src='https://www.fssai.gov.in/upload/uploadfiles/files/fssai_logo.png';}}
+            style={{height:'32px',objectFit:'contain',background:'white',padding:'2px 6px',borderRadius:'4px'}}/>
           <div style={{textAlign:'left'}}>
             <div style={{fontSize:'9px',color:'#94a3b8',fontWeight:600,letterSpacing:'0.5px'}}>LICENSED BY</div>
             <div style={{fontSize:'12px',color:'white',fontWeight:700}}>FSSAI Reg. No: <span style={{color:'#16A34A'}}>23326003001887</span></div>
