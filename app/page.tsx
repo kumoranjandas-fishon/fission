@@ -281,7 +281,7 @@ export default function Home() {
           {/* Right */}
           <div style={{display:'flex',gap:'8px',alignItems:'center'}}>
             <div style={{fontSize:'12px',color:'#64748b',display:'flex',alignItems:'center',gap:'4px',background:'#f1f5f9',padding:'6px 12px',borderRadius:'8px'}}>
-              📍 <span style={{fontWeight:600,color:'#334155'}}>East Delhi</span>
+              📍 <span style={{fontWeight:600,color:'#334155'}}>Delhi NCR</span>
             </div>
             <button onClick={()=>{setShowCart(true);setCheckoutStep('cart');}}
               style={{background:'#DC2626',color:'white',border:'none',padding:'9px 16px',borderRadius:'9px',fontSize:'13px',fontWeight:700,cursor:'pointer',display:'flex',alignItems:'center',gap:'6px'}}>
@@ -541,7 +541,7 @@ export default function Home() {
           <span style={{color:'#DC2626',fontWeight:800,fontSize:'22px'}}>Fish</span>
           <span style={{color:'#16A34A',fontWeight:800,fontSize:'22px',fontStyle:'italic'}}>on</span>
         </div>
-        <p style={{color:'#475569',fontSize:'12px',margin:'0 0 16px'}}>📍 East Delhi • 🕐 9 AM - 12 PM Daily • © 2026 Fishon. All rights reserved.</p>
+        <p style={{color:'#475569',fontSize:'12px',margin:'0 0 16px'}}>📍 Delhi NCR • 🕐 7:30 AM - 11:00 PM Daily • © 2026 Fishon. All rights reserved.</p>
 
         {/* FSSAI Logo + Number */}
         <div style={{display:'inline-flex',alignItems:'center',gap:'10px',background:'#1e293b',border:'1px solid #334155',borderRadius:'10px',padding:'10px 20px'}}>
