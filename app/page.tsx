@@ -496,7 +496,12 @@ export default function Home() {
           <span style={{color:'#DC2626',fontWeight:800,fontSize:'20px'}}>Fish</span>
           <span style={{color:'#16A34A',fontWeight:800,fontSize:'20px',fontStyle:'italic'}}>on</span>
         </div>
-        <p style={{color:'#475569',fontSize:'12px',margin:0}}>📍 East Delhi • 🕐 9 AM - 12 PM Daily • © 2026 Fishon. All rights reserved.</p>
+        <p style={{color:'#475569',fontSize:'12px',margin:'0 0 8px'}}>📍 East Delhi • 🕐 9 AM - 12 PM Daily • © 2026 Fishon. All rights reserved.</p>
+        <div style={{display:'flex',alignItems:'center',justifyContent:'center',gap:'8px'}}>
+          <span style={{background:'#1e293b',border:'1px solid #334155',borderRadius:'6px',padding:'4px 12px',fontSize:'11px',color:'#94a3b8',fontWeight:500}}>
+            🏛️ FSSAI Reg. No: <span style={{color:'#16A34A',fontWeight:700}}>23326003001887</span>
+          </span>
+        </div>
       </footer>
 
       {/* FLOATING CART */}
