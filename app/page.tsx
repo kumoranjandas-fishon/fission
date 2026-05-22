@@ -186,7 +186,7 @@ export default function Home() {
 
       // 2. Razorpay checkout open karo
       const options = {
-        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+        key: "rzp_live_SsO85o950hY9hk",
         amount: order.amount,
         currency: 'INR',
         name: 'Fishon 🐟',
