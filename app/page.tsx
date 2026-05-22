@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { db } from "@/lib/firebase";
 import { collection, addDoc, serverTimestamp, doc, getDoc } from "firebase/firestore";
 
@@ -101,20 +101,28 @@ const ITEMS = [
 
 const AVAILABLE_ITEMS = [
   {n:'Rohu',h:'Labeo rohita',p:180,u:'/500g',e:'🐟',c:'▲₹10',up:true,
+    img:'https://img.clevup.in/224989/SKU-0930_0-1712380773022.png?width=600&format=webp',
     desc:'Fresh Rohu fish, cleaned and ready. Same day delivery possible.',tags:['Same Day','Freshwater']},
   {n:'Katla',h:'Catla catla',p:160,u:'/500g',e:'🐡',c:'▲₹5',up:true,
+    img:'',
     desc:'Fresh Katla fish. Excellent for mustard curry or simple jhol.',tags:['Same Day','Freshwater']},
   {n:'Indian Baasa',h:'Pangasius',p:200,u:'/500g',e:'🐠',c:'▼₹10',up:false,
+    img:'',
     desc:'Mild flavoured Baasa, boneless cuts available. Great for fry.',tags:['Mild Flavour','Same Day']},
   {n:'Prawns',h:'Penaeus',p:320,u:'/500g',e:'🦐',c:'▼₹15',up:false,
+    img:'https://www.bbassets.com/media/uploads/p/l/800448132_1-ak-daily-bazaar-fish-bagda-chingri-tiger-prawn.jpg',
     desc:'Fresh sea prawns. Cleaned and deveined on request.',tags:['Same Day','Sea Fresh']},
   {n:'Hilsa',h:'Tenualosa ilisha',p:380,u:'/500g',e:'🐠',c:'▲₹30',up:true,
+    img:'https://www.bazaarkgp.com/product_image/11751194251.jpg',
     desc:'Fresh Hilsa — limited stock daily. Order early to avoid missing out.',tags:['Limited Stock','Premium']},
   {n:'Tilapia',h:'Oreochromis',p:140,u:'/500g',e:'🐡',c:'▼₹5',up:false,
+    img:'',
     desc:'Farm-raised Tilapia. Affordable and protein-rich. Good for light curry.',tags:['Farm Fresh','Affordable']},
   {n:'Rupchanda',h:'Pampus argenteus',p:420,u:'/500g',e:'🐠',c:'▲₹20',up:true,
+    img:'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Pampus_argenteus.jpg/400px-Pampus_argenteus.jpg',
     desc:'Silver Pomfret — premium quality available today. Order fast.',tags:['Premium','Limited']},
   {n:'Mourala',h:'Amblypharyngodon',p:120,u:'/500g',e:'🐟',c:'▲₹5',up:true,
+    img:'',
     desc:'Small freshwater Mourala. Perfect for crispy fry. Bengali favourite.',tags:['Bengali Favourite','Crispy Fry']},
 ];
 
@@ -136,6 +144,143 @@ type ModalItem = {n:string; b?:string; h?:string; t?:string; s?:string; p:number
 
 const inputStyle: React.CSSProperties = {width:'100%',padding:'11px 14px',borderRadius:'10px',border:'1.5px solid #e2e8f0',fontSize:'14px',marginBottom:'10px',boxSizing:'border-box',outline:'none',color:'#0f172a'};
 
+// ─── SCROLLING TICKER ───────────────────────────────────────────────
+function ScrollingTicker({ availableItems, preorderItems }: { availableItems: typeof AVAILABLE_ITEMS, preorderItems: typeof ITEMS }) {
+  const tickerItems = [
+    ...availableItems.map(i => ({ label: `${i.e} ${i.n} ₹${i.p}${i.u}`, type: 'available' as const, delivery: '90 min delivery' })),
+    ...preorderItems.map(i => ({ label: `${i.e} ${i.n} ₹${i.p}`, type: 'preorder' as const, delivery: 'Tomorrow morning' })),
+  ];
+  // Duplicate for seamless loop
+  const doubled = [...tickerItems, ...tickerItems];
+
+  return (
+    <div style={{ background: '#0f172a', overflow: 'hidden', height: '36px', display: 'flex', alignItems: 'center', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+      <style>{`
+        @keyframes ticker {
+          0%   { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
+        }
+        .ticker-track {
+          display: flex;
+          animation: ticker 40s linear infinite;
+          width: max-content;
+          will-change: transform;
+        }
+        .ticker-track:hover { animation-play-state: paused; }
+      `}</style>
+      <div className="ticker-track">
+        {doubled.map((item, i) => (
+          <span key={i} style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '0 24px', whiteSpace: 'nowrap', borderRight: '1px solid rgba(255,255,255,0.08)' }}>
+            <span style={{ fontSize: '12px', fontWeight: 700, color: item.type === 'available' ? '#4ade80' : '#fb923c' }}>
+              {item.label}
+            </span>
+            <span style={{ fontSize: '10px', color: item.type === 'available' ? 'rgba(74,222,128,0.6)' : 'rgba(251,146,60,0.6)', fontWeight: 500 }}>
+              • {item.delivery}
+            </span>
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// ─── SEARCH BAR WITH DROPDOWN ────────────────────────────────────────
+function SearchBar({ allItems, onSelect }: { allItems: any[], onSelect: (item: any) => void }) {
+  const [query, setQuery] = useState('');
+  const [results, setResults] = useState<any[]>([]);
+  const [focused, setFocused] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (query.trim().length < 1) { setResults([]); return; }
+    const q = query.toLowerCase();
+    const found = allItems.filter(item =>
+      item.n?.toLowerCase().includes(q) ||
+      item.b?.toLowerCase().includes(q) ||
+      item.h?.toLowerCase().includes(q) ||
+      item.t?.toLowerCase().includes(q) ||
+      item.desc?.toLowerCase().includes(q) ||
+      item.tags?.some((t: string) => t.toLowerCase().includes(q))
+    ).slice(0, 8);
+    setResults(found);
+  }, [query, allItems]);
+
+  // Close on outside click
+  useEffect(() => {
+    const handler = (e: MouseEvent) => { if (ref.current && !ref.current.contains(e.target as Node)) setFocused(false); };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, []);
+
+  return (
+    <div ref={ref} style={{ flex: 1, minWidth: '200px', position: 'relative' }}>
+      <div style={{ display: 'flex', alignItems: 'center', background: '#f8fafc', borderRadius: '10px', padding: '9px 16px', gap: '8px', border: focused ? '1.5px solid #DC2626' : '1.5px solid #e2e8f0', transition: 'border 0.2s' }}>
+        <span style={{ fontSize: '14px', color: '#94a3b8' }}>🔍</span>
+        <input
+          placeholder="Search fish, prawns, seafood..."
+          value={query}
+          onChange={e => setQuery(e.target.value)}
+          onFocus={() => setFocused(true)}
+          style={{ border: 'none', background: 'transparent', outline: 'none', fontSize: '14px', width: '100%', color: '#334155' }}
+        />
+        {query && (
+          <button onClick={() => { setQuery(''); setResults([]); }} style={{ border: 'none', background: 'none', cursor: 'pointer', color: '#94a3b8', fontSize: '16px', padding: 0, lineHeight: 1 }}>✕</button>
+        )}
+      </div>
+
+      {/* Dropdown results */}
+      {focused && results.length > 0 && (
+        <div style={{
+          position: 'absolute', top: 'calc(100% + 6px)', left: 0, right: 0,
+          background: 'white', borderRadius: '14px', boxShadow: '0 8px 32px rgba(0,0,0,0.12)',
+          border: '1px solid #f1f5f9', zIndex: 500, overflow: 'hidden', maxHeight: '420px', overflowY: 'auto'
+        }}>
+          <div style={{ padding: '8px 14px', fontSize: '11px', color: '#94a3b8', fontWeight: 600, borderBottom: '1px solid #f1f5f9', letterSpacing: '0.5px' }}>
+            {results.length} RESULT{results.length > 1 ? 'S' : ''} FOUND
+          </div>
+          {results.map((item, i) => (
+            <div
+              key={i}
+              onClick={() => { onSelect(item); setQuery(''); setResults([]); setFocused(false); }}
+              style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '10px 14px', cursor: 'pointer', borderBottom: '1px solid #f8fafc', transition: 'background 0.15s' }}
+              onMouseEnter={e => (e.currentTarget.style.background = '#f8fafc')}
+              onMouseLeave={e => (e.currentTarget.style.background = 'white')}
+            >
+              {/* Thumbnail */}
+              <div style={{ width: '48px', height: '48px', borderRadius: '10px', overflow: 'hidden', flexShrink: 0, background: item.bg || '#f0fdf4', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                {item.img || item.imgs?.[0]
+                  ? <img src={item.img || item.imgs?.[0]} alt={item.n} style={{ width: '100%', height: '100%', objectFit: 'cover' }} onError={e => { (e.target as HTMLImageElement).style.display = 'none'; }} />
+                  : <span style={{ fontSize: '24px' }}>{item.e}</span>
+                }
+              </div>
+              {/* Info */}
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ fontWeight: 700, fontSize: '13px', color: '#0f172a' }}>{item.n}</div>
+                {item.b && <div style={{ fontSize: '11px', color: '#16A34A', fontWeight: 600 }}>{item.b}</div>}
+                <div style={{ fontSize: '11px', color: '#64748b' }}>{item.s || item.u || ''}</div>
+              </div>
+              {/* Price + badge */}
+              <div style={{ textAlign: 'right', flexShrink: 0 }}>
+                <div style={{ fontWeight: 900, fontSize: '14px', color: '#DC2626' }}>₹{item.p}</div>
+                <div style={{ fontSize: '10px', fontWeight: 700, color: item.badge ? '#0B4F6C' : '#16A34A', background: item.badge ? '#EBF5FA' : '#dcfce7', padding: '2px 7px', borderRadius: '10px', marginTop: '2px' }}>
+                  {item.badge || 'Available'}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* No results */}
+      {focused && query.length > 0 && results.length === 0 && (
+        <div style={{ position: 'absolute', top: 'calc(100% + 6px)', left: 0, right: 0, background: 'white', borderRadius: '14px', boxShadow: '0 8px 32px rgba(0,0,0,0.12)', border: '1px solid #f1f5f9', zIndex: 500, padding: '20px', textAlign: 'center', color: '#94a3b8', fontSize: '13px' }}>
+          🐟 No fish found for "{query}"
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function Home() {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [showCart, setShowCart] = useState(false);
@@ -149,8 +294,6 @@ export default function Home() {
   const [orderId, setOrderId] = useState('');
   const [modalPhoto, setModalPhoto] = useState(0);
   const [modalItem, setModalItem] = useState<ModalItem|null>(null);
-
-  // Firebase se live items fetch karo
   const [liveAvailableItems, setLiveAvailableItems] = useState(AVAILABLE_ITEMS);
   const [livePreorderItems, setLivePreorderItems] = useState(ITEMS);
 
@@ -160,36 +303,21 @@ export default function Home() {
         const snap = await getDoc(doc(db, 'settings', 'items'));
         if (snap.exists()) {
           const firebaseItems = snap.data().list;
-          // Available items update karo
           const newAvailable = AVAILABLE_ITEMS.map(ai => {
-            const fi = firebaseItems.find((f: any) =>
-              f.name.toLowerCase().includes(ai.n.toLowerCase()) ||
-              ai.n.toLowerCase().includes(f.name.toLowerCase().split(' ')[0])
-            );
+            const fi = firebaseItems.find((f: any) => f.name.toLowerCase().includes(ai.n.toLowerCase()) || ai.n.toLowerCase().includes(f.name.toLowerCase().split(' ')[0]));
             if (fi) return {...ai, p: fi.price, type: fi.type};
             return ai;
           }).filter(ai => {
-            const fi = firebaseItems.find((f: any) =>
-              f.name.toLowerCase().includes(ai.n.toLowerCase()) ||
-              ai.n.toLowerCase().includes(f.name.toLowerCase().split(' ')[0])
-            );
+            const fi = firebaseItems.find((f: any) => f.name.toLowerCase().includes(ai.n.toLowerCase()) || ai.n.toLowerCase().includes(f.name.toLowerCase().split(' ')[0]));
             return !fi || fi.type === 'available';
           });
           setLiveAvailableItems(newAvailable);
-
-          // Preorder items update karo
           const newPreorder = ITEMS.map(pi => {
-            const fi = firebaseItems.find((f: any) =>
-              f.name.toLowerCase().includes(pi.n.toLowerCase().split(' ')[0]) ||
-              pi.n.toLowerCase().includes(f.name.toLowerCase().split(' ')[0])
-            );
+            const fi = firebaseItems.find((f: any) => f.name.toLowerCase().includes(pi.n.toLowerCase().split(' ')[0]) || pi.n.toLowerCase().includes(f.name.toLowerCase().split(' ')[0]));
             if (fi) return {...pi, p: fi.price};
             return pi;
           }).filter(pi => {
-            const fi = firebaseItems.find((f: any) =>
-              f.name.toLowerCase().includes(pi.n.toLowerCase().split(' ')[0]) ||
-              pi.n.toLowerCase().includes(f.name.toLowerCase().split(' ')[0])
-            );
+            const fi = firebaseItems.find((f: any) => f.name.toLowerCase().includes(pi.n.toLowerCase().split(' ')[0]) || pi.n.toLowerCase().includes(f.name.toLowerCase().split(' ')[0]));
             return !fi || fi.type === 'preorder';
           });
           setLivePreorderItems(newPreorder);
@@ -198,6 +326,21 @@ export default function Home() {
     };
     fetchItems();
   }, []);
+
+  // Combine all items for search
+  const allSearchItems = [
+    ...liveAvailableItems.map(i => ({ ...i, type: 'available', badge: null })),
+    ...livePreorderItems.map(i => ({ ...i, type: 'preorder' })),
+  ];
+
+  const handleSearchSelect = (item: any) => {
+    setModalPhoto(0);
+    if (item.type === 'available') {
+      setModalItem({ n: item.n, h: item.h, p: item.p, e: item.e, desc: item.desc, tags: item.tags, u: item.u, img: item.img, type: 'available' });
+    } else {
+      setModalItem({ n: item.n, b: item.b, h: item.h, t: item.t, s: item.s, p: item.p, e: item.e, desc: item.desc, tags: item.tags, img: item.img, imgs: item.imgs, badge: item.badge, storage: item.storage, weight: item.weight, type: 'preorder' });
+    }
+  };
 
   const totalItems = cart.reduce((s,i)=>s+i.qty,0);
   const totalPrice = cart.reduce((s,i)=>s+i.p*i.qty,0);
@@ -252,10 +395,8 @@ export default function Home() {
   return (
     <main style={{fontFamily:'-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif',minHeight:'100vh',background:'#f9fafb'}}>
 
-      {/* ANNOUNCEMENT BAR */}
-      <div style={{background:'#0f172a',color:'white',textAlign:'center',padding:'8px 16px',fontSize:'12px',fontWeight:500,letterSpacing:'0.3px'}}>
-        🎉 Free Delivery on orders above ₹499 &nbsp;•&nbsp; Order by 11 PM for next morning delivery
-      </div>
+      {/* ── SCROLLING TICKER (replaces old announcement bar) ── */}
+      <ScrollingTicker availableItems={liveAvailableItems} preorderItems={livePreorderItems} />
 
       {/* HEADER */}
       <header style={{background:'white',borderBottom:'1px solid #f1f5f9',padding:'12px 24px',position:'sticky',top:0,zIndex:100,boxShadow:'0 1px 8px rgba(0,0,0,0.06)'}}>
@@ -272,11 +413,8 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Search */}
-          <div style={{flex:1,minWidth:'200px',display:'flex',alignItems:'center',background:'#f8fafc',borderRadius:'10px',padding:'9px 16px',gap:'8px',border:'1.5px solid #e2e8f0'}}>
-            <span style={{fontSize:'14px',color:'#94a3b8'}}>🔍</span>
-            <input placeholder="Search fish, prawns, seafood..." style={{border:'none',background:'transparent',outline:'none',fontSize:'14px',width:'100%',color:'#334155'}}/>
-          </div>
+          {/* ── SEARCH BAR WITH LIVE RESULTS ── */}
+          <SearchBar allItems={allSearchItems} onSelect={handleSearchSelect} />
 
           {/* Right */}
           <div style={{display:'flex',gap:'8px',alignItems:'center'}}>
@@ -300,83 +438,34 @@ export default function Home() {
 
       {/* HERO */}
       <section style={{background:'linear-gradient(180deg,#0a1628 0%,#0d2137 40%,#0a1628 100%)',padding:'80px 24px',position:'relative',overflow:'hidden'}}>
-
-        {/* Animated CSS */}
         <style>{`
-          @keyframes fishSwim1 {
-            0%   { transform: translateX(-120px) translateY(0px) scaleX(1); opacity:0; }
-            10%  { opacity: 0.18; }
-            90%  { opacity: 0.18; }
-            100% { transform: translateX(110vw) translateY(-30px) scaleX(1); opacity:0; }
-          }
-          @keyframes fishSwim2 {
-            0%   { transform: translateX(110vw) translateY(0px) scaleX(-1); opacity:0; }
-            10%  { opacity: 0.13; }
-            90%  { opacity: 0.13; }
-            100% { transform: translateX(-120px) translateY(20px) scaleX(-1); opacity:0; }
-          }
-          @keyframes fishSwim3 {
-            0%   { transform: translateX(-120px) translateY(0px) scaleX(1); opacity:0; }
-            10%  { opacity: 0.1; }
-            90%  { opacity: 0.1; }
-            100% { transform: translateX(110vw) translateY(10px) scaleX(1); opacity:0; }
-          }
-          @keyframes bubble {
-            0%   { transform: translateY(0px); opacity:0.4; }
-            100% { transform: translateY(-80px); opacity:0; }
-          }
-          @keyframes glow {
-            0%,100% { opacity:0.15; }
-            50%      { opacity:0.25; }
-          }
+          @keyframes fishSwim1 { 0% { transform:translateX(-120px) translateY(0px) scaleX(1);opacity:0; } 10% { opacity:0.18; } 90% { opacity:0.18; } 100% { transform:translateX(110vw) translateY(-30px) scaleX(1);opacity:0; } }
+          @keyframes fishSwim2 { 0% { transform:translateX(110vw) translateY(0px) scaleX(-1);opacity:0; } 10% { opacity:0.13; } 90% { opacity:0.13; } 100% { transform:translateX(-120px) translateY(20px) scaleX(-1);opacity:0; } }
+          @keyframes bubble { 0% { transform:translateY(0px);opacity:0.4; } 100% { transform:translateY(-80px);opacity:0; } }
+          @keyframes glow { 0%,100% { opacity:0.15; } 50% { opacity:0.25; } }
         `}</style>
-
-        {/* Underwater glow */}
         <div style={{position:'absolute',inset:0,backgroundImage:'radial-gradient(ellipse at 20% 60%,rgba(0,100,200,0.2) 0%,transparent 55%),radial-gradient(ellipse at 80% 40%,rgba(0,60,120,0.15) 0%,transparent 50%)',animation:'glow 4s ease-in-out infinite'}}></div>
-
-        {/* Floating fish silhouettes */}
-        {/* Fish 1 - big, slow */}
         <div style={{position:'absolute',top:'20%',left:0,fontSize:'48px',animation:'fishSwim1 18s linear infinite',animationDelay:'0s',pointerEvents:'none'}}>🐟</div>
-        {/* Fish 2 - medium, opposite direction */}
         <div style={{position:'absolute',top:'55%',right:0,fontSize:'36px',animation:'fishSwim2 14s linear infinite',animationDelay:'3s',pointerEvents:'none'}}>🐠</div>
-        {/* Fish 3 - small */}
         <div style={{position:'absolute',top:'70%',left:0,fontSize:'24px',animation:'fishSwim1 22s linear infinite',animationDelay:'7s',pointerEvents:'none'}}>🐡</div>
-        {/* Fish 4 - prawn */}
         <div style={{position:'absolute',top:'35%',right:0,fontSize:'30px',animation:'fishSwim2 16s linear infinite',animationDelay:'11s',pointerEvents:'none'}}>🦐</div>
-        {/* Fish 5 */}
         <div style={{position:'absolute',top:'80%',left:0,fontSize:'40px',animation:'fishSwim1 20s linear infinite',animationDelay:'5s',pointerEvents:'none'}}>🐟</div>
-        {/* Fish 6 - small opposite */}
         <div style={{position:'absolute',top:'15%',right:0,fontSize:'28px',animation:'fishSwim2 12s linear infinite',animationDelay:'9s',pointerEvents:'none'}}>🐠</div>
-
-        {/* Bubbles */}
         {[{l:'10%',d:'0s',s:'3px'},{l:'25%',d:'1.5s',s:'5px'},{l:'45%',d:'0.8s',s:'4px'},{l:'60%',d:'2s',s:'3px'},{l:'75%',d:'0.3s',s:'6px'},{l:'88%',d:'1.2s',s:'4px'}].map((b,i)=>(
           <div key={i} style={{position:'absolute',bottom:'10%',left:b.l,width:b.s,height:b.s,borderRadius:'50%',background:'rgba(100,180,255,0.3)',animation:`bubble ${3+i*0.5}s ease-out infinite`,animationDelay:b.d,pointerEvents:'none'}}></div>
         ))}
-
-        {/* Light rays from top */}
         <div style={{position:'absolute',top:0,left:'30%',width:'2px',height:'100%',background:'linear-gradient(180deg,rgba(100,200,255,0.08) 0%,transparent 70%)',transform:'rotate(-15deg)',transformOrigin:'top'}}></div>
         <div style={{position:'absolute',top:0,left:'60%',width:'1px',height:'100%',background:'linear-gradient(180deg,rgba(100,200,255,0.06) 0%,transparent 60%)',transform:'rotate(10deg)',transformOrigin:'top'}}></div>
-
         <div style={{maxWidth:'860px',margin:'0 auto',position:'relative',zIndex:2,textAlign:'center'}}>
-
-          {/* Badge */}
           <div style={{display:'inline-flex',alignItems:'center',gap:'8px',background:'rgba(220,38,38,0.15)',border:'1px solid rgba(220,38,38,0.35)',padding:'7px 18px',borderRadius:'30px',marginBottom:'28px'}}>
             <span style={{color:'#fca5a5',fontSize:'12px',fontWeight:700,letterSpacing:'0.5px'}}>⏰ ORDER BY 11 PM — DELIVERED FRESH TOMORROW</span>
           </div>
-
-          {/* Heading */}
           <h1 style={{color:'white',fontSize:'clamp(36px,5vw,64px)',fontWeight:900,margin:'0 0 20px',lineHeight:1.1,letterSpacing:'-1.5px'}}>
-            Fresh Fish,{' '}
-            <span style={{color:'#DC2626'}}>Delivered</span>{' '}
-            to Your Doorstep 🐟
+            Fresh Fish,{' '}<span style={{color:'#DC2626'}}>Delivered</span>{' '}to Your Doorstep 🐟
           </h1>
-
-          {/* Subtext */}
           <p style={{color:'#94a3b8',fontSize:'17px',marginBottom:'40px',maxWidth:'560px',lineHeight:1.75,margin:'0 auto 40px'}}>
             Sourced fresh from the market every morning. Delivered to your home <strong style={{color:'white'}}>9 AM – 12 PM</strong>. No chemicals, no preservatives.
           </p>
-
-          {/* Stats */}
           <div style={{display:'flex',justifyContent:'center',gap:'40px',marginBottom:'44px',flexWrap:'wrap'}}>
             {[{n:'100%',l:'Chemical Free'},{n:'15+',l:'Fish Varieties'},{n:'9–12 AM',l:'Delivery Window'},{n:'₹499+',l:'Free Delivery'}].map(s=>(
               <div key={s.l} style={{textAlign:'center'}}>
@@ -385,20 +474,14 @@ export default function Home() {
               </div>
             ))}
           </div>
-
-          {/* CTA Buttons */}
           <div style={{display:'flex',gap:'14px',justifyContent:'center',flexWrap:'wrap'}}>
-            <a href="#menu" style={{background:'#DC2626',color:'white',textDecoration:'none',padding:'15px 32px',borderRadius:'12px',fontWeight:700,fontSize:'15px',display:'flex',alignItems:'center',gap:'8px',boxShadow:'0 4px 24px rgba(220,38,38,0.4)'}}>
-              🛒 Order Now
-            </a>
-            <a href="https://wa.me/918287000582?text=Hi! I want to order fish" style={{background:'rgba(255,255,255,0.08)',color:'white',textDecoration:'none',padding:'15px 32px',borderRadius:'12px',fontWeight:700,fontSize:'15px',border:'1px solid rgba(255,255,255,0.2)',display:'flex',alignItems:'center',gap:'8px'}}>
-              💬 WhatsApp Order
-            </a>
+            <a href="#menu" style={{background:'#DC2626',color:'white',textDecoration:'none',padding:'15px 32px',borderRadius:'12px',fontWeight:700,fontSize:'15px',display:'flex',alignItems:'center',gap:'8px',boxShadow:'0 4px 24px rgba(220,38,38,0.4)'}}>🛒 Order Now</a>
+            <a href="https://wa.me/918287000582?text=Hi! I want to order fish" style={{background:'rgba(255,255,255,0.08)',color:'white',textDecoration:'none',padding:'15px 32px',borderRadius:'12px',fontWeight:700,fontSize:'15px',border:'1px solid rgba(255,255,255,0.2)',display:'flex',alignItems:'center',gap:'8px'}}>💬 WhatsApp Order</a>
           </div>
         </div>
       </section>
 
-      {/* RATES — Available Items */}
+      {/* AVAILABLE NOW */}
       <section style={{background:'white',padding:'32px 24px',borderBottom:'1px solid #f1f5f9'}}>
         <div style={{maxWidth:'1200px',margin:'0 auto'}}>
           <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:'20px'}}>
@@ -413,19 +496,19 @@ export default function Home() {
               const qty = getQty(i.n);
               return (
                 <div key={i.n}
-                  onClick={()=>setModalItem({n:i.n,h:i.h,p:i.p,e:i.e,desc:i.desc,tags:i.tags,u:i.u,type:'available'})}
+                  onClick={()=>setModalItem({n:i.n,h:i.h,p:i.p,e:i.e,desc:i.desc,tags:i.tags,u:i.u,img:i.img,type:'available'})}
                   style={{background:'#f8fafc',borderRadius:'12px',padding:'14px',textAlign:'center',border:'1.5px solid #e2e8f0',cursor:'pointer',transition:'box-shadow 0.2s',position:'relative'}}>
-                  <div style={{fontSize:'30px',marginBottom:'6px'}}>{i.e}</div>
+                  <div style={{width:'60px',height:'60px',margin:'0 auto 8px',borderRadius:'10px',overflow:'hidden',background:'#f0fdf4',display:'flex',alignItems:'center',justifyContent:'center'}}>
+                    {i.img ? <img src={i.img} alt={i.n} style={{width:'100%',height:'100%',objectFit:'cover'}} onError={e=>{(e.target as HTMLImageElement).style.display='none';}}/> : <span style={{fontSize:'28px'}}>{i.e}</span>}
+                  </div>
                   <div style={{fontSize:'13px',fontWeight:700,color:'#0f172a'}}>{i.n}</div>
                   <div style={{fontSize:'10px',color:'#94a3b8',marginBottom:'6px',fontStyle:'italic'}}>{i.h}</div>
                   <div style={{fontSize:'18px',fontWeight:900,color:'#0f172a'}}>{i.p}</div>
                   <div style={{fontSize:'10px',color:'#64748b'}}>{i.u}</div>
                   <div style={{fontSize:'11px',fontWeight:700,color:i.up?'#DC2626':'#16A34A',marginTop:'4px',marginBottom:'8px'}}>{i.c}</div>
-                  {/* Add to cart inline - stop propagation */}
                   <div onClick={e=>e.stopPropagation()}>
                     {qty === 0 ? (
-                      <button onClick={()=>addToCart({n:i.n,p:i.p,e:i.e})}
-                        style={{background:'#DC2626',color:'white',border:'none',padding:'6px 14px',borderRadius:'8px',fontSize:'11px',fontWeight:700,cursor:'pointer',width:'100%'}}>+ Add</button>
+                      <button onClick={()=>addToCart({n:i.n,p:i.p,e:i.e})} style={{background:'#DC2626',color:'white',border:'none',padding:'6px 14px',borderRadius:'8px',fontSize:'11px',fontWeight:700,cursor:'pointer',width:'100%'}}>+ Add</button>
                     ) : (
                       <div style={{display:'flex',alignItems:'center',justifyContent:'center',gap:'6px'}}>
                         <button onClick={()=>removeFromCart(i.n)} style={{background:'#f1f5f9',border:'none',width:'26px',height:'26px',borderRadius:'6px',fontWeight:700,cursor:'pointer',fontSize:'14px',color:'#334155'}}>−</button>
@@ -441,7 +524,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* PRE ORDER STRIP — "Fresh Catch Pre-Order" heading ke bilkul upar */}
+      {/* PRE ORDER STRIP */}
       <div style={{background:'#fffbeb',borderBottom:'2px solid #f59e0b',padding:'12px 24px',display:'flex',alignItems:'center',gap:'16px',flexWrap:'wrap'}}>
         <div style={{display:'flex',alignItems:'center',gap:'8px',flex:1}}>
           <span style={{fontSize:'18px'}}>⏰</span>
@@ -450,9 +533,7 @@ export default function Home() {
             <span style={{fontSize:'12px',color:'#b45309'}}>Tomorrow morning 9 AM - 12 PM delivery • Free on orders above ₹499</span>
           </div>
         </div>
-        <a href="https://wa.me/918287000582?text=I want to pre-order" style={{background:'#f59e0b',color:'white',textDecoration:'none',padding:'8px 18px',borderRadius:'8px',fontWeight:700,fontSize:'13px',whiteSpace:'nowrap'}}>
-          Pre-Order Now →
-        </a>
+        <a href="https://wa.me/918287000582?text=I want to pre-order" style={{background:'#f59e0b',color:'white',textDecoration:'none',padding:'8px 18px',borderRadius:'8px',fontWeight:700,fontSize:'13px',whiteSpace:'nowrap'}}>Pre-Order Now →</a>
       </div>
 
       {/* PRE-ORDER MENU */}
@@ -530,9 +611,7 @@ export default function Home() {
       <section style={{background:'linear-gradient(135deg,#16A34A,#15803d)',padding:'40px 24px',textAlign:'center'}}>
         <h2 style={{color:'white',fontWeight:800,fontSize:'24px',marginBottom:'8px'}}>📱 Order via WhatsApp</h2>
         <p style={{color:'rgba(255,255,255,0.85)',marginBottom:'20px',fontSize:'14px'}}>Message us directly — confirmed within 10 minutes!</p>
-        <a href="https://wa.me/918287000582?text=Hi Fishon! I want to order fish" style={{background:'white',color:'#16A34A',textDecoration:'none',padding:'14px 32px',borderRadius:'10px',fontWeight:800,fontSize:'15px',display:'inline-block',letterSpacing:'-0.3px'}}>
-          💬 Chat on WhatsApp
-        </a>
+        <a href="https://wa.me/918287000582?text=Hi Fishon! I want to order fish" style={{background:'white',color:'#16A34A',textDecoration:'none',padding:'14px 32px',borderRadius:'10px',fontWeight:800,fontSize:'15px',display:'inline-block',letterSpacing:'-0.3px'}}>💬 Chat on WhatsApp</a>
       </section>
 
       {/* FOOTER */}
@@ -542,10 +621,7 @@ export default function Home() {
           <span style={{color:'#16A34A',fontWeight:800,fontSize:'22px',fontStyle:'italic'}}>on</span>
         </div>
         <p style={{color:'#475569',fontSize:'12px',margin:'0 0 16px'}}>📍 Delhi NCR • 🕐 7:30 AM - 11:00 PM Daily • © 2026 Fishon. All rights reserved.</p>
-
-        {/* FSSAI Logo + Number */}
         <div style={{display:'inline-flex',alignItems:'center',gap:'10px',background:'#1e293b',border:'1px solid #334155',borderRadius:'10px',padding:'10px 20px'}}>
-          {/* FSSAI Logo SVG */}
           <div style={{background:'white',borderRadius:'4px',padding:'4px 8px',display:'flex',alignItems:'center',justifyContent:'center'}}>
             <svg width="60" height="28" viewBox="0 0 120 56" xmlns="http://www.w3.org/2000/svg">
               <rect width="120" height="56" fill="white"/>
@@ -573,53 +649,36 @@ export default function Home() {
         </button>
       )}
 
-      {/* ============ PRODUCT DETAIL MODAL ============ */}
+      {/* PRODUCT DETAIL MODAL */}
       {modalItem && (
-        <div onClick={()=>setModalItem(null)}
-          style={{position:'fixed',inset:0,background:'rgba(15,23,42,0.75)',zIndex:400,display:'flex',alignItems:'center',justifyContent:'center',padding:'20px'}}>
-          <div onClick={e=>e.stopPropagation()}
-            style={{background:'white',borderRadius:'20px',width:'100%',maxWidth:'480px',overflow:'hidden',boxShadow:'0 20px 60px rgba(0,0,0,0.3)'}}>
-
-            {/* Image / Emoji area with slider */}
-            <div style={{height:'220px',background: modalItem.type==='preorder' ? '#EBF5FA' : '#f0fdf4',display:'flex',alignItems:'center',justifyContent:'center',position:'relative'}}>
+        <div onClick={()=>setModalItem(null)} style={{position:'fixed',inset:0,background:'rgba(15,23,42,0.75)',zIndex:400,display:'flex',alignItems:'center',justifyContent:'center',padding:'20px'}}>
+          <div onClick={e=>e.stopPropagation()} style={{background:'white',borderRadius:'20px',width:'100%',maxWidth:'480px',overflow:'hidden',boxShadow:'0 20px 60px rgba(0,0,0,0.3)'}}>
+            <div style={{height:'220px',background:modalItem.type==='preorder'?'#EBF5FA':'#f0fdf4',display:'flex',alignItems:'center',justifyContent:'center',position:'relative'}}>
               {modalItem.imgs && modalItem.imgs.length > 0 ? (
                 <>
                   <img src={modalItem.imgs[modalPhoto]} alt={modalItem.n} style={{width:'100%',height:'100%',objectFit:'cover'}}/>
-                  {/* Dots */}
                   {modalItem.imgs.length > 1 && (
                     <div style={{position:'absolute',bottom:'10px',left:'50%',transform:'translateX(-50%)',display:'flex',gap:'6px'}}>
                       {modalItem.imgs.map((_,idx)=>(
-                        <div key={idx} onClick={e=>{e.stopPropagation();setModalPhoto(idx);}}
-                          style={{width:'8px',height:'8px',borderRadius:'50%',background:idx===modalPhoto?'white':'rgba(255,255,255,0.5)',cursor:'pointer',border:'1px solid rgba(0,0,0,0.2)'}}/>
+                        <div key={idx} onClick={e=>{e.stopPropagation();setModalPhoto(idx);}} style={{width:'8px',height:'8px',borderRadius:'50%',background:idx===modalPhoto?'white':'rgba(255,255,255,0.5)',cursor:'pointer',border:'1px solid rgba(0,0,0,0.2)'}}/>
                       ))}
                     </div>
                   )}
-                  {/* Prev/Next arrows */}
                   {modalItem.imgs.length > 1 && (
                     <>
-                      <button onClick={e=>{e.stopPropagation();setModalPhoto(p=>p===0?modalItem.imgs!.length-1:p-1);}}
-                        style={{position:'absolute',left:'8px',top:'50%',transform:'translateY(-50%)',background:'rgba(255,255,255,0.8)',border:'none',borderRadius:'50%',width:'32px',height:'32px',cursor:'pointer',fontSize:'16px',fontWeight:700}}>‹</button>
-                      <button onClick={e=>{e.stopPropagation();setModalPhoto(p=>p===modalItem.imgs!.length-1?0:p+1);}}
-                        style={{position:'absolute',right:'44px',top:'50%',transform:'translateY(-50%)',background:'rgba(255,255,255,0.8)',border:'none',borderRadius:'50%',width:'32px',height:'32px',cursor:'pointer',fontSize:'16px',fontWeight:700}}>›</button>
+                      <button onClick={e=>{e.stopPropagation();setModalPhoto(p=>p===0?modalItem.imgs!.length-1:p-1);}} style={{position:'absolute',left:'8px',top:'50%',transform:'translateY(-50%)',background:'rgba(255,255,255,0.8)',border:'none',borderRadius:'50%',width:'32px',height:'32px',cursor:'pointer',fontSize:'16px',fontWeight:700}}>‹</button>
+                      <button onClick={e=>{e.stopPropagation();setModalPhoto(p=>p===modalItem.imgs!.length-1?0:p+1);}} style={{position:'absolute',right:'44px',top:'50%',transform:'translateY(-50%)',background:'rgba(255,255,255,0.8)',border:'none',borderRadius:'50%',width:'32px',height:'32px',cursor:'pointer',fontSize:'16px',fontWeight:700}}>›</button>
                     </>
                   )}
                 </>
-              ) : modalItem.img ? (
-                <img src={modalItem.img} alt={modalItem.n} style={{width:'100%',height:'100%',objectFit:'cover'}}/>
-              ) : (
-                <span style={{fontSize:'80px'}}>{modalItem.e}</span>
-              )}
-              {modalItem.badge && (
-                <span style={{position:'absolute',top:'12px',left:'12px',background:'#0B4F6C',color:'white',fontSize:'10px',fontWeight:700,padding:'4px 10px',borderRadius:'20px'}}>{modalItem.badge}</span>
-              )}
-              <button onClick={()=>setModalItem(null)}
-                style={{position:'absolute',top:'12px',right:'12px',background:'rgba(255,255,255,0.9)',border:'none',borderRadius:'50%',width:'32px',height:'32px',cursor:'pointer',fontSize:'16px',fontWeight:700,color:'#334155'}}>✕</button>
+              ) : (modalItem.img)
+                ? <img src={modalItem.img} alt={modalItem.n} style={{width:'100%',height:'100%',objectFit:'cover'}}/>
+                : <span style={{fontSize:'80px'}}>{modalItem.e}</span>
+              }
+              {modalItem.badge && <span style={{position:'absolute',top:'12px',left:'12px',background:'#0B4F6C',color:'white',fontSize:'10px',fontWeight:700,padding:'4px 10px',borderRadius:'20px'}}>{modalItem.badge}</span>}
+              <button onClick={()=>setModalItem(null)} style={{position:'absolute',top:'12px',right:'12px',background:'rgba(255,255,255,0.9)',border:'none',borderRadius:'50%',width:'32px',height:'32px',cursor:'pointer',fontSize:'16px',fontWeight:700,color:'#334155'}}>✕</button>
             </div>
-
-            {/* Content */}
             <div style={{padding:'20px 24px 24px',maxHeight:'60vh',overflowY:'auto'}}>
-
-              {/* Name in multiple languages */}
               <div style={{marginBottom:'12px'}}>
                 <h2 style={{margin:'0 0 4px',fontSize:'20px',fontWeight:800,color:'#0f172a'}}>{modalItem.n}</h2>
                 <div style={{display:'flex',flexWrap:'wrap',gap:'8px',marginBottom:'4px'}}>
@@ -629,71 +688,36 @@ export default function Home() {
                 </div>
                 <div style={{fontSize:'12px',color:'#94a3b8'}}>{modalItem.s || modalItem.u}</div>
               </div>
-
-              {/* Price */}
               <div style={{display:'flex',alignItems:'center',gap:'12px',marginBottom:'16px',padding:'12px',background:'#f8fafc',borderRadius:'10px'}}>
                 <div>
                   <div style={{fontSize:'28px',fontWeight:900,color:'#DC2626'}}>₹{modalItem.p}</div>
                   <div style={{fontSize:'11px',color:'#64748b'}}>per {modalItem.s || '500g'}</div>
                 </div>
-                {modalItem.badge && (
-                  <span style={{background:'#0B4F6C',color:'white',fontSize:'11px',fontWeight:700,padding:'4px 12px',borderRadius:'20px'}}>{modalItem.badge}</span>
-                )}
+                {modalItem.badge && <span style={{background:'#0B4F6C',color:'white',fontSize:'11px',fontWeight:700,padding:'4px 12px',borderRadius:'20px'}}>{modalItem.badge}</span>}
               </div>
-
-              {/* Description */}
-              {modalItem.desc && (
-                <p style={{color:'#475569',fontSize:'13px',lineHeight:1.7,margin:'0 0 14px',padding:'12px',background:'#f0fdf4',borderRadius:'10px',borderLeft:'3px solid #16A34A'}}>{modalItem.desc}</p>
-              )}
-
-              {/* Weight & Storage */}
+              {modalItem.desc && <p style={{color:'#475569',fontSize:'13px',lineHeight:1.7,margin:'0 0 14px',padding:'12px',background:'#f0fdf4',borderRadius:'10px',borderLeft:'3px solid #16A34A'}}>{modalItem.desc}</p>}
               <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'10px',marginBottom:'14px'}}>
-                {modalItem.weight && (
-                  <div style={{background:'#fefce8',borderRadius:'10px',padding:'10px',border:'1px solid #fef08a'}}>
-                    <div style={{fontSize:'10px',color:'#854d0e',fontWeight:700,marginBottom:'3px'}}>⚖️ WEIGHT INFO</div>
-                    <div style={{fontSize:'12px',color:'#713f12'}}>{modalItem.weight}</div>
-                  </div>
-                )}
-                {modalItem.storage && (
-                  <div style={{background:'#eff6ff',borderRadius:'10px',padding:'10px',border:'1px solid #bfdbfe'}}>
-                    <div style={{fontSize:'10px',color:'#1e40af',fontWeight:700,marginBottom:'3px'}}>❄️ STORAGE</div>
-                    <div style={{fontSize:'12px',color:'#1e3a8a'}}>{modalItem.storage}</div>
-                  </div>
-                )}
+                {modalItem.weight && <div style={{background:'#fefce8',borderRadius:'10px',padding:'10px',border:'1px solid #fef08a'}}><div style={{fontSize:'10px',color:'#854d0e',fontWeight:700,marginBottom:'3px'}}>⚖️ WEIGHT INFO</div><div style={{fontSize:'12px',color:'#713f12'}}>{modalItem.weight}</div></div>}
+                {modalItem.storage && <div style={{background:'#eff6ff',borderRadius:'10px',padding:'10px',border:'1px solid #bfdbfe'}}><div style={{fontSize:'10px',color:'#1e40af',fontWeight:700,marginBottom:'3px'}}>❄️ STORAGE</div><div style={{fontSize:'12px',color:'#1e3a8a'}}>{modalItem.storage}</div></div>}
               </div>
-
-              {/* Tags */}
               {modalItem.tags && modalItem.tags.length > 0 && (
                 <div style={{display:'flex',flexWrap:'wrap',gap:'6px',marginBottom:'16px'}}>
-                  {modalItem.tags.map(tag=>(
-                    <span key={tag} style={{background:'#f0fdf4',color:'#16A34A',fontSize:'11px',fontWeight:600,padding:'3px 10px',borderRadius:'20px',border:'1px solid #bbf7d0'}}>{tag}</span>
-                  ))}
+                  {modalItem.tags.map(tag=><span key={tag} style={{background:'#f0fdf4',color:'#16A34A',fontSize:'11px',fontWeight:600,padding:'3px 10px',borderRadius:'20px',border:'1px solid #bbf7d0'}}>{tag}</span>)}
                 </div>
               )}
-
-              {/* Marketed by */}
               <div style={{background:'#f8fafc',borderRadius:'10px',padding:'10px 14px',marginBottom:'16px',fontSize:'12px',color:'#64748b',border:'1px solid #e2e8f0'}}>
                 <div style={{fontWeight:700,color:'#334155',marginBottom:'2px'}}>🏪 Marketed By</div>
                 <div>Fishon Fresh Delivery, A38/2 Joshi Colony, Mandawali, Preet Vihar, Delhi - 110092</div>
                 <div style={{marginTop:'4px',color:'#16A34A',fontWeight:600}}>FSSAI Reg. No: 23326003001887</div>
               </div>
-
-              {/* Add to cart in modal */}
               {(() => {
                 const qty = getQty(modalItem.n);
                 return qty === 0 ? (
-                  <button
-                    onClick={()=>{ addToCart({n:modalItem.n,p:modalItem.p,e:modalItem.e}); setModalItem(null); }}
-                    style={{width:'100%',background:'#DC2626',color:'white',border:'none',padding:'14px',borderRadius:'12px',fontWeight:700,fontSize:'15px',cursor:'pointer'}}>
-                    🛒 Add to Cart — ₹{modalItem.p}
-                  </button>
+                  <button onClick={()=>{ addToCart({n:modalItem.n,p:modalItem.p,e:modalItem.e}); setModalItem(null); }} style={{width:'100%',background:'#DC2626',color:'white',border:'none',padding:'14px',borderRadius:'12px',fontWeight:700,fontSize:'15px',cursor:'pointer'}}>🛒 Add to Cart — ₹{modalItem.p}</button>
                 ) : (
                   <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',background:'#f8fafc',borderRadius:'12px',padding:'10px 16px',border:'1.5px solid #e2e8f0'}}>
                     <button onClick={()=>removeFromCart(modalItem.n)} style={{background:'white',border:'1.5px solid #e2e8f0',width:'36px',height:'36px',borderRadius:'8px',fontWeight:700,cursor:'pointer',fontSize:'18px',color:'#334155'}}>−</button>
-                    <div style={{textAlign:'center'}}>
-                      <div style={{fontWeight:900,fontSize:'18px',color:'#0f172a'}}>{qty} in cart</div>
-                      <div style={{fontSize:'12px',color:'#DC2626',fontWeight:600}}>₹{modalItem.p*qty} total</div>
-                    </div>
+                    <div style={{textAlign:'center'}}><div style={{fontWeight:900,fontSize:'18px',color:'#0f172a'}}>{qty} in cart</div><div style={{fontSize:'12px',color:'#DC2626',fontWeight:600}}>₹{modalItem.p*qty} total</div></div>
                     <button onClick={()=>addToCart({n:modalItem.n,p:modalItem.p,e:modalItem.e})} style={{background:'#DC2626',color:'white',border:'none',width:'36px',height:'36px',borderRadius:'8px',fontWeight:700,cursor:'pointer',fontSize:'18px'}}>+</button>
                   </div>
                 );
@@ -707,8 +731,6 @@ export default function Home() {
       {showCart && (
         <div style={{position:'fixed',inset:0,background:'rgba(15,23,42,0.7)',zIndex:300,display:'flex',alignItems:'flex-end',justifyContent:'center'}}>
           <div style={{background:'white',width:'100%',maxWidth:'540px',borderRadius:'20px 20px 0 0',padding:'24px',maxHeight:'90vh',overflowY:'auto'}}>
-
-            {/* STEP 1: CART */}
             {checkoutStep === 'cart' && (
               <>
                 <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:'20px'}}>
@@ -740,21 +762,16 @@ export default function Home() {
                     ))}
                     <div style={{marginTop:'16px',padding:'14px',background:'#f8fafc',borderRadius:'12px',border:'1px solid #e2e8f0'}}>
                       <div style={{display:'flex',justifyContent:'space-between',fontWeight:800,fontSize:'16px',color:'#0f172a'}}>
-                        <span>Total</span>
-                        <span style={{color:'#DC2626'}}>₹{totalPrice}</span>
+                        <span>Total</span><span style={{color:'#DC2626'}}>₹{totalPrice}</span>
                       </div>
                       {totalPrice >= 499 ? <div style={{color:'#16A34A',fontSize:'12px',marginTop:'4px',fontWeight:600}}>🎉 Free Delivery!</div> :
                         <div style={{color:'#64748b',fontSize:'12px',marginTop:'4px'}}>Add ₹{499-totalPrice} more for free delivery</div>}
                     </div>
-                    <button onClick={()=>setCheckoutStep('pincode')} style={{width:'100%',background:'#DC2626',color:'white',border:'none',padding:'14px',borderRadius:'10px',fontWeight:700,fontSize:'15px',cursor:'pointer',marginTop:'14px'}}>
-                      Check Delivery →
-                    </button>
+                    <button onClick={()=>setCheckoutStep('pincode')} style={{width:'100%',background:'#DC2626',color:'white',border:'none',padding:'14px',borderRadius:'10px',fontWeight:700,fontSize:'15px',cursor:'pointer',marginTop:'14px'}}>Check Delivery →</button>
                   </>
                 )}
               </>
             )}
-
-            {/* STEP 2: PINCODE */}
             {checkoutStep === 'pincode' && (
               <>
                 <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:'20px'}}>
@@ -763,9 +780,7 @@ export default function Home() {
                 </div>
                 <p style={{color:'#64748b',fontSize:'13px',marginBottom:'16px'}}>Enter your pincode to check if we deliver to your area</p>
                 <div style={{display:'flex',gap:'10px',marginBottom:'16px'}}>
-                  <input type="number" placeholder="Enter 6 digit pincode" value={pincode}
-                    onChange={e=>setPincode(e.target.value.slice(0,6))}
-                    style={{flex:1,padding:'12px 16px',borderRadius:'10px',border:'1.5px solid #e2e8f0',fontSize:'14px',outline:'none',color:'#0f172a'}}/>
+                  <input type="number" placeholder="Enter 6 digit pincode" value={pincode} onChange={e=>setPincode(e.target.value.slice(0,6))} style={{flex:1,padding:'12px 16px',borderRadius:'10px',border:'1.5px solid #e2e8f0',fontSize:'14px',outline:'none',color:'#0f172a'}}/>
                   <button onClick={checkPincode} style={{background:'#DC2626',color:'white',border:'none',padding:'12px 20px',borderRadius:'10px',fontWeight:700,cursor:'pointer',fontSize:'14px'}}>Check</button>
                 </div>
                 {pinResult === 'short' && <div style={{background:'#fef2f2',border:'1.5px solid #fecaca',borderRadius:'10px',padding:'12px',color:'#dc2626',fontSize:'13px',fontWeight:500}}>Please enter a valid 6-digit pincode</div>}
@@ -780,28 +795,17 @@ export default function Home() {
                   <div style={{background:'#fef2f2',border:'1.5px solid #fecaca',borderRadius:'10px',padding:'14px',fontSize:'13px',lineHeight:1.8}}>
                     <div style={{color:'#DC2626',fontWeight:700,marginBottom:'8px'}}>⚠️ Delivery not available in this area yet</div>
                     <div style={{color:'#64748b',marginBottom:'12px',fontSize:'12px'}}>We are expanding soon! Get notified when we arrive.</div>
-                    <input placeholder="Your name" value={notifyName} onChange={e=>setNotifyName(e.target.value)}
-                      style={{width:'100%',padding:'10px',borderRadius:'8px',border:'1.5px solid #e2e8f0',fontSize:'13px',marginBottom:'8px',boxSizing:'border-box',outline:'none'}}/>
+                    <input placeholder="Your name" value={notifyName} onChange={e=>setNotifyName(e.target.value)} style={{width:'100%',padding:'10px',borderRadius:'8px',border:'1.5px solid #e2e8f0',fontSize:'13px',marginBottom:'8px',boxSizing:'border-box',outline:'none'}}/>
                     {!notifySent ? (
-                      <a href={`https://wa.me/918287000582?text=Please notify me: Name ${notifyName || 'Customer'}, Pincode ${pincode}`}
-                        onClick={()=>setNotifySent(true)}
-                        style={{display:'block',background:'#16A34A',color:'white',textDecoration:'none',padding:'10px',borderRadius:'8px',fontWeight:700,fontSize:'13px',textAlign:'center'}}>
-                        🔔 Notify Me on WhatsApp
-                      </a>
+                      <a href={`https://wa.me/918287000582?text=Please notify me: Name ${notifyName || 'Customer'}, Pincode ${pincode}`} onClick={()=>setNotifySent(true)} style={{display:'block',background:'#16A34A',color:'white',textDecoration:'none',padding:'10px',borderRadius:'8px',fontWeight:700,fontSize:'13px',textAlign:'center'}}>🔔 Notify Me on WhatsApp</a>
                     ) : (
                       <div style={{background:'#f0fdf4',color:'#16A34A',padding:'10px',borderRadius:'8px',textAlign:'center',fontWeight:700,fontSize:'13px'}}>✅ We will notify you!</div>
                     )}
                   </div>
                 )}
-                {pinResult === 'valid' && (
-                  <button onClick={()=>setCheckoutStep('address')} style={{width:'100%',background:'#16A34A',color:'white',border:'none',padding:'14px',borderRadius:'10px',fontWeight:700,fontSize:'15px',cursor:'pointer',marginTop:'14px'}}>
-                    Enter Delivery Address →
-                  </button>
-                )}
+                {pinResult === 'valid' && <button onClick={()=>setCheckoutStep('address')} style={{width:'100%',background:'#16A34A',color:'white',border:'none',padding:'14px',borderRadius:'10px',fontWeight:700,fontSize:'15px',cursor:'pointer',marginTop:'14px'}}>Enter Delivery Address →</button>}
               </>
             )}
-
-            {/* STEP 3: ADDRESS */}
             {checkoutStep === 'address' && (
               <>
                 <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:'20px'}}>
@@ -810,22 +814,15 @@ export default function Home() {
                 </div>
                 <input placeholder="Full Name *" value={address.name} onChange={e=>setAddress({...address,name:e.target.value})} style={inputStyle}/>
                 <input placeholder="Phone Number (10 digits) *" type="number" value={address.phone} onChange={e=>setAddress({...address,phone:e.target.value.slice(0,10)})} style={inputStyle}/>
-                <input placeholder="Flat / House No. + Floor * (e.g. Flat 203, 2nd Floor)" value={address.flat} onChange={e=>setAddress({...address,flat:e.target.value})} style={inputStyle}/>
-                <input placeholder="Building / Society Name * (e.g. Sunrise Apartments)" value={address.building} onChange={e=>setAddress({...address,building:e.target.value})} style={inputStyle}/>
-                <input placeholder="Street / Gali * (e.g. Gali No. 5, IP Extension)" value={address.street} onChange={e=>setAddress({...address,street:e.target.value})} style={inputStyle}/>
-                <input placeholder="Landmark (e.g. Near Metro Station)" value={address.landmark} onChange={e=>setAddress({...address,landmark:e.target.value})} style={inputStyle}/>
+                <input placeholder="Flat / House No. + Floor *" value={address.flat} onChange={e=>setAddress({...address,flat:e.target.value})} style={inputStyle}/>
+                <input placeholder="Building / Society Name *" value={address.building} onChange={e=>setAddress({...address,building:e.target.value})} style={inputStyle}/>
+                <input placeholder="Street / Gali *" value={address.street} onChange={e=>setAddress({...address,street:e.target.value})} style={inputStyle}/>
+                <input placeholder="Landmark (optional)" value={address.landmark} onChange={e=>setAddress({...address,landmark:e.target.value})} style={inputStyle}/>
                 <textarea placeholder="Special Instructions (optional)" value={address.instructions} onChange={e=>setAddress({...address,instructions:e.target.value})} style={{...inputStyle,height:'70px',resize:'none'}}/>
-                <div style={{background:'#f0fdf4',borderRadius:'10px',padding:'10px 14px',marginBottom:'14px',fontSize:'13px',color:'#16A34A',fontWeight:500}}>
-                  📍 {PINCODES[pincode]?.area} • 🕐 {PINCODES[pincode]?.time}
-                </div>
-                <button onClick={()=>{ if(isAddressValid()) setCheckoutStep('confirm'); else alert('Please fill all required fields!'); }}
-                  style={{width:'100%',background:'#DC2626',color:'white',border:'none',padding:'14px',borderRadius:'10px',fontWeight:700,fontSize:'15px',cursor:'pointer'}}>
-                  Review Order →
-                </button>
+                <div style={{background:'#f0fdf4',borderRadius:'10px',padding:'10px 14px',marginBottom:'14px',fontSize:'13px',color:'#16A34A',fontWeight:500}}>📍 {PINCODES[pincode]?.area} • 🕐 {PINCODES[pincode]?.time}</div>
+                <button onClick={()=>{ if(isAddressValid()) setCheckoutStep('confirm'); else alert('Please fill all required fields!'); }} style={{width:'100%',background:'#DC2626',color:'white',border:'none',padding:'14px',borderRadius:'10px',fontWeight:700,fontSize:'15px',cursor:'pointer'}}>Review Order →</button>
               </>
             )}
-
-            {/* STEP 4: CONFIRM */}
             {checkoutStep === 'confirm' && (
               <>
                 <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:'20px'}}>
@@ -839,11 +836,8 @@ export default function Home() {
                   </div>
                 ))}
                 <div style={{display:'flex',justifyContent:'space-between',fontWeight:800,fontSize:'16px',marginTop:'12px',padding:'12px 0',borderTop:'2px solid #e2e8f0',color:'#0f172a'}}>
-                  <span>Total</span>
-                  <span style={{color:'#DC2626'}}>₹{totalPrice}</span>
+                  <span>Total</span><span style={{color:'#DC2626'}}>₹{totalPrice}</span>
                 </div>
-
-                {/* COD Badge */}
                 <div style={{background:'#f0fdf4',border:'1.5px solid #86efac',borderRadius:'12px',padding:'14px',marginBottom:'14px',display:'flex',alignItems:'center',gap:'12px'}}>
                   <div style={{fontSize:'28px'}}>💵</div>
                   <div>
@@ -852,7 +846,6 @@ export default function Home() {
                   </div>
                   <div style={{marginLeft:'auto',background:'#16A34A',color:'white',fontSize:'11px',fontWeight:700,padding:'4px 10px',borderRadius:'20px'}}>✓ Selected</div>
                 </div>
-
                 <div style={{background:'#f8fafc',borderRadius:'12px',padding:'14px',marginBottom:'16px',fontSize:'13px',border:'1px solid #e2e8f0',lineHeight:1.8,color:'#334155'}}>
                   <div style={{fontWeight:700,color:'#0f172a',marginBottom:'6px'}}>📦 Delivery Details</div>
                   <div>👤 {address.name} • 📱 {address.phone}</div>
@@ -862,14 +855,11 @@ export default function Home() {
                   <div>🕐 {PINCODES[pincode]?.time}</div>
                   {address.instructions && <div>🗒️ {address.instructions}</div>}
                 </div>
-                <button onClick={placeOrder} disabled={orderLoading}
-                  style={{width:'100%',background:'#16A34A',color:'white',border:'none',padding:'14px',borderRadius:'10px',fontWeight:700,fontSize:'15px',cursor:'pointer',opacity:orderLoading?0.7:1}}>
+                <button onClick={placeOrder} disabled={orderLoading} style={{width:'100%',background:'#16A34A',color:'white',border:'none',padding:'14px',borderRadius:'10px',fontWeight:700,fontSize:'15px',cursor:'pointer',opacity:orderLoading?0.7:1}}>
                   {orderLoading ? '⏳ Placing Order...' : '✅ Place Order — Cash on Delivery'}
                 </button>
               </>
             )}
-
-            {/* STEP 5: DONE */}
             {checkoutStep === 'done' && (
               <div style={{textAlign:'center',padding:'20px 0'}}>
                 <div style={{fontSize:'64px',marginBottom:'16px'}}>🎉</div>
@@ -878,15 +868,8 @@ export default function Home() {
                   <div style={{fontSize:'12px',color:'#64748b',marginBottom:'4px',fontWeight:500}}>Order ID</div>
                   <div style={{fontSize:'24px',fontWeight:900,color:'#16A34A',letterSpacing:'3px'}}>#{orderId}</div>
                 </div>
-                <p style={{color:'#64748b',fontSize:'14px',marginBottom:'20px',lineHeight:1.6}}>
-                  Your order will be delivered tomorrow<br/>
-                  <strong style={{color:'#0f172a'}}>{PINCODES[pincode]?.time}</strong><br/>
-                  We will call you to confirm.
-                </p>
-                <button onClick={()=>{setShowCart(false);setCheckoutStep('cart');}}
-                  style={{width:'100%',background:'#DC2626',color:'white',border:'none',padding:'14px',borderRadius:'10px',fontWeight:700,fontSize:'15px',cursor:'pointer'}}>
-                  Continue Shopping 🛒
-                </button>
+                <p style={{color:'#64748b',fontSize:'14px',marginBottom:'20px',lineHeight:1.6}}>Your order will be delivered tomorrow<br/><strong style={{color:'#0f172a'}}>{PINCODES[pincode]?.time}</strong><br/>We will call you to confirm.</p>
+                <button onClick={()=>{setShowCart(false);setCheckoutStep('cart');}} style={{width:'100%',background:'#DC2626',color:'white',border:'none',padding:'14px',borderRadius:'10px',fontWeight:700,fontSize:'15px',cursor:'pointer'}}>Continue Shopping 🛒</button>
               </div>
             )}
           </div>
