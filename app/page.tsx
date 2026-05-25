@@ -236,6 +236,8 @@ export default function Home() {
         createdAt: serverTimestamp(),
       });
       setOrderId(docRef.id.slice(0,8).toUpperCase());
+      // Telegram notification
+      fetch("/api/notify-order", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ name: address.name, phone: address.phone, items: itemsText, total: totalPrice, area: PINCODES[pincode]?.area, address: fullAddress, deliveryTime: PINCODES[pincode]?.time, paymentMethod: method, instructions: address.instructions, orderId: docRef.id.slice(0,8).toUpperCase() }) });
       setCheckoutStep('done');
       setCart([]);
     } catch(e) { console.error(e); alert('Order save failed.'); }
