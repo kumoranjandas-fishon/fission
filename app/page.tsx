@@ -3,6 +3,8 @@ import { useState, useEffect, useRef } from "react";
 import { db } from "@/lib/firebase";
 import { collection, addDoc, serverTimestamp, doc, getDoc } from "firebase/firestore";
 import Script from "next/script";
+import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
+import { doc, getDoc } from "firebase/firestore";
 
 const ITEMS = [
   {n:'Rohu Fish',b:'রুই মাছ',h:'रोहू मछली',t:'ரோஹு மீன்',s:'500g • Cleaned & Cut',p:180,e:'🐟',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA',img:'https://img.clevup.in/224989/SKU-0930_0-1712380773022.png?width=600&format=webp',imgs:['https://img.clevup.in/224989/SKU-0930_0-1712380773022.png?width=600&format=webp','https://m.media-amazon.com/images/I/51vddLa1uUL._AC_UF894,1000_QL80_.jpg','https://5.imimg.com/data5/SELLER/Default/2020/12/PK/QF/UV/58226302/rohu-fish-cut.jpg'],desc:'Fresh Rohu from local market, cleaned and cut into pieces. Rich in Omega-3, perfect for curry.',storage:'Store under refrigeration at 4°C or below',weight:'Pre-cleaned: ~650g | Final: 500g | Pieces: 6-8',tags:['High Protein','Omega-3','Best Seller']},
@@ -136,6 +138,28 @@ export default function Home() {
   const [orderId, setOrderId] = useState('');
   const [modalPhoto, setModalPhoto] = useState(0);
   const [modalItem, setModalItem] = useState<ModalItem|null>(null);
+  const [currentUser, setCurrentUser] = useState<{name:string, phone:string}|null>(null);
+
+  useEffect(() => {
+    const auth = getAuth();
+    const unsub = onAuthStateChanged(auth, async (user) => {
+      if (user && user.phoneNumber) {
+        const ph = user.phoneNumber.replace("+91","");
+        try {
+          const pd = await getDoc(doc(db, "users", ph));
+          if (pd.exists()) setCurrentUser({name: pd.data().name, phone: ph});
+          else setCurrentUser({name: "", phone: ph});
+        } catch(e) { setCurrentUser(null); }
+      } else { setCurrentUser(null); }
+    });
+    return () => unsub();
+  }, []);
+
+  const handleLogout = async () => {
+    const auth = getAuth();
+    await signOut(auth);
+    setCurrentUser(null);
+  };
   const [liveAvailableItems, setLiveAvailableItems] = useState(AVAILABLE_ITEMS);
   const [livePreorderItems, setLivePreorderItems] = useState(ITEMS);
 
@@ -276,7 +300,14 @@ export default function Home() {
               {totalItems > 0 && <span style={{background:'white',color:'#DC2626',borderRadius:'50%',width:'20px',height:'20px',fontSize:'11px',fontWeight:900,display:'flex',alignItems:'center',justifyContent:'center'}}>{totalItems}</span>}
             </button>
             <a href="https://wa.me/918287000582" style={{background:'#16A34A',color:'white',textDecoration:'none',padding:'9px 16px',borderRadius:'9px',fontSize:'13px',fontWeight:700,display:'flex',alignItems:'center',gap:'4px'}}>💬 WhatsApp</a>
-            <a href="/login" style={{background:'#0f172a',color:'white',textDecoration:'none',padding:'9px 16px',borderRadius:'9px',fontSize:'13px',fontWeight:700}}>👤 Login</a>
+            {currentUser ? (
+              <div style={{display:'flex',alignItems:'center',gap:'8px'}}>
+                <a href="/login" style={{background:'#0f172a',color:'white',textDecoration:'none',padding:'9px 16px',borderRadius:'9px',fontSize:'13px',fontWeight:700}}>👤 {currentUser.name || currentUser.phone}</a>
+                <button onClick={handleLogout} style={{background:'rgba(239,68,68,0.15)',border:'1px solid rgba(239,68,68,0.3)',color:'#ef4444',padding:'9px 14px',borderRadius:'9px',fontSize:'12px',fontWeight:700,cursor:'pointer'}}>Logout</button>
+              </div>
+            ) : (
+              <a href="/login" style={{background:'#0f172a',color:'white',textDecoration:'none',padding:'9px 16px',borderRadius:'9px',fontSize:'13px',fontWeight:700}}>👤 Login</a>
+            )}
           </div>
         </div>
       </header>
