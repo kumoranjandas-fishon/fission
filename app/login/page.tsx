@@ -170,7 +170,7 @@ export default function LoginPage() {
       {/* ── PHONE ── */}
       {step === 'phone' && (
         <div style={{display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',minHeight:'100vh',padding:24}}>
-          <a href="https://www.fishon.co.in" style={{textDecoration:'none',marginBottom:32,textAlign:'center'}}>
+          <div onClick={()=>window.location.href="https://www.fishon.co.in"} style={{cursor:'pointer',marginBottom:32,textAlign:'center'}}>
             <div style={{display:'flex',alignItems:'center',justifyContent:'center',gap:10,marginBottom:6}}>
               <div style={{width:44,height:44,background:'#DC2626',borderRadius:12,display:'flex',alignItems:'center',justifyContent:'center',fontSize:24}}>🐟</div>
               <div><span style={{color:'#DC2626',fontWeight:900,fontSize:26}}>Fish</span><span style={{color:'#16A34A',fontWeight:900,fontSize:26,fontStyle:'italic'}}>on</span></div>
