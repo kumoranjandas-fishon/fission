@@ -1,4 +1,5 @@
 "use client";
+import { useRouter } from "next/navigation";
 import { useState, useEffect, useRef } from "react";
 import { getAuth, signInWithPhoneNumber, RecaptchaVerifier, signOut, ConfirmationResult } from "firebase/auth";
 import { db } from "@/lib/firebase";
@@ -82,6 +83,7 @@ export default function LoginPage() {
   const [selectedOrder, setSelectedOrder] = useState<Order|null>(null);
   const recaptchaRef = useRef<HTMLDivElement>(null);
   const auth = getAuth();
+  const router = useRouter();
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(async (user) => {
@@ -170,7 +172,7 @@ export default function LoginPage() {
       {/* ── PHONE ── */}
       {step === 'phone' && (
         <div style={{display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',minHeight:'100vh',padding:24}}>
-          <a href="https://www.fishon.co.in" target="_self" onClick={(e)=>{e.preventDefault();window.location.replace("https://www.fishon.co.in")}} style={{textDecoration:'none',marginBottom:32,textAlign:'center'}}>
+          <a href="/" onClick={(e)=>{e.preventDefault();router.push("/")} style={{textDecoration:'none',marginBottom:32,textAlign:'center'}}>
             <div style={{display:'flex',alignItems:'center',justifyContent:'center',gap:10,marginBottom:6}}>
               <div style={{width:44,height:44,background:'#DC2626',borderRadius:12,display:'flex',alignItems:'center',justifyContent:'center',fontSize:24}}>🐟</div>
               <div><span style={{color:'#DC2626',fontWeight:900,fontSize:26}}>Fish</span><span style={{color:'#16A34A',fontWeight:900,fontSize:26,fontStyle:'italic'}}>on</span></div>
@@ -239,7 +241,7 @@ export default function LoginPage() {
         <div style={{maxWidth:600,margin:'0 auto',minHeight:'100vh'}}>
           {/* Header */}
           <div style={{background:'rgba(255,255,255,0.05)',padding:'16px 24px',display:'flex',alignItems:'center',justifyContent:'space-between',borderBottom:'1px solid rgba(255,255,255,0.08)'}}>
-            <a href="https://www.fishon.co.in" target="_self" onClick={(e)=>{e.preventDefault();window.location.replace("https://www.fishon.co.in")}} style={{textDecoration:'none',display:'flex',alignItems:'center',gap:8}}>
+            <a href="/" onClick={(e)=>{e.preventDefault();router.push("/")} style={{textDecoration:'none',display:'flex',alignItems:'center',gap:8}}>
               <div style={{width:36,height:36,background:'#DC2626',borderRadius:10,display:'flex',alignItems:'center',justifyContent:'center',fontSize:18}}>🐟</div>
               <span style={{color:'#DC2626',fontWeight:900,fontSize:18}}>Fish<span style={{color:'#16A34A',fontStyle:'italic'}}>on</span></span>
             </a>
@@ -273,7 +275,7 @@ export default function LoginPage() {
                   <div style={{textAlign:'center',padding:'60px 0',color:'rgba(255,255,255,0.2)'}}>
                     <div style={{fontSize:48,marginBottom:12}}>🐟</div>
                     <div style={{fontSize:16,fontWeight:600,marginBottom:16}}>No orders yet</div>
-                    <a href="https://www.fishon.co.in" target="_self" onClick={(e)=>{e.preventDefault();window.location.replace("https://www.fishon.co.in")}} style={{display:'inline-block',background:'#DC2626',color:'white',textDecoration:'none',padding:'12px 24px',borderRadius:12,fontWeight:700}}>Order Now →</a>
+                    <a href="/" onClick={(e)=>{e.preventDefault();router.push("/")} style={{display:'inline-block',background:'#DC2626',color:'white',textDecoration:'none',padding:'12px 24px',borderRadius:12,fontWeight:700}}>Order Now →</a>
                   </div>
                 ) : orders.map(order=>(
                   <div key={order.id} onClick={()=>setSelectedOrder(order)} style={{background:'rgba(255,255,255,0.05)',border:'1px solid rgba(255,255,255,0.08)',borderRadius:16,padding:16,marginBottom:10,cursor:'pointer',transition:'background 0.2s',position:'relative',overflow:'hidden'}}
@@ -300,7 +302,7 @@ export default function LoginPage() {
                   </div>
                 ))}
                 <div style={{textAlign:'center',marginTop:8}}>
-                  <a href="https://www.fishon.co.in" target="_self" onClick={(e)=>{e.preventDefault();window.location.replace("https://www.fishon.co.in")}} style={{color:'#94a3b8',fontSize:13,textDecoration:'none'}}>← Back to Home</a>
+                  <a href="/" onClick={(e)=>{e.preventDefault();router.push("/")} style={{color:'#94a3b8',fontSize:13,textDecoration:'none'}}>← Back to Home</a>
                 </div>
               </>
             )}
@@ -415,7 +417,7 @@ export default function LoginPage() {
             </div>
 
             {/* Reorder Button */}
-            <a href="https://www.fishon.co.in" target="_self" onClick={(e)=>{e.preventDefault();window.location.replace("https://www.fishon.co.in")}} style={{display:'block',width:'100%',background:'#DC2626',color:'white',textDecoration:'none',padding:14,borderRadius:12,fontWeight:700,fontSize:15,textAlign:'center',boxSizing:'border-box'}}>
+            <a href="/" onClick={(e)=>{e.preventDefault();router.push("/")} style={{display:'block',width:'100%',background:'#DC2626',color:'white',textDecoration:'none',padding:14,borderRadius:12,fontWeight:700,fontSize:15,textAlign:'center',boxSizing:'border-box'}}>
               🛒 Order Again
             </a>
           </div>
