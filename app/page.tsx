@@ -4,7 +4,6 @@ import { db } from "@/lib/firebase";
 import { collection, addDoc, serverTimestamp, doc, getDoc } from "firebase/firestore";
 import Script from "next/script";
 import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
-import { doc, getDoc } from "firebase/firestore";
 
 const ITEMS = [
   {n:'Rohu Fish',b:'রুই মাছ',h:'रोहू मछली',t:'ரோஹு மீன்',s:'500g • Cleaned & Cut',p:180,e:'🐟',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA',img:'https://img.clevup.in/224989/SKU-0930_0-1712380773022.png?width=600&format=webp',imgs:['https://img.clevup.in/224989/SKU-0930_0-1712380773022.png?width=600&format=webp','https://m.media-amazon.com/images/I/51vddLa1uUL._AC_UF894,1000_QL80_.jpg','https://5.imimg.com/data5/SELLER/Default/2020/12/PK/QF/UV/58226302/rohu-fish-cut.jpg'],desc:'Fresh Rohu from local market, cleaned and cut into pieces. Rich in Omega-3, perfect for curry.',storage:'Store under refrigeration at 4°C or below',weight:'Pre-cleaned: ~650g | Final: 500g | Pieces: 6-8',tags:['High Protein','Omega-3','Best Seller']},
