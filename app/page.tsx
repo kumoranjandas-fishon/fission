@@ -418,11 +418,14 @@ export default function Home() {
       <footer style={{background:'#0f172a',color:'white',padding:'32px 24px',textAlign:'center'}}>
         <div style={{marginBottom:'8px'}}><span style={{color:'#DC2626',fontWeight:800,fontSize:'22px'}}>Fish</span><span style={{color:'#16A34A',fontWeight:800,fontSize:'22px',fontStyle:'italic'}}>on</span></div>
         <p style={{color:'#475569',fontSize:'12px',margin:'0 0 16px'}}>📍 Delhi NCR • 🕐 7:30 AM - 11:00 PM Daily • © 2026 Fishon. All rights reserved.</p>
-        <div style={{display:'inline-flex',alignItems:'center',gap:'10px',background:'#1e293b',border:'1px solid #334155',borderRadius:'10px',padding:'10px 20px'}}>
-          <div style={{background:'white',borderRadius:'4px',padding:'4px 8px'}}>
-            <svg width="60" height="28" viewBox="0 0 120 56" xmlns="http://www.w3.org/2000/svg"><rect width="120" height="56" fill="white"/><text x="4" y="22" fontSize="13" fontWeight="bold" fill="#1a5276" fontFamily="Arial">FSSAI</text><text x="4" y="38" fontSize="7" fill="#666" fontFamily="Arial">Food Safety and Standards</text><text x="4" y="48" fontSize="7" fill="#666" fontFamily="Arial">Authority of India</text><rect x="78" y="4" width="38" height="48" rx="4" fill="#f39c12"/><text x="82" y="20" fontSize="8" fontWeight="bold" fill="white" fontFamily="Arial">GOVT</text><text x="82" y="30" fontSize="8" fontWeight="bold" fill="white" fontFamily="Arial">OF</text><text x="82" y="40" fontSize="8" fontWeight="bold" fill="white" fontFamily="Arial">INDIA</text></svg>
+        <div style={{display:'inline-flex',alignItems:'center',gap:'10px',background:'#f0fdf4',border:'1.5px solid #bbf7d0',borderRadius:'12px',padding:'10px 18px'}}>
+          <div style={{background:'white',borderRadius:'8px',padding:'6px 10px',border:'1px solid #e2e8f0',display:'flex',alignItems:'center',justifyContent:'center'}}>
+            <svg width="56" height="26" viewBox="0 0 120 56" xmlns="http://www.w3.org/2000/svg"><rect width="120" height="56" fill="white"/><text x="4" y="22" fontSize="13" fontWeight="bold" fill="#1a5276" fontFamily="Arial">FSSAI</text><text x="4" y="38" fontSize="7" fill="#666" fontFamily="Arial">Food Safety and Standards</text><text x="4" y="48" fontSize="7" fill="#666" fontFamily="Arial">Authority of India</text><rect x="78" y="4" width="38" height="48" rx="4" fill="#f39c12"/><text x="82" y="20" fontSize="8" fontWeight="bold" fill="white" fontFamily="Arial">GOVT</text><text x="82" y="30" fontSize="8" fontWeight="bold" fill="white" fontFamily="Arial">OF</text><text x="82" y="40" fontSize="8" fontWeight="bold" fill="white" fontFamily="Arial">INDIA</text></svg>
           </div>
-          <div style={{textAlign:'left'}}><div style={{fontSize:'9px',color:'#94a3b8',fontWeight:600,letterSpacing:'0.5px'}}>LICENSED BY</div><div style={{fontSize:'12px',color:'white',fontWeight:700}}>FSSAI Reg. No: <span style={{color:'#16A34A'}}>23326003001887</span></div></div>
+          <div style={{textAlign:'left'}}>
+            <div style={{fontSize:'10px',color:'#16A34A',fontWeight:700,letterSpacing:'0.5px'}}>✅ FSSAI LICENSED</div>
+            <div style={{fontSize:'13px',color:'#0f172a',fontWeight:800}}>Lic. No. 23326003001887</div>
+          </div>
         </div>
       </footer>
 
