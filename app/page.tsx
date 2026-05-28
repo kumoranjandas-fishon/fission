@@ -20,18 +20,18 @@ const C = {
 
 // ── FISH ITEMS ───────────────────────────────────────────
 const ITEMS = [
-  {n:'Rohu Fish',b:'রুই মাছ',h:'रोहू मछली',t:'ரோஹு மீன்',s:'500g • Cleaned & Cut',p:180,e:'🐟',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA',img:'https://img.clevup.in/224989/SKU-0930_0-1712380773022.png?width=600&format=webp',imgs:['https://img.clevup.in/224989/SKU-0930_0-1712380773022.png?width=600&format=webp','https://m.media-amazon.com/images/I/51vddLa1uUL._AC_UF894,1000_QL80_.jpg'],desc:'Fresh Rohu from local market, cleaned and cut into pieces. Rich in Omega-3, perfect for curry.',storage:'Store under refrigeration at 4°C or below',weight:'Pre-cleaned: ~650g | Final: 500g | Pieces: 6-8',tags:['High Protein','Omega-3','Best Seller']},
-  {n:'Ilish Hilsa',b:'ইলিশ মাছ',h:'इलिश हिलसा',t:'இலிஷ் ஹில்சா',s:'500g • Whole Cleaned',p:380,e:'🐠',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA',img:'https://www.bazaarkgp.com/product_image/11751194251.jpg',imgs:['https://www.bazaarkgp.com/product_image/11751194251.jpg'],desc:'Premium Ilish Hilsa — the king of fish. Sourced fresh every morning.',storage:'Store under refrigeration at 4°C or below',weight:'Whole fish 500g | Cleaned & gutted',tags:['Premium','Seasonal','Bengali Favourite']},
-  {n:'Tiger Prawns',b:'বাঘা চিংড়ি',h:'टाइगर झींगा',t:'புலி இறால்',s:'250g • Deveined',p:320,e:'🦐',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA',img:'https://www.bbassets.com/media/uploads/p/l/800448132_1-ak-daily-bazaar-fish-bagda-chingri-tiger-prawn.jpg',imgs:['https://www.bbassets.com/media/uploads/p/l/800448132_1-ak-daily-bazaar-fish-bagda-chingri-tiger-prawn.jpg'],desc:'Large Tiger Prawns, deveined and cleaned. Great for grilling, frying or curry.',storage:'Store under refrigeration at 4°C or below',weight:'250g deveined | Count: 8-12 pieces',tags:['Deveined','Ready to Cook']},
-  {n:'Golda Chingdi',b:'গলদা চিংড়ি',h:'गोल्डा झींगा',t:'கோல்டா இறால்',s:'250g • Whole',p:450,e:'🦐',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA',img:'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Macrobrachium_rosenbergii.jpg/400px-Macrobrachium_rosenbergii.jpg',desc:'Fresh water Golda Prawns — a Bengali delicacy.',storage:'Store under refrigeration at 4°C or below',weight:'250g whole with shell | Count: 4-6 pieces',tags:['Delicacy','Bengali Special']},
-  {n:'Pink Perch / Kilimeen',b:'কিলিমিন',h:'पिंक पर्च',t:'கிலிமீன்',s:'500g • Whole Cleaned',p:280,e:'🐟',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA',img:'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Lutjanus_campechanus.jpg/400px-Lutjanus_campechanus.jpg',desc:'Pink Perch from coastal waters. Tender white flesh.',storage:'Store under refrigeration at 4°C or below',weight:'500g whole cleaned',tags:['Coastal Catch','Tender Flesh']},
-  {n:'River Sole / Vaka Varal',b:'ভাকা ভারাল',h:'रिवर सोल',t:'வாக்கா வரால்',s:'500g • Whole Cleaned',p:260,e:'🐟',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA',img:'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/Solea_solea.jpg/400px-Solea_solea.jpg',desc:'River Sole — flat fish with delicate flavour.',storage:'Store under refrigeration at 4°C or below',weight:'500g whole cleaned',tags:['Delicate Flavour']},
-  {n:'Kolkata Bhetki / Barramundi',b:'ভেটকী মাছ',h:'भेटकी / बारामुंडी',t:'பெட்கி மீன்',s:'Whole Fish 1kg-2kg',p:520,e:'🐠',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA',img:'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Lates_calcarifer.jpg/400px-Lates_calcarifer.jpg',desc:'Premium Bhetki from Kolkata markets.',storage:'Store under refrigeration at 4°C or below',weight:'Whole fish 1kg-2kg | Cleaned',tags:['Premium','Firm Flesh','Bengali Classic']},
-  {n:'Black Pomfret / Halwa Fish',b:'কালো পমফ্রেট',h:'काला पॉमफ्रेट',t:'கருப்பு பாம்ஃப்ரெட்',s:'Whole Fish 1.5kg-4kg',p:580,e:'🐠',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA',img:'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Parastromateus_niger.jpg/400px-Parastromateus_niger.jpg',desc:'Black Pomfret — a premium sea fish.',storage:'Store under refrigeration at 4°C or below',weight:'Whole fish 1.5kg-4kg',tags:['Sea Fish','Premium','Mild Flavour']},
-  {n:'White Pomfret / Silver Pomfret',b:'রূপালী পমফ্রেট',h:'सफेद पॉमफ्रेट',t:'வெள்ளை பாம்ஃப்ரெட்',s:'Whole Fish 200g-300g',p:650,e:'🐠',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA',img:'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Pampus_argenteus.jpg/400px-Pampus_argenteus.jpg',desc:'Silver Pomfret — the most prized sea fish.',storage:'Store under refrigeration at 4°C or below',weight:'Whole fish 200g-300g per piece',tags:['Most Prized','Buttery','Sea Fish']},
-  {n:'Seer Fish / Surmai',b:'সুরমাই মাছ',h:'सुरमई मछली',t:'வஞ்சரம் மீன்',s:'Whole Fish 5kg+',p:750,e:'🐠',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA',img:'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Scomberomorus_commerson.jpg/400px-Scomberomorus_commerson.jpg',desc:'King Mackerel / Surmai — firm steaks with rich flavour.',storage:'Store under refrigeration at 4°C or below',weight:'Whole fish 5kg+ | Steaks available',tags:['King Fish','Firm Steak']},
-  {n:'Mackerel / Bangda',b:'ম্যাকেরেল',h:'मैकेरल / बांगड़ा',t:'அயலா மீன்',s:'5-9 Count/kg • Whole',p:180,e:'🐟',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA',img:'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8b/Rastrelliger_kanagurta.jpg/400px-Rastrelliger_kanagurta.jpg',desc:'Fresh Mackerel — affordable and nutritious.',storage:'Store under refrigeration at 4°C or below',weight:'5-9 count per kg | Whole',tags:['Omega-3','Affordable','Nutritious']},
-];
+  {n:'Rohu Fish',b:'রুই মাছ',h:'रोहू मछली',t:'ரோஹு மீன்',s:'Cleaned & Cut',p:180,e:'🐟',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA',img:'https://img.clevup.in/224989/SKU-0930_0-1712380773022.png?width=600&format=webp',imgs:['https://img.clevup.in/224989/SKU-0930_0-1712380773022.png?width=600&format=webp','https://m.media-amazon.com/images/I/51vddLa1uUL._AC_UF894,1000_QL80_.jpg'],desc:'Fresh Rohu from local market, cleaned and cut into pieces. Rich in Omega-3, perfect for curry.',storage:'Store under refrigeration at 4°C or below',weight:'Pre-cleaned: ~650g | Final: 500g | Pieces: 6-8',tags:['High Protein','Omega-3','Best Seller'],weights:[{label:'500g',price:180},{label:'1kg',price:340}],cuts:['Curry Cut','Whole Fish','Steak Cut'],nutrition:{Protein:'22g','Omega-3':'1.2g',Calories:'150kcal',Fat:'4g'},origin:'Local Delhi Market',freshness:'Caught today'},
+  {n:'Ilish Hilsa',b:'ইলিশ মাছ',h:'इलिश हिलसा',t:'இலிஷ் ஹில்சா',s:'Whole Cleaned',p:380,e:'🐠',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA',img:'https://www.bazaarkgp.com/product_image/11751194251.jpg',imgs:['https://www.bazaarkgp.com/product_image/11751194251.jpg'],desc:'Premium Ilish Hilsa — the king of fish. Sourced fresh every morning.',storage:'Store under refrigeration at 4°C or below',weight:'Whole fish 500g | Cleaned & gutted',tags:['Premium','Seasonal','Bengali Favourite'],weights:[{label:'500g',price:380},{label:'1kg',price:720}],cuts:['Whole Fish','Steak Cut'],nutrition:{Protein:'19g','Omega-3':'2.1g',Calories:'170kcal',Fat:'8g'},origin:'Kolkata Market',freshness:'Fresh today'},
+  {n:'Tiger Prawns',b:'বাঘা চিংড়ি',h:'टाइगर झींगा',t:'புலி இறால்',s:'Deveined',p:320,e:'🦐',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA',img:'https://www.bbassets.com/media/uploads/p/l/800448132_1-ak-daily-bazaar-fish-bagda-chingri-tiger-prawn.jpg',imgs:['https://www.bbassets.com/media/uploads/p/l/800448132_1-ak-daily-bazaar-fish-bagda-chingri-tiger-prawn.jpg'],desc:'Large Tiger Prawns, deveined and cleaned. Great for grilling, frying or curry.',storage:'Store under refrigeration at 4°C or below',weight:'250g deveined | Count: 8-12 pieces',tags:['Deveined','Ready to Cook'],weights:[{label:'250g',price:320},{label:'500g',price:600}],cuts:['Deveined','With Shell'],nutrition:{Protein:'24g','Omega-3':'0.5g',Calories:'99kcal',Fat:'1g'},origin:'Coastal India',freshness:'Fresh today'},
+  {n:'Golda Chingdi',b:'গলদা চিংড়ি',h:'गोल्डा झींगा',t:'கோல்டா இறால்',s:'Whole',p:450,e:'🦐',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA',img:'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Macrobrachium_rosenbergii.jpg/400px-Macrobrachium_rosenbergii.jpg',desc:'Fresh water Golda Prawns — a Bengali delicacy.',storage:'Store under refrigeration at 4°C or below',weight:'250g whole with shell | Count: 4-6 pieces',tags:['Delicacy','Bengali Special'],weights:[{label:'250g',price:450},{label:'500g',price:850}],cuts:['Whole','Cleaned'],nutrition:{Protein:'21g','Omega-3':'0.4g',Calories:'110kcal',Fat:'2g'},origin:'West Bengal',freshness:'Fresh today'},
+  {n:'Pink Perch / Kilimeen',b:'কিলিমিন',h:'पिंक पर्च',t:'கிலிமீன்',s:'Whole Cleaned',p:280,e:'🐟',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA',img:'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Lutjanus_campechanus.jpg/400px-Lutjanus_campechanus.jpg',desc:'Pink Perch from coastal waters. Tender white flesh.',storage:'Store under refrigeration at 4°C or below',weight:'500g whole cleaned',tags:['Coastal Catch','Tender Flesh'],weights:[{label:'500g',price:280},{label:'1kg',price:530}],cuts:['Whole Fish','Curry Cut','Fillet'],nutrition:{Protein:'20g','Omega-3':'0.8g',Calories:'130kcal',Fat:'3g'},origin:'Arabian Sea',freshness:'Caught today'},
+  {n:'River Sole / Vaka Varal',b:'ভাকা ভারাল',h:'रिवर सोल',t:'வாக்கா வரால்',s:'Whole Cleaned',p:260,e:'🐟',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA',img:'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/Solea_solea.jpg/400px-Solea_solea.jpg',desc:'River Sole — flat fish with delicate flavour.',storage:'Store under refrigeration at 4°C or below',weight:'500g whole cleaned',tags:['Delicate Flavour'],weights:[{label:'500g',price:260},{label:'1kg',price:490}],cuts:['Whole Fish','Fillet'],nutrition:{Protein:'18g','Omega-3':'0.6g',Calories:'120kcal',Fat:'2g'},origin:'River Catch',freshness:'Fresh today'},
+  {n:'Kolkata Bhetki / Barramundi',b:'ভেটকী মাছ',h:'भेटकी / बारामुंडी',t:'பெட்கி மீன்',s:'Whole Fish 1kg-2kg',p:520,e:'🐠',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA',img:'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Lates_calcarifer.jpg/400px-Lates_calcarifer.jpg',desc:'Premium Bhetki from Kolkata markets.',storage:'Store under refrigeration at 4°C or below',weight:'Whole fish 1kg-2kg | Cleaned',tags:['Premium','Firm Flesh','Bengali Classic'],weights:[{label:'1kg',price:520},{label:'2kg',price:980}],cuts:['Whole Fish','Curry Cut','Steak'],nutrition:{Protein:'23g','Omega-3':'1.0g',Calories:'145kcal',Fat:'5g'},origin:'Kolkata Market',freshness:'Fresh today'},
+  {n:'Black Pomfret / Halwa Fish',b:'কালো পমফ্রেট',h:'काला पॉमफ्रेट',t:'கருப்பு பாம்ஃப்ரெட்',s:'Whole Fish 1.5kg-4kg',p:580,e:'🐠',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA',img:'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Parastromateus_niger.jpg/400px-Parastromateus_niger.jpg',desc:'Black Pomfret — a premium sea fish.',storage:'Store under refrigeration at 4°C or below',weight:'Whole fish 1.5kg-4kg',tags:['Sea Fish','Premium','Mild Flavour'],weights:[{label:'1kg',price:580},{label:'2kg',price:1100}],cuts:['Whole Fish','Curry Cut'],nutrition:{Protein:'21g','Omega-3':'1.5g',Calories:'160kcal',Fat:'6g'},origin:'Arabian Sea',freshness:'Caught today'},
+  {n:'White Pomfret / Silver Pomfret',b:'রূপালী পমফ্রেট',h:'सफेद पॉमफ्रेट',t:'வெள்ளை பாம்ஃப்ரெட்',s:'Whole Fish 200g-300g',p:650,e:'🐠',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA',img:'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Pampus_argenteus.jpg/400px-Pampus_argenteus.jpg',desc:'Silver Pomfret — the most prized sea fish.',storage:'Store under refrigeration at 4°C or below',weight:'Whole fish 200g-300g per piece',tags:['Most Prized','Buttery','Sea Fish'],weights:[{label:'250g',price:650},{label:'500g',price:1200}],cuts:['Whole Fish','Fillet'],nutrition:{Protein:'20g','Omega-3':'1.8g',Calories:'155kcal',Fat:'7g'},origin:'Arabian Sea',freshness:'Caught today'},
+  {n:'Seer Fish / Surmai',b:'সুরমাই মাছ',h:'सुरमई मछली',t:'வஞ்சரம் மீன்',s:'Whole Fish 5kg+',p:750,e:'🐠',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA',img:'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Scomberomorus_commerson.jpg/400px-Scomberomorus_commerson.jpg',desc:'King Mackerel / Surmai — firm steaks with rich flavour.',storage:'Store under refrigeration at 4°C or below',weight:'Whole fish 5kg+ | Steaks available',tags:['King Fish','Firm Steak'],weights:[{label:'500g',price:750},{label:'1kg',price:1400}],cuts:['Steak Cut','Curry Cut','Whole'],nutrition:{Protein:'26g','Omega-3':'1.3g',Calories:'175kcal',Fat:'6g'},origin:'Bay of Bengal',freshness:'Caught today'},
+  {n:'Mackerel / Bangda',b:'ম্যাকেরেল',h:'मैकेरल / बांगड़ा',t:'அயலா மீன்',s:'5-9 Count/kg • Whole',p:180,e:'🐟',badge:'Pre-Order',bc:'#0B4F6C',bg:'#EBF5FA',img:'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8b/Rastrelliger_kanagurta.jpg/400px-Rastrelliger_kanagurta.jpg',desc:'Fresh Mackerel — affordable and nutritious.',storage:'Store under refrigeration at 4°C or below',weight:'5-9 count per kg | Whole',tags:['Omega-3','Affordable','Nutritious'],weights:[{label:'500g',price:180},{label:'1kg',price:340}],cuts:['Whole Fish','Curry Cut'],nutrition:{Protein:'19g','Omega-3':'2.2g',Calories:'165kcal',Fat:'8g'},origin:'Coastal India',freshness:'Fresh today'},
+];;
 
 const AVAILABLE_ITEMS: any[] = [];
 
@@ -178,6 +178,8 @@ export default function Home() {
   const [orderId, setOrderId] = useState('');
   const [modalItem, setModalItem] = useState<ModalItem|null>(null);
   const [modalPhoto, setModalPhoto] = useState(0);
+  const [selectedWeight, setSelectedWeight] = useState(0);
+  const [selectedCut, setSelectedCut] = useState(0);
   const [currentUser, setCurrentUser] = useState<{name:string,phone:string,addresses?:any[]}|null>(null);
   const [savedAddresses, setSavedAddresses] = useState<SavedAddress[]>([]);
   const [selectedSavedAddr, setSelectedSavedAddr] = useState<string|null>(null);
@@ -660,50 +662,147 @@ export default function Home() {
         </div>
       )}
 
-      {/* ── ITEM DETAIL MODAL ── */}
+      {/* ── ITEM DETAIL MODAL (FreshToHome Style) ── */}
       {modalItem && (
-        <div onClick={()=>setModalItem(null)} style={{position:'fixed',inset:0,background:'rgba(0,0,0,0.6)',zIndex:400,display:'flex',alignItems:'flex-end',justifyContent:'center'}}>
-          <div onClick={e=>e.stopPropagation()} style={{background:'white',width:'100%',maxWidth:540,borderRadius:'20px 20px 0 0',maxHeight:'88vh',overflowY:'auto',boxShadow:'0 -4px 40px rgba(0,0,0,0.15)'}}>
-            <div style={{height:220,background:modalItem.bg||C.light,position:'relative',overflow:'hidden'}}>
-              {(modalItem.imgs?.[modalPhoto]||modalItem.img)?<img src={modalItem.imgs?.[modalPhoto]||modalItem.img} alt={modalItem.n} style={{width:'100%',height:'100%',objectFit:'cover'}}/>:<div style={{display:'flex',alignItems:'center',justifyContent:'center',height:'100%',fontSize:64}}>{modalItem.e}</div>}
-              <button onClick={()=>setModalItem(null)} style={{position:'absolute',top:12,right:12,background:'rgba(255,255,255,0.9)',border:'none',borderRadius:'50%',width:32,height:32,cursor:'pointer',fontSize:16,display:'flex',alignItems:'center',justifyContent:'center',color:C.text}}>✕</button>
+        <div onClick={()=>setModalItem(null)} style={{position:'fixed',inset:0,background:'rgba(0,0,0,0.6)',zIndex:400,display:'flex',alignItems:'flex-end',justifyContent:'center',backdropFilter:'blur(4px)'}}>
+          <div onClick={e=>e.stopPropagation()} style={{background:'white',width:'100%',maxWidth:520,borderRadius:'20px 20px 0 0',maxHeight:'92vh',overflowY:'auto',boxShadow:'0 -8px 40px rgba(0,0,0,0.2)'}}>
+
+            {/* Photo */}
+            <div style={{position:'relative',height:260,background:'#f1f5f9',overflow:'hidden'}}>
+              {(modalItem.imgs?.[modalPhoto]||modalItem.img)?<img src={modalItem.imgs?.[modalPhoto]||modalItem.img} alt={modalItem.n} style={{width:'100%',height:'100%',objectFit:'cover'}}/>:<div style={{display:'flex',alignItems:'center',justifyContent:'center',height:'100%',fontSize:80}}>{modalItem.e}</div>}
+              <button onClick={()=>setModalItem(null)} style={{position:'absolute',top:12,right:12,background:'rgba(255,255,255,0.95)',border:'none',borderRadius:'50%',width:36,height:36,cursor:'pointer',fontSize:18,display:'flex',alignItems:'center',justifyContent:'center',boxShadow:'0 2px 8px rgba(0,0,0,0.15)',color:'#334155'}}>✕</button>
+              {modalItem.badge&&<span style={{position:'absolute',top:12,left:12,background:'#0B4F6C',color:'white',fontSize:10,fontWeight:800,padding:'4px 12px',borderRadius:20,letterSpacing:0.5}}>PRE-ORDER</span>}
+              {(modalItem as any).freshness&&<div style={{position:'absolute',bottom:12,left:12,background:'rgba(22,163,74,0.95)',color:'white',fontSize:11,fontWeight:700,padding:'4px 12px',borderRadius:20}}>🟢 {(modalItem as any).freshness}</div>}
+              {modalItem.imgs&&modalItem.imgs.length>1&&(<>
+                <button onClick={e=>{e.stopPropagation();setModalPhoto(p=>p===0?modalItem.imgs!.length-1:p-1);}} style={{position:'absolute',left:8,top:'50%',transform:'translateY(-50%)',background:'rgba(255,255,255,0.9)',border:'none',borderRadius:'50%',width:32,height:32,cursor:'pointer',fontSize:18,fontWeight:700}}>‹</button>
+                <button onClick={e=>{e.stopPropagation();setModalPhoto(p=>p===modalItem.imgs!.length-1?0:p+1);}} style={{position:'absolute',right:8,top:'50%',transform:'translateY(-50%)',background:'rgba(255,255,255,0.9)',border:'none',borderRadius:'50%',width:32,height:32,cursor:'pointer',fontSize:18,fontWeight:700}}>›</button>
+                <div style={{position:'absolute',bottom:12,right:12,display:'flex',gap:5}}>{modalItem.imgs.map((_:any,i:number)=><div key={i} onClick={e=>{e.stopPropagation();setModalPhoto(i);}} style={{width:7,height:7,borderRadius:'50%',cursor:'pointer',background:i===modalPhoto?'white':'rgba(255,255,255,0.5)'}}/>)}</div>
+              </>)}
             </div>
-            {modalItem.imgs && modalItem.imgs.length > 1 && (
-              <div style={{display:'flex',gap:6,padding:'10px 16px',overflowX:'auto'}}>
-                {modalItem.imgs.map((img,i)=>(
-                  <div key={i} onClick={()=>setModalPhoto(i)} style={{width:48,height:48,borderRadius:8,overflow:'hidden',flexShrink:0,border:`2px solid ${modalPhoto===i?C.red:C.border}`,cursor:'pointer'}}>
+
+            {/* Thumbnails */}
+            {modalItem.imgs&&modalItem.imgs.length>1&&(
+              <div style={{display:'flex',gap:8,padding:'10px 16px',borderBottom:'1px solid #f1f5f9',overflowX:'auto'}}>
+                {modalItem.imgs.map((img:string,i:number)=>(
+                  <div key={i} onClick={()=>setModalPhoto(i)} style={{width:52,height:52,borderRadius:10,overflow:'hidden',flexShrink:0,border:`2px solid ${i===modalPhoto?'#DC2626':'#e2e8f0'}`,cursor:'pointer'}}>
                     <img src={img} alt="" style={{width:'100%',height:'100%',objectFit:'cover'}}/>
                   </div>
                 ))}
               </div>
             )}
+
             <div style={{padding:'16px 20px'}}>
-              <div style={{display:'flex',alignItems:'flex-start',justifyContent:'space-between',marginBottom:8}}>
+              {/* Name + Price */}
+              <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginBottom:12}}>
                 <div>
-                  <h2 style={{fontSize:20,fontWeight:900,color:C.text,margin:'0 0 4px'}}>{modalItem.n}</h2>
-                  <div style={{fontSize:14,color:C.green,fontWeight:700}}>{modalItem.b}</div>
+                  <h2 style={{margin:'0 0 4px',fontSize:20,fontWeight:900,color:'#0f172a'}}>{modalItem.n}</h2>
+                  <div style={{display:'flex',gap:6,flexWrap:'wrap' as const}}>
+                    {modalItem.b&&<span style={{fontSize:12,color:'#16A34A',fontWeight:700}}>{modalItem.b}</span>}
+                    {modalItem.h&&<span style={{fontSize:12,color:'#DC2626',fontWeight:600}}>• {modalItem.h}</span>}
+                  </div>
+                  {(modalItem as any).origin&&<div style={{fontSize:11,color:'#94a3b8',marginTop:2}}>📍 {(modalItem as any).origin}</div>}
                 </div>
-                <div style={{fontWeight:900,fontSize:22,color:C.red}}>₹{modalItem.p}</div>
+                <div style={{textAlign:'right' as const}}>
+                  <div style={{fontSize:26,fontWeight:900,color:'#DC2626'}}>₹{((modalItem as any).weights?.[selectedWeight]?.price)||modalItem.p}</div>
+                  <div style={{fontSize:11,color:'#94a3b8'}}>per {((modalItem as any).weights?.[selectedWeight]?.label)||'500g'}</div>
+                </div>
               </div>
-              <div style={{fontSize:13,color:C.sub,marginBottom:12,lineHeight:1.6}}>{modalItem.desc}</div>
+
+              {/* Weight Selector */}
+              {(modalItem as any).weights&&(modalItem as any).weights.length>1&&(
+                <div style={{marginBottom:16}}>
+                  <div style={{fontSize:12,fontWeight:700,color:'#64748b',marginBottom:8,textTransform:'uppercase' as const,letterSpacing:0.5}}>Select Weight</div>
+                  <div style={{display:'flex',gap:8,flexWrap:'wrap' as const}}>
+                    {(modalItem as any).weights.map((w:any,i:number)=>(
+                      <button key={i} onClick={()=>setSelectedWeight(i)} style={{padding:'8px 18px',borderRadius:10,fontWeight:700,fontSize:13,cursor:'pointer',border:'none',background:selectedWeight===i?'#DC2626':'#f1f5f9',color:selectedWeight===i?'white':'#334155',transition:'all 0.2s'}}>
+                        {w.label}<span style={{display:'block',fontSize:10,fontWeight:600,opacity:0.8}}>₹{w.price}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Cut Type Selector */}
+              {(modalItem as any).cuts&&(modalItem as any).cuts.length>1&&(
+                <div style={{marginBottom:16}}>
+                  <div style={{fontSize:12,fontWeight:700,color:'#64748b',marginBottom:8,textTransform:'uppercase' as const,letterSpacing:0.5}}>Cutting Style</div>
+                  <div style={{display:'flex',gap:8,flexWrap:'wrap' as const}}>
+                    {(modalItem as any).cuts.map((cut:string,i:number)=>(
+                      <button key={i} onClick={()=>setSelectedCut(i)} style={{padding:'7px 14px',borderRadius:10,fontWeight:600,fontSize:12,cursor:'pointer',border:selectedCut===i?'2px solid #DC2626':'1.5px solid #e2e8f0',background:selectedCut===i?'#fff5f5':'white',color:selectedCut===i?'#DC2626':'#334155',transition:'all 0.2s'}}>
+                        {cut==='Curry Cut'?'🔪':cut==='Whole Fish'?'🐟':cut==='Fillet'?'🍽️':'✂️'} {cut}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Nutrition */}
+              {(modalItem as any).nutrition&&(
+                <div style={{marginBottom:16}}>
+                  <div style={{fontSize:12,fontWeight:700,color:'#64748b',marginBottom:8,textTransform:'uppercase' as const,letterSpacing:0.5}}>Nutrition (per 100g)</div>
+                  <div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:8}}>
+                    {Object.entries((modalItem as any).nutrition).map(([key,val]:any)=>(
+                      <div key={key} style={{background:'#f8fafc',borderRadius:10,padding:'8px',textAlign:'center' as const,border:'1px solid #e2e8f0'}}>
+                        <div style={{fontSize:14,fontWeight:900,color:'#0f172a'}}>{val}</div>
+                        <div style={{fontSize:10,color:'#94a3b8',marginTop:2}}>{key}</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Description */}
+              {modalItem.desc&&<div style={{marginBottom:14,padding:'12px 14px',background:'#f0fdf4',borderRadius:12,borderLeft:'3px solid #16A34A'}}><div style={{fontSize:12,fontWeight:700,color:'#16A34A',marginBottom:4}}>About This Fish</div><p style={{color:'#475569',fontSize:13,lineHeight:1.7,margin:0}}>{modalItem.desc}</p></div>}
+
+              {/* Storage & Weight */}
               <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:8,marginBottom:14}}>
-                {[{l:'Weight',v:modalItem.weight},{l:'Storage',v:modalItem.storage}].map(({l,v})=>(
-                  <div key={l} style={{background:C.light,borderRadius:10,padding:'10px 12px'}}>
-                    <div style={{fontSize:11,color:C.sub,fontWeight:600,marginBottom:2}}>{l}</div>
-                    <div style={{fontSize:12,color:C.text,fontWeight:600,lineHeight:1.4}}>{v}</div>
+                {[{icon:'🧊',label:'Storage',val:modalItem.storage},{icon:'⚖️',label:'Weight Info',val:modalItem.weight}].filter(x=>x.val).map(({icon,label,val})=>(
+                  <div key={label} style={{background:'#f8fafc',borderRadius:10,padding:'10px 12px',border:'1px solid #e2e8f0'}}>
+                    <div style={{fontSize:11,color:'#94a3b8',fontWeight:600,marginBottom:4}}>{icon} {label}</div>
+                    <div style={{fontSize:12,color:'#334155',fontWeight:600,lineHeight:1.4}}>{val}</div>
                   </div>
                 ))}
               </div>
-              {modalItem.tags && (
-                <div style={{display:'flex',gap:6,flexWrap:'wrap',marginBottom:16}}>
-                  {modalItem.tags.map((tag:string)=>(
-                    <span key={tag} style={{background:'#EBF5FA',color:'#0B4F6C',fontSize:11,fontWeight:700,padding:'3px 10px',borderRadius:20}}>{tag}</span>
-                  ))}
-                </div>
-              )}
-              <button onClick={()=>{addToCart(modalItem);setModalItem(null);setShowCart(true);setCheckoutStep('cart');}} style={{width:'100%',background:C.red,color:'white',border:'none',padding:14,borderRadius:12,fontWeight:700,fontSize:15,cursor:'pointer',boxShadow:'0 4px 12px rgba(220,38,38,0.3)'}}>
-                🛒 Add to Cart
-              </button>
+
+              {/* Tags */}
+              {modalItem.tags&&<div style={{display:'flex',gap:6,flexWrap:'wrap' as const,marginBottom:14}}>{modalItem.tags.map((tag:string)=><span key={tag} style={{background:'#EBF5FA',color:'#0B4F6C',fontSize:11,fontWeight:700,padding:'3px 10px',borderRadius:20}}>{tag}</span>)}</div>}
+
+              {/* Quality badges */}
+              <div style={{display:'flex',gap:12,marginBottom:16,padding:'10px 14px',background:'#f0fdf4',borderRadius:12}}>
+                {['✅ No Chemicals','🧊 Always Fresh','🚚 Home Delivery'].map(b=><span key={b} style={{fontSize:11,fontWeight:600,color:'#16A34A'}}>{b}</span>)}
+              </div>
+
+              {/* Add to Cart */}
+              {(()=>{
+                const currentPrice = ((modalItem as any).weights?.[selectedWeight]?.price)||modalItem.p;
+                const qty = cart.find(c=>c.n===modalItem.n)?.qty||0;
+                return qty===0?(
+                  <div style={{display:'flex',gap:10}}>
+                    <button onClick={()=>{addToCart({...modalItem,p:currentPrice});setModalItem(null);setSelectedWeight(0);setSelectedCut(0);}} style={{flex:1,background:'#DC2626',color:'white',border:'none',padding:14,borderRadius:12,fontWeight:700,fontSize:15,cursor:'pointer',boxShadow:'0 4px 12px rgba(220,38,38,0.3)'}}>
+                      🛒 Add to Cart — ₹{currentPrice}
+                    </button>
+                    <button onClick={()=>{addToCart({...modalItem,p:currentPrice});setModalItem(null);setSelectedWeight(0);setSelectedCut(0);setShowCart(true);setCheckoutStep('cart');}} style={{background:'#0f172a',color:'white',border:'none',padding:'14px 16px',borderRadius:12,fontWeight:700,fontSize:13,cursor:'pointer'}}>
+                      Buy Now
+                    </button>
+                  </div>
+                ):(
+                  <div>
+                    <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',background:'#f8fafc',borderRadius:12,padding:'10px 16px',border:'1.5px solid #e2e8f0',marginBottom:10}}>
+                      <button onClick={()=>removeFromCart(modalItem.n)} style={{background:'white',border:'1.5px solid #e2e8f0',width:36,height:36,borderRadius:8,fontWeight:700,cursor:'pointer',fontSize:18,color:'#334155'}}>−</button>
+                      <div style={{textAlign:'center' as const}}>
+                        <div style={{fontWeight:900,fontSize:18,color:'#0f172a'}}>{qty} in cart</div>
+                        <div style={{fontSize:12,color:'#DC2626',fontWeight:600}}>₹{currentPrice*qty} total</div>
+                      </div>
+                      <button onClick={()=>addToCart({...modalItem,p:currentPrice})} style={{background:'#DC2626',color:'white',border:'none',width:36,height:36,borderRadius:8,fontWeight:700,cursor:'pointer',fontSize:18}}>+</button>
+                    </div>
+                    <button onClick={()=>{setModalItem(null);setShowCart(true);setCheckoutStep('cart');}} style={{width:'100%',background:'#0f172a',color:'white',border:'none',padding:13,borderRadius:12,fontWeight:700,fontSize:14,cursor:'pointer'}}>
+                      View Cart & Checkout →
+                    </button>
+                  </div>
+                );
+              })()}
+
+              <div style={{marginTop:12,textAlign:'center' as const,fontSize:12,color:'#94a3b8'}}>🔒 Secure checkout • 📦 Fresh guarantee</div>
             </div>
           </div>
         </div>
