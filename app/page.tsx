@@ -446,7 +446,7 @@ export default function Home() {
           {[{e:'🧊',t:'Always Fresh',d:'Sourced every morning from market'},
             {e:'🚫',t:'No Chemicals',d:'No preservatives or artificial agents'},
             {e:'🚚',t:'Home Delivery',d:'9 AM – 12 PM, Delhi NCR'},
-            {e:'⭐',t:'FSSAI Certified',d:'Reg: 23326003001887'},
+            {e:'⭐',t:'FSSAI Certified',d:'Lic. No. 23326003001887'},
           ].map(({e,t,d})=>(
             <div key={t} style={{display:'flex',gap:12,alignItems:'flex-start'}}>
               <span style={{fontSize:24}}>{e}</span>
