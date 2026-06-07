@@ -80,7 +80,7 @@ function ScrollingTicker({ availableItems, preorderItems }: { availableItems: an
   ];
   const doubled = [...tickerItems, ...tickerItems];
   return (
-    <div style={{ background: C.red, overflow: 'hidden', height: '34px', display: 'flex', alignItems: 'center' }}>
+    <div style={{ background: C.green, overflow: 'hidden', height: '34px', display: 'flex', alignItems: 'center' }}>
       <style>{`@keyframes ticker{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}.ticker-track{display:flex;animation:ticker 40s linear infinite;width:max-content;will-change:transform}.ticker-track:hover{animation-play-state:paused}`}</style>
       <div className="ticker-track">
         {doubled.map((item, i) => (
